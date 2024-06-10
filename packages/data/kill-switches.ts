@@ -3,4 +3,7 @@ export enum KillSwitch {
   Signup = 'signup'
 }
 
-export const enabledKillSwitches: KillSwitch[] = [KillSwitch.FourEverLand];
+export const enabledKillSwitches: KillSwitch[] = [
+  // KillSwitch.FourEverLand
+  // KillSwitch.Invites,
+];
