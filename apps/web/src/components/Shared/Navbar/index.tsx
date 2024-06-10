@@ -84,11 +84,11 @@ const Navbar: FC = () => {
               // className="hidden rounded-full outline-offset-8 md:block"
               href="/"
             >
-              <div className="inline-flex flex-grow justify-between items-center font-bold text-white-900">
+              <div className="text-white-900 inline-flex flex-grow items-center justify-between font-bold">
                 <div className="text-3xl font-black">
-                  <img className="w-12 h-12" src="/logo1.svg" alt="Logo" />
+                  <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
                 </div>
-                <span className="flex fle-grow ml-3 mr-3">Goodcast</span>
+                <span className="fle-grow ml-3 mr-3 flex">Goodcast</span>
               </div>
             </Link>
             <div className="hidden sm:ml-6 md:block">
@@ -108,7 +108,7 @@ const Navbar: FC = () => {
               alt="Logo"
               className="size-7"
               height={32}
-              src= "/logo.png" //{`${STATIC_IMAGES_URL}/app-icon/${appIcon}.png`}
+              src="/logo.png" //{`${STATIC_IMAGES_URL}/app-icon/${appIcon}.png`}
               width={32}
             />
           </Link>
