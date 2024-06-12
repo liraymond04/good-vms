@@ -81,7 +81,7 @@ const Navbar: FC = () => {
               )}
             </button>
             <Link
-              // className="hidden rounded-full outline-offset-8 md:block"
+              className="hidden rounded-full outline-offset-8 md:block"
               href="/"
             >
               <div className="text-white-900 inline-flex flex-grow items-center justify-between font-bold">
