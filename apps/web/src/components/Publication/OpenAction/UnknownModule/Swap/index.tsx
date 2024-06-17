@@ -88,7 +88,7 @@ const SwapOpenAction: FC<SwapOpenActionProps> = ({ module, publication }) => {
     useBalance({
       address,
       query: { enabled: Boolean(currentProfile), refetchInterval: 8000 },
-      token: WMATIC_ADDRESS
+      token: WMATIC_ADDRESS // MIGRATE: token param no longer supported, use useReadContracts instead
     });
   const wmaticBalance = wmaticBalanceData
     ? parseFloat(formatUnits(wmaticBalanceData.value, 18)).toFixed(2)
@@ -98,7 +98,7 @@ const SwapOpenAction: FC<SwapOpenActionProps> = ({ module, publication }) => {
     useBalance({
       address,
       query: { enabled: Boolean(currentProfile), refetchInterval: 8000 },
-      token: outputTokenAddress
+      token: outputTokenAddress // MIGRATE: token param no longer supported, use useReadContracts instead
     });
   const outputTokenBalance = outputTokenBalanceData
     ? parseFloat(

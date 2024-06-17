@@ -76,7 +76,7 @@ const Action: FC<ActionProps> = ({
   const { data: balanceData } = useBalance({
     address,
     query: { refetchInterval: 2000 },
-    token: selectedCurrency?.contractAddress as Address
+    token: selectedCurrency?.contractAddress as Address // MIGRATE: token param no longer supported, use useReadContracts instead
   });
 
   const { data, isLoading: isGettingAllowance } = useReadContract({
