@@ -23,9 +23,9 @@ const LoginButton: FC<LoginButtonProps> = ({
 
   return (
     <Button
-      className={cn(
-        isFullWidth ? 'flex w-full items-center justify-center' : className
-      )}
+    className={
+      'inline-flex items-center justify-center rounded-full border border-white bg-black text-white w-full p-2 mb-2 text-base' 
+    }
       onClick={(e) => {
         e.stopPropagation();
         setShowAuthModal(true);

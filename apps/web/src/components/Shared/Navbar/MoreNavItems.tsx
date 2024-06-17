@@ -28,7 +28,7 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="ml-[-3px] size-8" />
-            <span className="text-xl">More</span>
+            <span className="text-xl nav-text text-black dark:text-white">More</span>
           </MenuButton>
           <MenuTransition>
             <MenuItems

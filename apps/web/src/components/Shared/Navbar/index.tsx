@@ -25,12 +25,13 @@ import styled from 'styled-components';
 
 import MoreNavItems from './MoreNavItems';
 import StaffBar from './StaffBar';
+import LoginButton from '../LoginButton';
+import SignupButton from './SignupButton';
 
 const NavbarContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
   margin: 0;
   padding: 0;
 
@@ -88,33 +89,6 @@ const MobilePostButton = styled.button`
     z-index: 10;
     font-size: 2rem;
   }
-`;
-
-const SignupButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  border: 1px solid white;
-  background-color: black;
-  color: white;
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-`;
-
-const LoginButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  width: 100%;
-  padding: 0.25rem;
-  font-size: 0.875rem;
 `;
 
 const Navbar: FC = () => {
@@ -224,7 +198,7 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="divider sticky top-0 z-10 w-full bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 w-full bg-white dark:bg-black">
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto max-w-screen-xl">
         <div className="relative flex h-full flex-col items-start justify-start">
@@ -254,13 +228,9 @@ const Navbar: FC = () => {
               <NavItems />
               <div className="desktop-post-button mt-5 w-full">
                 <PostButton>Post</PostButton>
-                <div className="auth-buttons">
-                  <Link href="/signup">
-                    <SignupButton>Signup</SignupButton>
-                  </Link>
-                  <Link href="/login">
-                    <LoginButton>Login</LoginButton>
-                  </Link>
+                <div className="auth-buttons">           
+                      <SignupButton/>
+                      <LoginButton/>
                 </div>
               </div>
             </div>

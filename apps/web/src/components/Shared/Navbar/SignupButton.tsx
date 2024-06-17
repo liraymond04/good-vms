@@ -11,8 +11,12 @@ const SignupButton: FC = () => {
   const { setShowAuthModal } = useGlobalModalStateStore();
   const { setScreen } = useSignupStore();
 
+
   return (
-    <Button
+    <Button 
+    className={
+      'inline-flex items-center justify-center rounded-full border border-white bg-black text-white w-full p-2 mb-2 text-base' 
+    }
       onClick={() => {
         setScreen('choose');
         setShowAuthModal(true, 'signup');
