@@ -37,7 +37,6 @@ const NavbarContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-    width: auto; /* or set a specific width */ 
   .nav-text,
   .auth-buttons {
   display: block;
@@ -55,7 +54,7 @@ const NavbarContainer = styled.div`
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 760px) {
   .hide-on-mobile {
     display: none; 
   }
