@@ -28,26 +28,53 @@ import StaffBar from './StaffBar';
 import LoginButton from '../LoginButton';
 import SignupButton from './SignupButton';
 import NavPost from '@components/Composer/Post/NavPost';
+import ModIcon from './ModIcon';
+import MenuItems from './MenuItems';
+import MobileLogoButton from './mobileLogoButton';
 
 const NavbarContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  padding: 0;
+    width: auto; /* or set a specific width */ 
+  .nav-text,
+  .auth-buttons {
+  display: block;
+}
 
-  @media (max-width: 1024px) {
+@media (max-width: 1024px) {
     .nav-text,
     .auth-buttons {
-      display: none;
+    display: none;
+  }
+}
+
+  .hide-on-mobile {
+  display: block; 
+}
+
+
+@media (max-width: 1024px) {
+  .hide-on-mobile {
+    display: none; 
+  }
+}
+
+
+  .display-on-mobile {
+  display: none; 
+}
+
+@media (max-width: 760px) {
+    .display-on-mobile {
+    display: block; 
     }
   }
 
-  @media (max-width: 430px) {
-    .hide-on-mobile {
-      display: none;
-    }
-  }
+}
+
+
 `;
 
 const BottomButtonsContainer = styled.div`
@@ -191,39 +218,38 @@ const Navbar: FC = () => {
           name="Messages"
           url="/messages"
         />
-        <div className="relative">
-          <MoreNavItems />
-        </div>
+        <MoreNavItems />
       </>
     );
   };
 
   return (
-    <header className="sticky top-0 z-10 w-full bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 min-w-fit  bg-white dark:bg-black">
       {staffMode ? <StaffBar /> : null}
-      <NavbarContainer className="container mx-auto max-w-screen-xl">
-        <div className="relative flex h-full flex-col items-start justify-start">
+      <NavbarContainer className="container mx-auto w-1/12">
+        <div className="relative flex h-full flex-col items-start justify-start w-1/12">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
             type="button"
           >
-            {showSearch ? (
-              <XMarkIconSolid className="size-6" />
-            ) : (
-              <MagnifyingGlassIconSolid className="size-8" />
-            )}
           </button>
           <Link className="hide-on-mobile" href="/">
             <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
+                <img alt="Logo" className=" h-12 w-12" src="apps/web/public/logo1.svg" />
               </div>
               <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast
+                Goodcast 
               </span>
             </div>
           </Link>
+        <div className ="display-on-mobile">
+          <MobileLogoButton/>
+        </div>
+          
+
+
           <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
@@ -233,6 +259,23 @@ const Navbar: FC = () => {
                       <SignupButton/>
                       <LoginButton/>
                 </div>
+                <div className={isShortScreen ? "flex items-start mt-4 justify-between" : "fixed  bottom-0  md:fixed"}>
+              <Link className={cn('md:hidden max-h-[100vh]', !currentProfile?.id && 'ml-[60px]')} href="/">
+                <img
+                  alt="Logo"
+                  className="size-7"
+                  height={32}
+                  src="/logo.png" //{`${STATIC_IMAGES_URL}/app-icon/${appIcon}.png`}
+                  width={32}
+                />
+              </Link>
+              <div id="profile" className="flex items-start mt-4 items-start justify-between">
+              <div className="flex items-center gap-2">
+                  <MenuItems /> {/* Profile Submenu Section */}
+                  <ModIcon />
+                </div>
+              </div>
+              </div>
               </div>
             </div>
           </div>

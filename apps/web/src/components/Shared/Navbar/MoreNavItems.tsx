@@ -32,7 +32,7 @@ const MoreNavItems: FC = () => {
           </MenuButton>
           <MenuTransition>
             <MenuItems
-              className="absolute bottom-full mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
+              className="absolute bottom-0 left-0 mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
               static
             >
               {currentProfile ? (
@@ -40,7 +40,7 @@ const MoreNavItems: FC = () => {
                   <MenuItem
                     as="div"
                     className={({ focus }: { focus: boolean }) =>
-                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                      cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
                     }
                   >
                     <Bookmarks />
