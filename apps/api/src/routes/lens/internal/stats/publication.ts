@@ -52,7 +52,7 @@ query Publications($request: PublicationsRequest!, $countOpenActionsRequest2: Pu
 }
 `;
 
-async function fetchStatsBatch(cursor: string|undefined) {
+async function fetchStatsBatch(cursor: string | undefined) {
   const getStatsQuery = {
     query: FETCH_STATS_QUERY,
     variables: {
@@ -67,10 +67,10 @@ async function fetchStatsBatch(cursor: string|undefined) {
       countOpenActionsRequest2: {
         anyOf: [
           {
-            category: "COLLECT"
+            category: 'COLLECT'
           }
         ]
-      },
+      }
     }
   };
 
@@ -127,7 +127,7 @@ async function getAggregateStats() {
 
   let { stats, nextCursor, prevCursor } = await fetchStatsBatch(undefined);
   for (const [k, v] of Object.entries(stats)) {
-    console.log(totals[k], v)
+    console.log(totals[k], v);
     totals[k] += v;
   }
   while (nextCursor) {
@@ -135,7 +135,7 @@ async function getAggregateStats() {
       let res = await fetchStatsBatch(nextCursor);
       nextCursor = res.nextCursor;
       for (const [k, v] of Object.entries(res.stats)) {
-        console.log(totals[k], v)
+        console.log(totals[k], v);
         totals[k] += v;
       }
     } catch (e) {
@@ -168,7 +168,7 @@ export const get: Handler = async (req, res) => {
   }
 
   try {
-    const stats = await getAggregateStats()
+    const stats = await getAggregateStats();
 
     logger.info('Lens: Fetched publication stats');
 
