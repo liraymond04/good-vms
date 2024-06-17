@@ -228,7 +228,7 @@ const Navbar: FC = () => {
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="desktop-post-button mt-5 w-full">
-                <NavPost>Post</NavPost>
+                <NavPost/>
                 <div className="auth-buttons">           
                       <SignupButton/>
                       <LoginButton/>
