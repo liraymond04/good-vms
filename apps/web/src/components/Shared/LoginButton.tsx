@@ -31,7 +31,7 @@ const LoginButton: FC<LoginButtonProps> = ({
         setShowAuthModal(true);
         Leafwatch.track(AUTH.OPEN_LOGIN);
       }}
-      size={isBig ? 'lg' : 'md'}
+      
     >
       {title}
     </Button>

@@ -30,7 +30,7 @@ import SignupButton from './SignupButton';
 import NavPost from '@components/Composer/Post/NavPost';
 import ModIcon from './ModIcon';
 import MenuItems from './MenuItems';
-import MobileLogoButton from './mobileLogoButton';
+import MobileLogoButton from './MobileLogoButton';
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -111,7 +111,7 @@ const MobilePostButton = styled.button`
     width: 56px;
     height: 56px;
     position: fixed;
-    bottom: 80px; /* Adjust this value to raise the button */
+    bottom: 80px; 
     right: 20px;
     z-index: 10;
     font-size: 2rem;
@@ -247,17 +247,13 @@ const Navbar: FC = () => {
           <MobileLogoButton/>
         </div>
           
-
-
           <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="desktop-post-button mt-5 w-full">
                 <NavPost/>
-                <div className="auth-buttons">           
-                      <SignupButton/>
-                      <LoginButton/>
-                </div>
+                  {!currentProfile ? <LoginButton/> : null}
+                  {!currentProfile ? <SignupButton/> : null}
                 <div className={isShortScreen ? "flex items-start mt-4 justify-between" : "fixed  bottom-0  md:fixed"}>
               <Link className={cn('md:hidden max-h-[100vh]', !currentProfile?.id && 'ml-[60px]')} href="/">
                 <img
@@ -270,9 +266,9 @@ const Navbar: FC = () => {
               </Link>
               <div id="profile" className="flex items-start mt-4 items-start justify-between">
               <div className="flex items-center gap-2">
-                  <MenuItems /> {/* Profile Submenu Section */}
-                  <ModIcon />
-                </div>
+              {currentProfile ? <MenuItems /> : null}
+              <ModIcon />
+              </div>
               </div>
               </div>
               </div>
