@@ -1,9 +1,7 @@
-import React from 'react';
 import type { FC, ReactNode } from 'react';
-import { useRouter } from 'next/router';
 
-import Link from 'next/link';
-
+import cn from '@good/ui/cn';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
   BellIcon as BellIconOutline,
   EnvelopeIcon as EnvelopeIconOutline,
@@ -14,19 +12,14 @@ import {
   BellIcon as BellIconSolid,
   EnvelopeIcon as EnvelopeIconSolid,
   HomeIcon as HomeIconSolid,
-  MagnifyingGlassIcon as MagnifyingGlassIconSolid,
-  XMarkIcon as XMarkIconSolid
+  MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
-
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { EllipsisHorizontalCircleIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import cn from '@good/ui/cn';
 
 import MenuTransition from '../MenuTransition';
-import Bookmarks from './NavItems/Bookmarks';
-import MoreLink from './NavItems/MoreLink';
-import Support from './NavItems/Support';
 import MoreNavItems from './MoreNavItems';
 
 interface NavItemProps {
@@ -51,9 +44,7 @@ const NavItem: FC<NavItemProps> = ({ current, icon, name, url }) => {
     >
       {icon}
       <div className="nav-text text-black dark:text-white">
-        <span className={`text-xl ${current ? 'font-bold' : ''}`}>
-          {name}
-        </span>
+        <span className={`text-xl ${current ? 'font-bold' : ''}`}>{name}</span>
       </div>
     </Link>
   );
@@ -63,80 +54,81 @@ const MobileLogoButton: React.FC = () => {
   const { currentProfile } = useProfileStore();
   const { pathname } = useRouter();
 
-
   return (
     <Menu as="div" className="relative">
-    {({ open }) => (
-      <>
-        <MenuButton
-          className={cn(
-            'text-white-900 inline-flex flex-grow items-start justify-start font-bold',
-            {
-              'bg-gray-200 text-black dark:bg-gray-800 dark:text-white': open,
-              'text-white-700 dark:text-white-300 hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white':
-                !open
-            }
-          )}
-        >
-              <div className="ml-6 text-3xl font-black">
-                <img alt="Logo" className=" h-12 w-12" src="apps/web/public/logo1.svg" />
-              </div>
-              <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast 
-              </span>
-        </MenuButton>
-        <MenuTransition>
-          <MenuItems
-           className=" absolute min-w-max  mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
-            //className=" absolute mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
-            static
+      {({ open }) => (
+        <>
+          <MenuButton
+            className={cn(
+              'text-white-900 inline-flex flex-grow items-start justify-start font-bold',
+              {
+                'bg-gray-200 text-black dark:bg-gray-800 dark:text-white': open,
+                'text-white-700 dark:text-white-300 hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white':
+                  !open
+              }
+            )}
           >
-            {currentProfile ? (
-              <>
-                <MenuItem
-                  as="div"
-                  className={({ focus }: { focus: boolean }) =>
-                    cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                  }
-                >
-                <NavItem
-                          current={pathname === '/'}
-                          icon={
-                            pathname === '/' ? (
-                              <HomeIconSolid className="size-8" />
-                            ) : (
-                              <HomeIconOutline className="size-8" />
-                            )
-                          }
-                          name="Home"
-                          url="/"
-                        />                
-                  </MenuItem>
-                <MenuItem
-                  as="div"
-                  className={({ focus }: { focus: boolean }) =>
-                    cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                  }
-                >
-                  <NavItem
-                    current={pathname === '/explore'}
-                    icon={
-                      pathname === '/explore' ? (
-                        <MagnifyingGlassIconSolid className="size-8" />
-                      ) : (
-                        <MagnifyingGlassIconOutline className="size-8" />
-                      )
+            <div className="ml-6 text-3xl font-black">
+              <img
+                alt="Logo"
+                className="h-12 w-12"
+                src="apps/web/public/logo1.svg"
+              />
+            </div>
+            <span className="nav-text ml-3 mr-3 flex flex-grow">Goodcast</span>
+          </MenuButton>
+          <MenuTransition>
+            <MenuItems
+              className="absolute mb-2 min-w-max rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
+              //className=" absolute mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
+              static
+            >
+              {currentProfile ? (
+                <>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                     }
-                    name="Explore"
-                    url="/explore"
-                  />
-                </MenuItem>
-                <MenuItem
-                  as="div"
-                  className={({ focus }: { focus: boolean }) =>
-                    cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                  }
-                >
+                  >
+                    <NavItem
+                      current={pathname === '/'}
+                      icon={
+                        pathname === '/' ? (
+                          <HomeIconSolid className="size-8" />
+                        ) : (
+                          <HomeIconOutline className="size-8" />
+                        )
+                      }
+                      name="Home"
+                      url="/"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <NavItem
+                      current={pathname === '/explore'}
+                      icon={
+                        pathname === '/explore' ? (
+                          <MagnifyingGlassIconSolid className="size-8" />
+                        ) : (
+                          <MagnifyingGlassIconOutline className="size-8" />
+                        )
+                      }
+                      name="Explore"
+                      url="/explore"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
                     <NavItem
                       current={pathname === '/notifications'}
                       icon={
@@ -149,44 +141,42 @@ const MobileLogoButton: React.FC = () => {
                       name="Notifications"
                       url="/notifications"
                     />
-                </MenuItem>
-                <div className="divider" />
-              </>
-            ) : null}
-            <MenuItem
-              as="div"
-              className={({ focus }: { focus: boolean }) =>
-                cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-              }
-                  >
-            <NavItem
-                current={pathname === '/messages'}
-                icon={
-                  pathname === '/messages' ? (
-                    <EnvelopeIconSolid className="size-8" />
-                  ) : (
-                    <EnvelopeIconOutline className="size-8" />
-                  )
+                  </MenuItem>
+                  <div className="divider" />
+                </>
+              ) : null}
+              <MenuItem
+                as="div"
+                className={({ focus }: { focus: boolean }) =>
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-                name="Messages"
-                url="/messages"
-              />           
-         </MenuItem>
-         <MenuItem
-              as="div"
-              className={({ focus }: { focus: boolean }) =>
-                cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-              }
-            >
-              <MoreNavItems/>
-          </MenuItem>
-
-
-          </MenuItems>
-        </MenuTransition>
-      </>
-    )}
-  </Menu>
+              >
+                <NavItem
+                  current={pathname === '/messages'}
+                  icon={
+                    pathname === '/messages' ? (
+                      <EnvelopeIconSolid className="size-8" />
+                    ) : (
+                      <EnvelopeIconOutline className="size-8" />
+                    )
+                  }
+                  name="Messages"
+                  url="/messages"
+                />
+              </MenuItem>
+              <MenuItem
+                as="div"
+                className={({ focus }: { focus: boolean }) =>
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                }
+              >
+                <MoreNavItems />
+              </MenuItem>
+            </MenuItems>
+          </MenuTransition>
+        </>
+      )}
+    </Menu>
   );
 };
 

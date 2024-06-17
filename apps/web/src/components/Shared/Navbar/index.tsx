@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
+import NavPost from '@components/Composer/Post/NavPost';
 import Search from '@components/Search';
 import cn from '@good/ui/cn';
 import {
@@ -12,8 +13,7 @@ import {
   BellIcon as BellIconSolid,
   EnvelopeIcon as EnvelopeIconSolid,
   HomeIcon as HomeIconSolid,
-  MagnifyingGlassIcon as MagnifyingGlassIconSolid,
-  XMarkIcon as XMarkIconSolid
+  MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -23,14 +23,13 @@ import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import styled from 'styled-components';
 
-import MoreNavItems from './MoreNavItems';
-import StaffBar from './StaffBar';
 import LoginButton from '../LoginButton';
-import SignupButton from './SignupButton';
-import NavPost from '@components/Composer/Post/NavPost';
-import ModIcon from './ModIcon';
 import MenuItems from './MenuItems';
 import MobileLogoButton from './MobileLogoButton';
+import ModIcon from './ModIcon';
+import MoreNavItems from './MoreNavItems';
+import SignupButton from './SignupButton';
+import StaffBar from './StaffBar';
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -111,7 +110,7 @@ const MobilePostButton = styled.button`
     width: 56px;
     height: 56px;
     position: fixed;
-    bottom: 80px; 
+    bottom: 80px;
     right: 20px;
     z-index: 10;
     font-size: 2rem;
@@ -223,54 +222,72 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 min-w-fit  bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-1/12">
-        <div className="relative flex h-full flex-col items-start justify-start w-1/12">
+        <div className="relative flex h-full w-1/12 flex-col items-start justify-start">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
             type="button"
-          >
-          </button>
+          />
           <Link className="hide-on-mobile" href="/">
             <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img alt="Logo" className=" h-12 w-12" src="apps/web/public/logo1.svg" />
+                <img
+                  alt="Logo"
+                  className="h-12 w-12"
+                  src="apps/web/public/logo1.svg"
+                />
               </div>
               <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast 
+                Goodcast
               </span>
             </div>
           </Link>
-        <div className ="display-on-mobile">
-          <MobileLogoButton/>
-        </div>
-          
+          <div className="display-on-mobile">
+            <MobileLogoButton />
+          </div>
+
           <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="desktop-post-button mt-5 w-full">
-                <NavPost/>
-                  {!currentProfile ? <LoginButton/> : null}
-                  {!currentProfile ? <SignupButton/> : null}
-                <div className={isShortScreen ? "flex items-start mt-4 justify-between" : "fixed  bottom-0  md:fixed"}>
-              <Link className={cn('md:hidden max-h-[100vh]', !currentProfile?.id && 'ml-[60px]')} href="/">
-                <img
-                  alt="Logo"
-                  className="size-7"
-                  height={32}
-                  src="/logo.png" //{`${STATIC_IMAGES_URL}/app-icon/${appIcon}.png`}
-                  width={32}
-                />
-              </Link>
-              <div id="profile" className="flex items-start mt-4 items-start justify-between">
-              <div className="flex items-center gap-2">
-              {currentProfile ? <MenuItems /> : null}
-              <ModIcon />
-              </div>
-              </div>
-              </div>
+                <NavPost />
+                {!currentProfile ? <LoginButton /> : null}
+                {!currentProfile ? <SignupButton /> : null}
+                <div
+                  className={
+                    isShortScreen
+                      ? 'mt-4 flex items-start justify-between'
+                      : 'fixed bottom-0 md:fixed'
+                  }
+                >
+                  <Link
+                    className={cn(
+                      'max-h-[100vh] md:hidden',
+                      !currentProfile?.id && 'ml-[60px]'
+                    )}
+                    href="/"
+                  >
+                    <img
+                      alt="Logo"
+                      className="size-7"
+                      height={32}
+                      src="/logo.png" //{`${STATIC_IMAGES_URL}/app-icon/${appIcon}.png`}
+                      width={32}
+                    />
+                  </Link>
+                  <div
+                    className="mt-4 flex items-start justify-between"
+                    id="profile"
+                  >
+                    <div className="flex items-center gap-2">
+                      {currentProfile ? <MenuItems /> : null}
+                      <ModIcon />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

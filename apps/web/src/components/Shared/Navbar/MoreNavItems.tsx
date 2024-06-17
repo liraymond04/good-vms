@@ -28,7 +28,9 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="ml-[-3px] size-8" />
-            <span className="text-xl nav-text text-black dark:text-white">More</span>
+            <span className="nav-text text-xl text-black dark:text-white">
+              More
+            </span>
           </MenuButton>
           <MenuTransition>
             <MenuItems
@@ -40,7 +42,7 @@ const MoreNavItems: FC = () => {
                   <MenuItem
                     as="div"
                     className={({ focus }: { focus: boolean }) =>
-                      cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                     }
                   >
                     <Bookmarks />
