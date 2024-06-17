@@ -21,9 +21,13 @@ const MenuItems: FC = () => {
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <SignupButton />
-      <LoginButton />
+    <div className="relative hidden md:block">
+      <div className="mb-4">
+        <SignupButton />
+      </div>
+      <div>
+        <LoginButton />
+      </div>
     </div>
   );
 };

@@ -16,7 +16,6 @@ app.disable('x-powered-by');
 
 const setupRoutes = async () => {
   // Route configuration
-  app.use('/signup', express.raw({ type: 'application/json' }), await router());
   app.use('/', express.json({ limit: '1mb' }), await router());
 
   // Start the server
@@ -26,6 +25,6 @@ const setupRoutes = async () => {
 };
 
 // Initialize routes
-setupRoutes().catch(() => {
-  logger.error('Error setting up routes');
+setupRoutes().catch((error) => {
+  logger.error('Error setting up routes', error);
 });
