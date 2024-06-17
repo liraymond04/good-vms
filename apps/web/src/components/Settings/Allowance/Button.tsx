@@ -46,7 +46,7 @@ const AllowanceButton: FC<AllowanceButtonProps> = ({
     sendTransaction
   } = useSendTransaction({
     mutation: { onError }
-  });
+  }); // MIGRATE: Updated useSendTransaction and useWriteContract return type from { hash: `0x${string}` } to `0x${string}`.
 
   const {
     error,
