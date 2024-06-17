@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 
-import { HEY_API_URL } from '@hey/data/constants';
-import formatRelativeOrAbsolute from '@hey/helpers/datetime/formatRelativeOrAbsolute';
-import { Card, CardHeader } from '@hey/ui';
+import { HEY_API_URL } from '@good/data/constants';
+import formatRelativeOrAbsolute from '@good/helpers/datetime/formatRelativeOrAbsolute';
+import { Card, CardHeader } from '@good/ui';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
