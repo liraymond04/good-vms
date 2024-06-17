@@ -65,12 +65,12 @@ export const get: Handler = async (req, res) => {
       ? getAddress(address)
       : await fetchAddressFromProfileId(id!);
 
-    const viemclient = createPublicClient({
+    const viemClient = createPublicClient({
       chain: IS_MAINNET ? polygon : polygonAmoy,
       transport: getRpc({ mainnet: IS_MAINNET })
     });
 
-    const data = await viemclient.readContract({
+    const data = await viemClient.readContract({
       abi: GoodLensSignup,
       address: GOOD_LENS_SIGNUP,
       args: [formattedAddress],
