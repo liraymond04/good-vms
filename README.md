@@ -45,8 +45,8 @@ Goodcast is a cutting-edge social media for the public good that leverages the p
 
 ## 📦 Environments
 
-| Name    | Link                    |
-| ------- | ----------------------- |
+| Name    | Link                         |
+| ------- | ---------------------------- |
 | Mainnet | https://bcharity.net         |
 | Testnet | https://testnet.bcharity.net |
 | Staging | https://staging.bcharity.net |
