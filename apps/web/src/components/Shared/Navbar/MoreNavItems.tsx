@@ -28,11 +28,13 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="ml-[-3px] size-8" />
-            <span className="text-xl">More</span>
+            <span className="nav-text text-xl text-black dark:text-white">
+              More
+            </span>
           </MenuButton>
           <MenuTransition>
             <MenuItems
-              className="absolute bottom-full mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
+              className="absolute bottom-0 left-0 mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
               static
             >
               {currentProfile ? (
