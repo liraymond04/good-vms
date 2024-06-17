@@ -74,12 +74,12 @@ export const get: Handler = async (req, res) => {
   }
 
   try {
-    const viemclient = createPublicClient({
+    const viemClient = createPublicClient({
       chain: IS_MAINNET ? polygon : polygonAmoy,
       transport: getRpc({ mainnet: IS_MAINNET })
     });
 
-    const signupCount = await viemclient.readContract({
+    const signupCount = await viemClient.readContract({
       abi: GoodLensSignup,
       address: GOOD_LENS_SIGNUP,
       args: [],
