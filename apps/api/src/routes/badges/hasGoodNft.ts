@@ -15,32 +15,58 @@ import { getAddress } from 'viem';
 
 const LENS_GRAPHQL_API_V2 = 'https://api-v2.lens.dev/graphql';
 
-const fetchPublications = async () => {
+const fetchPublications = async (id: any, addr: any) => {
   const LENS_V2_HAS_ACTED_QUERY = {
     query: `
-    query Profile($request: PublicationRequest!) {
-  publication(request: $request) {
-    ... on Post {
-      by {
-        id
-        ownedBy {
-          address
-        }
+    query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
+  whoActedOnPublication(request: $whoActedOnPublicationRequest2) {
+    items {
+      id
+      ownedBy {
+        address
       }
+    }
+    pageInfo {
+      next
+      prev
     }
   }
 }
   `,
     variables: {
-      request: {
-        forId: GOOD_MEMBERSHIP_NFT_PUBLICATION_ID
+      whoActedOnPublicationRequest2: {
+        cursor: null,
+        on: '0x020b69-0x01'
       }
     }
   };
 
   const { data } = await axios.post(
-    IS_MAINNET ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
-    LENS_V2_HAS_ACTED_QUERY,
+    true ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
+    {
+      query: `
+    query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
+  whoActedOnPublication(request: $whoActedOnPublicationRequest2) {
+    items {
+      id
+      ownedBy {
+        address
+      }
+    }
+    pageInfo {
+      next
+      prev
+    }
+  }
+}
+  `,
+      variables: {
+        whoActedOnPublicationRequest2: {
+          // cursor: null,
+          on: GOOD_MEMBERSHIP_NFT_PUBLICATION_ID
+        }
+      }
+    },
     {
       headers: {
         'Content-Type': 'application/json',
@@ -49,10 +75,90 @@ const fetchPublications = async () => {
     }
   );
   console.log(data);
-  if (data.data.publication) {
-    return data.data.publication.by;
+  let res = false;
+
+  if (data.data.whoActedOnPublication.items) {
+    const temp = data.data.whoActedOnPublication.items;
+    // console.log(temp);
+    for (const item of temp) {
+      // console.log(item);
+      // console.log(item.ownedBy.address);
+      if (item.id === id || item.ownedBy.address === addr) {
+        res = true;
+        break;
+      }
+    }
+    // console.log(res)
+    if (res) {
+      return true;
+    }
+
+    if (data.data.whoActedOnPublication.pageInfo.next) {
+      let next = data.data.whoActedOnPublication.pageInfo.next;
+      while (next) {
+        console.log(next);
+        // console.log(next)
+        const { data } = await axios.post(
+          true ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
+          {
+            query: `
+          query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
+          whoActedOnPublication(request: $whoActedOnPublicationRequest2) {
+            items {
+              id
+              ownedBy {
+                address
+              }
+            }
+            pageInfo {
+              next
+              prev
+            }
+          }
+        }
+        `,
+            variables: {
+              whoActedOnPublicationRequest2: {
+                cursor: next,
+                on: GOOD_MEMBERSHIP_NFT_PUBLICATION_ID
+              }
+            }
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'User-agent': GOOD_USER_AGENT
+            }
+          }
+        );
+
+        if (data.data.whoActedOnPublication.items) {
+          const temp = data.data.whoActedOnPublication.items;
+          // console.log(temp);
+          for (const item of temp) {
+            if (item.id === id || item.ownedBy.address === addr) {
+              res = true;
+              break;
+            }
+          }
+          if (res) {
+            return true;
+          }
+        }
+
+        if (data.data.whoActedOnPublication.pageInfo.next) {
+          next = data.data.whoActedOnPublication.pageInfo.next;
+          // console.log(next)
+        } else {
+          return false;
+        }
+      }
+      return res;
+    } else {
+      return false;
+    }
   } else {
-    return null;
+    return false;
   }
 };
 
@@ -74,21 +180,21 @@ export const get: Handler = async (req, res) => {
     //   address: formattedAddress
     // };
 
-    const response: any = await fetchPublications();
+    const response: any = await fetchPublications(id, formattedAddress);
 
     if (!response) {
       return res.status(200).json({ hasGoodNft: false, success: true });
     }
 
-    const profile = response.id;
-    const addr = response.ownedBy.address;
+    // const profile = response.id;
+    // const addr = response.ownedBy.address;
 
-    if (!profile || !addr) {
-      logger.info(`No profile found for ${id || formattedAddress}`);
-      return res.status(200).json({ hasGoodNft: false, success: true });
-    }
+    // if (!profile || !addr) {
+    //   logger.info(`No profile found for ${id || formattedAddress}`);
+    //   return res.status(200).json({ hasGoodNft: false, success: true });
+    // }
 
-    const hasGoodNft = profile == id || formattedAddress == addr;
+    const hasGoodNft = response;
 
     logger.info(`Good NFT badge fetched for ${id || formattedAddress}`);
 
