@@ -102,9 +102,12 @@ const LivestreamSettings = dynamic(
   () => import('@components/Composer/Actions/LivestreamSettings'),
   { loading: () => Shimmer }
 );
-const RequestSettings = dynamic(() => import('@components/Composer/Actions/RequestSettings'), {
-  loading: () => Shimmer
-});
+const RequestSettings = dynamic(
+  () => import('@components/Composer/Actions/RequestSettings'),
+  {
+    loading: () => Shimmer
+  }
+);
 const DraftSettings = dynamic(
   () => import('@components/Composer/Actions/DraftSettings'),
   { loading: () => Shimmer }
@@ -153,8 +156,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     usePublicationPollStore();
 
   // Request store
-  const { requestConfig, showRequestEditor, setShowRequestEditor } =
-  usePublicationRequestStore();
+  const { requestConfig, setShowRequestEditor, showRequestEditor } =
+    usePublicationRequestStore();
 
   // License store
   const { setLicense } = usePublicationLicenseStore();
