@@ -1,13 +1,13 @@
 import type { Handler } from 'express';
 
 import { APP_NAME, IS_MAINNET } from '@good/data/constants';
+import LensEndpoint from '@good/data/lens-endpoints';
 import logger from '@good/helpers/logger';
+import axios from 'axios';
 import catchedError from 'src/helpers/catchedError';
+import { GOOD_USER_AGENT } from 'src/helpers/constants';
 import validateIsStaff from 'src/helpers/middlewares/validateIsStaff';
 import { notAllowed } from 'src/helpers/responses';
-import axios from 'axios';
-import LensEndpoint from '@good/data/lens-endpoints';
-import { GOOD_USER_AGENT } from 'src/helpers/constants';
 
 const FETCH_STATS_QUERY = `
 query Publications($request: PublicationsRequest!, $countOpenActionsRequest2: PublicationStatsCountOpenActionArgs) {
@@ -56,20 +56,20 @@ async function fetchStatsBatch(cursor: string | undefined) {
   const getStatsQuery = {
     query: FETCH_STATS_QUERY,
     variables: {
-      request: {
-        where: {
-          metadata: {
-            publishedOn: APP_NAME
-          }
-        },
-        cursor: cursor ?? null
-      },
       countOpenActionsRequest2: {
         anyOf: [
           {
             category: 'COLLECT'
           }
         ]
+      },
+      request: {
+        cursor: cursor ?? null,
+        where: {
+          metadata: {
+            publishedOn: APP_NAME
+          }
+        }
       }
     }
   };
@@ -86,46 +86,51 @@ async function fetchStatsBatch(cursor: string | undefined) {
   );
 
   const stats = {
-    publications: 0,
-    mirrors: 0,
-    comments: 0,
-    quotes: 0,
-    reactions: 0,
-    collects: 0,
     actions: 0,
-    bookmarks: 0
+    bookmarks: 0,
+    collects: 0,
+    comments: 0,
+    mirrors: 0,
+    publications: 0,
+    quotes: 0,
+    reactions: 0
   };
 
-  data.data.publications.items.forEach((p: any) => {
-    if (p.__typename === 'Post') stats.publications++;
-    else if (p.__typename === 'Mirror') stats.mirrors++;
-    else if (p.__typename === 'Comment') stats.comments++;
-    else if (p.__typename === 'Quote') stats.quotes++;
+  for (const p of data.data.publications.items) {
+    if (p.__typename === 'Post') {
+      stats.publications++;
+    } else if (p.__typename === 'Mirror') {
+      stats.mirrors++;
+    } else if (p.__typename === 'Comment') {
+      stats.comments++;
+    } else if (p.__typename === 'Quote') {
+      stats.quotes++;
+    }
 
     stats.reactions += p.stats.reactions;
     stats.bookmarks += p.stats.bookmarks;
     stats.collects += p.stats.collects;
     stats.actions += p.stats.actions;
-  });
+  }
 
   const nextCursor: string | undefined = data.data.publications.pageInfo?.next;
   const prevCursor: string | undefined = data.data.publications.pageInfo?.prev;
-  return { stats, nextCursor, prevCursor };
+  return { nextCursor, prevCursor, stats };
 }
 
 async function getAggregateStats() {
   const totals: Record<string, number> = {
-    publications: 0,
-    mirrors: 0,
-    comments: 0,
-    quotes: 0,
-    reactions: 0,
-    collects: 0,
     actions: 0,
-    bookmarks: 0
+    bookmarks: 0,
+    collects: 0,
+    comments: 0,
+    mirrors: 0,
+    publications: 0,
+    quotes: 0,
+    reactions: 0
   };
 
-  let { stats, nextCursor, prevCursor } = await fetchStatsBatch(undefined);
+  let { nextCursor, prevCursor, stats } = await fetchStatsBatch();
   for (const [k, v] of Object.entries(stats)) {
     console.log(totals[k], v);
     totals[k] += v;
@@ -138,8 +143,8 @@ async function getAggregateStats() {
         console.log(totals[k], v);
         totals[k] += v;
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       break;
     }
   }
@@ -151,8 +156,8 @@ async function getAggregateStats() {
       for (const [k, v] of Object.entries(res.stats)) {
         totals[k] += v;
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       break;
     }
   }
