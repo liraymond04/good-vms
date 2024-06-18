@@ -1,12 +1,13 @@
 import type { FC } from 'react';
 
 import { Card, Tooltip } from '@good/ui';
-import { ClockIcon } from '@heroicons/react/24/outline';
+// import { ClockIcon } from '@heroicons/react/24/outline';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 // import { useState } from 'react';
 // import plur from 'plur';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
+import GiveGiftIcon from '../ReferenceSettings/GiveGiftIcon';
 import RequestForm from './RequestForm';
 
 // Created based on PollSetting's index.tsx, adjust as required
@@ -23,7 +24,8 @@ const RequestEditor: FC = () => {
     <Card className="m-5 px-8 py-6" forceRounded>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center space-x-2 text-sm">
-          <ClockIcon className="size-4" />
+          {/* <ClockIcon className="size-4" /> */}
+          <GiveGiftIcon />
           <b>Volunteer's GOOD Request</b>
         </div>
         <div className="flex items-center space-x-3">
