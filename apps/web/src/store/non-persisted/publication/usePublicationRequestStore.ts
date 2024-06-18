@@ -18,7 +18,8 @@ const store = create<State>((set) => ({
   resetRequestConfig: () =>
     set(() => ({ requestConfig: { length: 1, options: ['', ''] } })),
   setRequestConfig: (requestConfig) => set(() => ({ requestConfig })),
-  setShowRequestEditor: (showRequestEditor) => set(() => ({ showRequestEditor })),
+  setShowRequestEditor: (showRequestEditor) =>
+    set(() => ({ showRequestEditor })),
   showRequestEditor: false
 }));
 

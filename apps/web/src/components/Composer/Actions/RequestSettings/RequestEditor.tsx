@@ -1,16 +1,18 @@
 import type { FC } from 'react';
 
-import { Button, Card, Input, Modal, Tooltip } from '@good/ui';
-import { ClockIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Bars3BottomLeftIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import plur from 'plur';
-import { useState } from 'react';
+import { Card, Tooltip } from '@good/ui';
+import { ClockIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/solid';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
 // Created based on PollSetting's index.tsx, adjust as required
 const RequestEditor: FC = () => {
-  const { requestConfig, resetRequestConfig, setRequestConfig, setShowRequestEditor } =
-    usePublicationRequestStore();
+  const {
+    requestConfig,
+    resetRequestConfig,
+    setRequestConfig,
+    setShowRequestEditor
+  } = usePublicationRequestStore();
   // const [showPollLengthModal, setShowPollLengthModal] = useState(false);
 
   return (
@@ -35,9 +37,7 @@ const RequestEditor: FC = () => {
           </Tooltip>
         </div>
       </div>
-      <div className="mt-3 space-y-2">
-        PLACEHOLDER FOR CLAIM GOOD FORM
-      </div>
+      <div className="mt-3 space-y-2">PLACEHOLDER FOR CLAIM GOOD FORM</div>
     </Card>
   );
 };
