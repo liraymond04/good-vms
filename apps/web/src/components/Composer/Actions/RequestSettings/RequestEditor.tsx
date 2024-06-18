@@ -9,8 +9,12 @@ import { usePublicationRequestStore } from 'src/store/non-persisted/publication/
 
 // Created based on PollSetting's index.tsx, adjust as required
 const RequestEditor: FC = () => {
-  const { requestConfig, resetRequestConfig, setRequestConfig, setShowRequestEditor } =
-    usePublicationRequestStore();
+  const {
+    requestConfig,
+    resetRequestConfig,
+    setRequestConfig,
+    setShowRequestEditor
+  } = usePublicationRequestStore();
   // const [showPollLengthModal, setShowPollLengthModal] = useState(false);
 
   return (
@@ -35,9 +39,7 @@ const RequestEditor: FC = () => {
           </Tooltip>
         </div>
       </div>
-      <div className="mt-3 space-y-2">
-        PLACEHOLDER FOR CLAIM GOOD FORM
-      </div>
+      <div className="mt-3 space-y-2">PLACEHOLDER FOR CLAIM GOOD FORM</div>
     </Card>
   );
 };
