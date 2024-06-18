@@ -11,6 +11,7 @@ export enum ProfileFeedType {
   Feed = 'FEED',
   Media = 'MEDIA',
   Replies = 'REPLIES',
+  Requests = 'REQUESTS',
   Stats = 'STATS'
 }
 

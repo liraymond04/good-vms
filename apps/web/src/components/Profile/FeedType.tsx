@@ -7,6 +7,7 @@ import {
   ChartBarIcon,
   ChatBubbleLeftIcon,
   FilmIcon,
+  FlagIcon,
   PencilSquareIcon,
   RectangleStackIcon
 } from '@heroicons/react/24/outline';
@@ -62,6 +63,13 @@ const FeedType: FC<FeedTypeProps> = ({ feedType, setFeedType }) => {
           name="Collected"
           onClick={() => switchTab(ProfileFeedType.Collects)}
           type={ProfileFeedType.Collects.toLowerCase()}
+        />
+        <TabButton
+          active={feedType === ProfileFeedType.Requests}
+          icon={<FlagIcon className="size-4" />}
+          name="Requests"
+          onClick={() => switchTab(ProfileFeedType.Requests)}
+          type={ProfileFeedType.Requests.toLowerCase()}
         />
         {isPro && (
           <TabButton
