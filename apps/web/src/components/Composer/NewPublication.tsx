@@ -49,6 +49,7 @@ import {
 import { usePublicationLicenseStore } from 'src/store/non-persisted/publication/usePublicationLicenseStore';
 import { usePublicationLiveStore } from 'src/store/non-persisted/publication/usePublicationLiveStore';
 import { usePublicationPollStore } from 'src/store/non-persisted/publication/usePublicationPollStore';
+import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
 import {
   DEFAULT_VIDEO_THUMBNAIL,
@@ -63,6 +64,7 @@ import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 import LivestreamEditor from './Actions/LivestreamSettings/LivestreamEditor';
 import PollEditor from './Actions/PollSettings/PollEditor';
+import RequestEditor from './Actions/RequestSettings/RequestEditor';
 import { Editor, useEditorContext, withEditorContext } from './Editor';
 import LinkPreviews from './LinkPreviews';
 import OpenActionsPreviews from './OpenActionsPreviews';
@@ -100,6 +102,9 @@ const LivestreamSettings = dynamic(
   () => import('@components/Composer/Actions/LivestreamSettings'),
   { loading: () => Shimmer }
 );
+const RequestSettings = dynamic(() => import('@components/Composer/Actions/RequestSettings'), {
+  loading: () => Shimmer
+});
 const DraftSettings = dynamic(
   () => import('@components/Composer/Actions/DraftSettings'),
   { loading: () => Shimmer }
@@ -146,6 +151,10 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
   // Poll store
   const { pollConfig, resetPollConfig, setShowPollEditor, showPollEditor } =
     usePublicationPollStore();
+
+  // Request store
+  const { requestConfig, showRequestEditor, setShowRequestEditor } =
+  usePublicationRequestStore();
 
   // License store
   const { setLicense } = usePublicationLicenseStore();
@@ -197,6 +206,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     editor?.setMarkdown('');
     setPublicationContent('');
     setShowPollEditor(false);
+    setShowRequestEditor(false);
     resetPollConfig();
     setShowLiveVideoEditor(false);
     resetLiveVideoConfig();
@@ -563,6 +573,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         </div>
       ) : null}
       {showPollEditor ? <PollEditor /> : null}
+      {showRequestEditor ? <RequestEditor /> : null}
       {showLiveVideoEditor ? <LivestreamEditor /> : null}
       <OpenActionsPreviews setNftOpenActionEmbed={setNftOpenActionEmbed} />
       {!nftOpenActionEmbed ? <LinkPreviews /> : null}
@@ -597,6 +608,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
           ) : null}
           <PollSettings />
           {!isComment && <LivestreamSettings />}
+          {/* Request GOOD Button */}
+          <RequestSettings />
           {isPro && <DraftSettings />}
         </div>
         <div className="ml-auto mt-2 sm:mt-0">
