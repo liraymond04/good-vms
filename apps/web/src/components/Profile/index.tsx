@@ -31,6 +31,7 @@ import FeedType from './FeedType';
 import Followers from './Followers';
 import Following from './Following';
 import MutualFollowersList from './MutualFollowers/List';
+import Requests from './Requests';
 import ProfilePageShimmer from './Shimmer';
 import Stats from './Stats';
 import SuspendedDetails from './SuspendedDetails';
@@ -71,6 +72,7 @@ const ViewProfile: NextPage = () => {
     ProfileFeedType.Replies.toLowerCase(),
     ProfileFeedType.Media.toLowerCase(),
     ProfileFeedType.Collects.toLowerCase(),
+    ProfileFeedType.Requests.toLowerCase(),
     ProfileFeedType.Stats.toLowerCase()
   ];
 
@@ -189,6 +191,8 @@ const ViewProfile: NextPage = () => {
                 />
               ) : feedType === ProfileFeedType.Stats ? (
                 <Stats profileId={profile.id} />
+              ) : feedType === ProfileFeedType.Requests ? (
+                <Requests />
               ) : null}
             </>
           )}
