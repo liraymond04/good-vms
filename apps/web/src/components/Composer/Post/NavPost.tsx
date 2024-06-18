@@ -40,7 +40,7 @@ const NavPost: FC = () => {
 
   return (
     <button
-      className="bg-custom-pink mt-5 inline-flex w-full items-center justify-center rounded-full px-4 py-2 text-black focus:outline-none dark:text-white"
+      className="bg-custom-pink mb-5 mt-5 inline-flex hidden w-full items-center justify-center rounded-full px-4 py-2 text-black focus:outline-none md:block dark:text-white"
       onClick={openModal}
       style={{ backgroundColor: '#da5597' }}
       type="button"
