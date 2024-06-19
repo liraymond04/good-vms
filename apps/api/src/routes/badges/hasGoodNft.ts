@@ -13,36 +13,9 @@ import { CACHE_AGE_INDEFINITE, GOOD_USER_AGENT } from 'src/helpers/constants';
 import { noBody } from 'src/helpers/responses';
 import { getAddress } from 'viem';
 
-const LENS_GRAPHQL_API_V2 = 'https://api-v2.lens.dev/graphql';
-
 const fetchPublications = async (id: any, addr: any) => {
-  const LENS_V2_HAS_ACTED_QUERY = {
-    query: `
-    query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
-  whoActedOnPublication(request: $whoActedOnPublicationRequest2) {
-    items {
-      id
-      ownedBy {
-        address
-      }
-    }
-    pageInfo {
-      next
-      prev
-    }
-  }
-}
-  `,
-    variables: {
-      whoActedOnPublicationRequest2: {
-        cursor: null,
-        on: '0x020b69-0x01'
-      }
-    }
-  };
-
   const { data } = await axios.post(
-    true ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
+    IS_MAINNET ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
     {
       query: `
     query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
@@ -95,11 +68,12 @@ const fetchPublications = async (id: any, addr: any) => {
 
     if (data.data.whoActedOnPublication.pageInfo.next) {
       let next = data.data.whoActedOnPublication.pageInfo.next;
-      while (next) {
-        console.log(next);
+
+      const endTime = Date.now() + 5000;
+      while (next && Date.now() < endTime) {
         // console.log(next)
         const { data } = await axios.post(
-          true ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
+          IS_MAINNET ? LensEndpoint.Mainnet : LensEndpoint.Testnet,
           {
             query: `
           query Post($whoActedOnPublicationRequest2: WhoActedOnPublicationRequest!) {
@@ -174,26 +148,11 @@ export const get: Handler = async (req, res) => {
       ? getAddress(address as Address)
       : undefined;
 
-    console.log(formattedAddress);
-    // const variables = {
-    //   id,
-    //   address: formattedAddress
-    // };
-
     const response: any = await fetchPublications(id, formattedAddress);
 
     if (!response) {
       return res.status(200).json({ hasGoodNft: false, success: true });
     }
-
-    // const profile = response.id;
-    // const addr = response.ownedBy.address;
-
-    // if (!profile || !addr) {
-    //   logger.info(`No profile found for ${id || formattedAddress}`);
-    //   return res.status(200).json({ hasGoodNft: false, success: true });
-    // }
-
     const hasGoodNft = response;
 
     logger.info(`Good NFT badge fetched for ${id || formattedAddress}`);
