@@ -66,7 +66,7 @@ const NavbarContainer = styled.div`
 
 @media (max-width: 760px) {
     .display-on-mobile {
-    display: block; 
+    display: flex; 
     }
   }
 
@@ -92,7 +92,7 @@ const PostButton = styled.button`
   margin-bottom: 1rem;
   font-size: 1.25rem;
 
-  @media (max-width: 430px) {
+  @media (max-width: 760px) {
     display: none;
   }
 `;
@@ -100,7 +100,7 @@ const PostButton = styled.button`
 const MobilePostButton = styled.button`
   display: none;
 
-  @media (max-width: 430px) {
+  @media (max-width: 760px) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -245,14 +245,16 @@ const Navbar: FC = () => {
               </span>
             </div>
           </Link>
+         
           <div className="display-on-mobile">
+          <MenuItems/>
             <MobileLogoButton />
           </div>
 
           <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
-              <div className="desktop-post-button mt-5 w-full">
+              <div className=" mt-5 w-full">
                 <NavPost />
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
@@ -293,7 +295,6 @@ const Navbar: FC = () => {
           </div>
         </div>
       </NavbarContainer>
-      <MobilePostButton className="mobile-post-button">+</MobilePostButton>
       {showSearch ? (
         <div className="m-3 md:hidden">
           <Search />
