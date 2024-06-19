@@ -224,8 +224,8 @@ const Navbar: FC = () => {
   return (
     <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
       {staffMode ? <StaffBar /> : null}
-      <NavbarContainer className="container mx-auto w-1/12">
-        <div className="relative flex h-full w-1/12 flex-col items-start justify-start">
+      <NavbarContainer className="container mx-auto w-full">
+        <div className="relative flex h-full w-full flex-col items-start justify-start">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
@@ -259,11 +259,8 @@ const Navbar: FC = () => {
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
                 <div
-                  className={
-                    isShortScreen
-                      ? 'mt-4 flex items-start justify-between'
-                      : 'fixed bottom-0 md:fixed'
-                  }
+                  className=""
+                   
                 >
                   <Link
                     className={cn(
@@ -283,17 +280,20 @@ const Navbar: FC = () => {
                   <div
                     className="mt-4 flex items-start justify-between"
                     id="profile"
-                  >
-                    <div className="flex items-center gap-2">
-                      {currentProfile ? <MenuItems /> : null}
-                      <ModIcon />
-                    </div>
+                  >  
                   </div>
+                  
                 </div>
+                
               </div>
+              
             </div>
           </div>
         </div>
+        <div className="hide-on-mobile flex items-center ml-6 gap-2">
+                      {currentProfile ? <MenuItems /> : null}
+                      <ModIcon />
+                    </div>
       </NavbarContainer>
       {showSearch ? (
         <div className="m-3 md:hidden">
