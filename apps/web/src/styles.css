@@ -19,6 +19,16 @@ table {
   @apply dark:bg-gray-900;
 }
 
+#sortBy {
+  @apply bg-white;
+  @apply dark:bg-gray-900;
+}
+
+#filterBy {
+  @apply bg-white;
+  @apply dark:bg-gray-900;
+}
+
 .shimmer {
   @apply animate-pulse;
   @apply bg-gray-300;
@@ -26,7 +36,7 @@ table {
 }
 
 .menu-item {
-  @apply block px-4 py-1.5 text-sm text-gray-700 dark:text-gray-200 m-2 rounded-lg cursor-pointer;
+  @apply m-2 block cursor-pointer rounded-lg px-4 py-1.5 text-sm text-gray-700 dark:text-gray-200;
 }
 
 .text-brand {
@@ -44,19 +54,29 @@ table {
 }
 
 ::-webkit-file-upload-button {
-  @apply px-3 py-2 mr-2 border-0 cursor-pointer rounded-l-xl;
+  @apply mr-2 cursor-pointer rounded-l-xl border-0 px-3 py-2;
   @apply bg-gray-200 dark:bg-gray-900;
 }
 
 .bg-hero {
-  background: linear-gradient(90deg, theme('colors.white'), theme('colors.white') 50%, theme('colors.transparent')),
-    url("../public/bg-hero.png");
-  background-size: contain
+  background: linear-gradient(
+      90deg,
+      theme('colors.white'),
+      theme('colors.white') 50%,
+      theme('colors.transparent')
+    ),
+    url('../public/bg-hero.png');
+  background-size: contain;
 }
 .dark .bg-hero {
-  background: linear-gradient(90deg, theme('colors.black'), theme('colors.black') 50%, theme('colors.transparent')),
-    url("../public/bg-hero.png");
-  background-size: contain
+  background: linear-gradient(
+      90deg,
+      theme('colors.black'),
+      theme('colors.black') 50%,
+      theme('colors.transparent')
+    ),
+    url('../public/bg-hero.png');
+  background-size: contain;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -73,7 +93,7 @@ table {
 }
 
 .page-center {
-  @apply flex justify-center items-center h-[calc(100vh-65px)];
+  @apply flex h-[calc(100vh-65px)] items-center justify-center;
 }
 
 .tippy-content {
@@ -85,30 +105,30 @@ table {
 }
 
 .mention-input {
-  @apply pt-3 min-h-[4rem];
+  @apply min-h-[4rem] pt-3;
 }
 
 .mention-input textarea {
-  @apply px-4 w-full !bg-white rounded-xl border border-gray-300 shadow-sm dark:!bg-gray-800 disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 dark:border-gray-700/80 focus:border-brand-500 focus:ring-brand-400;
+  @apply focus:border-brand-500 focus:ring-brand-400 w-full rounded-xl border border-gray-300 !bg-white px-4 shadow-sm disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 dark:border-gray-700/80 dark:!bg-gray-800;
 }
 
 .mention-input__suggestions {
-  @apply !bg-white dark:!bg-gray-900 !mt-8 !border dark:border-gray-700/80 rounded-xl shadow-sm w-52;
+  @apply !mt-8 w-52 rounded-xl !border !bg-white shadow-sm dark:border-gray-700/80 dark:!bg-gray-900;
 }
 
 .mention-input__suggestions__list {
   @apply divide-y dark:divide-gray-700/80;
 }
 .mention-input-single {
-  @apply pt-4
+  @apply pt-4;
 }
 
 .mention-input-single textarea {
-  @apply px-4 w-full !bg-white rounded-xl border border-gray-300 shadow-sm dark:!bg-gray-800 disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 dark:border-gray-700/80 focus:border-brand-500 focus:ring-brand-400;
+  @apply focus:border-brand-500 focus:ring-brand-400 w-full rounded-xl border border-gray-300 !bg-white px-4 shadow-sm disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 dark:border-gray-700/80 dark:!bg-gray-800;
 }
 
 .mention-input-single__suggestions {
-  @apply !bg-white dark:!bg-gray-900 !mt-8 !border dark:border-gray-700/80 rounded-xl shadow-sm w-52;
+  @apply !mt-8 w-52 rounded-xl !border !bg-white shadow-sm dark:border-gray-700/80 dark:!bg-gray-900;
 }
 
 .mention-input-single__suggestions__list {
@@ -121,7 +141,7 @@ table {
 }
 
 .react-autosuggest__input {
-  @apply rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700/80 focus:border-brand-500 focus:ring-brand-400 disabled:opacity-60 disabled:bg-gray-500 disabled:bg-opacity-20 outline-none w-full;
+  @apply focus:border-brand-500 focus:ring-brand-400 w-full rounded-xl border border-gray-300 bg-white outline-none disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 dark:border-gray-700/80 dark:bg-gray-800;
 }
 
 .react-autosuggest__input--focused {
@@ -138,7 +158,7 @@ table {
 }
 
 .react-autosuggest__suggestions-container--open {
-  @apply bg-white dark:bg-black border-solid border block font-light text-base overflow-y-auto absolute;
+  @apply absolute block overflow-y-auto border border-solid bg-white text-base font-light dark:bg-black;
   top: 51px;
   width: 280px;
   border-color: rgba(170, 170, 170, 1);
@@ -160,9 +180,8 @@ table {
 }
 
 .react-autosuggest__suggestion--highlighted {
-  @apply bg-gray-300 dark:bg-gray-800
+  @apply bg-gray-300 dark:bg-gray-800;
 }
-
 
 .dropdown-active {
   @apply bg-gray-100 dark:bg-gray-800;
