@@ -68,7 +68,7 @@ const ActionButton: FC<ActionButtonProps> = ({
   const { data: balanceData } = useBalance({
     address,
     query: { refetchInterval: 2000 },
-    token: assetAddress
+    token: assetAddress // MIGRATE: token param no longer supported, use useReadContracts instead
   });
 
   let hasAmount = false;
