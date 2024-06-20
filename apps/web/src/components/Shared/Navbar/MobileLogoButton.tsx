@@ -21,6 +21,10 @@ import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
+import SignupButton from './SignupButton';
+import LoginButton from '../LoginButton';
+import ModIcon from './ModIcon';
+import NavPost from '@components/Composer/Post/NavPost';
 
 interface NavItemProps {
   current: boolean;
@@ -68,7 +72,7 @@ const MobileLogoButton: React.FC = () => {
               }
             )}
           >
-            <div className="ml-6 text-3xl font-black">
+            <div className="pl-6 text-3xl font-black">
               <img
                 alt="Logo"
                 className="h-12 w-12"
@@ -143,9 +147,7 @@ const MobileLogoButton: React.FC = () => {
                     />
                   </MenuItem>
                   <div className="divider" />
-                </>
-              ) : null}
-              <MenuItem
+                  <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
@@ -172,6 +174,25 @@ const MobileLogoButton: React.FC = () => {
               >
                 <MoreNavItems />
               </MenuItem>
+                </>
+              ) : null}
+        
+              <MenuItem
+                as="div"
+                className={({ focus }: { focus: boolean }) =>
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                }
+              >            
+                {!currentProfile ? <LoginButton /> : null}
+              </MenuItem>
+              <MenuItem
+                as="div"
+                className={({ focus }: { focus: boolean }) =>
+                  cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
+                }
+              >            
+                {!currentProfile ? <SignupButton /> : null}
+              </MenuItem>             
             </MenuItems>
           </MenuTransition>
         </>
