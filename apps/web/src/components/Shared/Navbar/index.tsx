@@ -222,7 +222,7 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full">
         <div className="relative flex h-full w-full flex-col items-start justify-start">
