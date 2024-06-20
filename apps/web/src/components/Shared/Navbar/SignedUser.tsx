@@ -63,15 +63,15 @@ const SignedUser: FC = () => {
         <div className="bottom-0 flex items-center">
           <MenuButton className="flex items-center rounded-full hover:bg-gray-200 hover:text-black dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
             <Avatar />
-            <span className="text-sm nav-text">
+            <span className="nav-text text-sm">
               @{currentProfile?.handle?.localName}
             </span>
-            <EllipsisHorizontalIcon className="ml-1 size-6 nav-text" />
+            <EllipsisHorizontalIcon className="nav-text ml-1 size-6" />
           </MenuButton>
         </div>
         <MenuTransition>
           <MenuItems
-            className="absolute bottom-full  mb-2 mt-2 w-48 rounded-xl border bg-white py-1 shadow-sm focus:outline-none dark:border-gray-700 dark:bg-black"
+            className="absolute bottom-full mb-2 mt-2 w-48 rounded-xl border bg-white py-1 shadow-sm focus:outline-none dark:border-gray-700 dark:bg-black"
             static
           >
             <MenuItem

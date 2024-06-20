@@ -245,23 +245,20 @@ const Navbar: FC = () => {
               </span>
             </div>
           </Link>
-         
+
           <div className="display-on-mobile">
-          <MenuItems/>
+            <MenuItems />
             <MobileLogoButton />
           </div>
 
           <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
-              <div className=" mt-5 w-full">
+              <div className="mt-5 w-full">
                 <NavPost />
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
-                <div
-                  className=""
-                   
-                >
+                <div className="">
                   <Link
                     className={cn(
                       'max-h-[100vh] md:hidden',
@@ -280,20 +277,16 @@ const Navbar: FC = () => {
                   <div
                     className="mt-4 flex items-start justify-between"
                     id="profile"
-                  >  
-                  </div>
-                  
+                  />
                 </div>
-                
               </div>
-              
             </div>
           </div>
         </div>
-        <div className="hide-on-mobile flex items-center ml-6 gap-2">
-                      {currentProfile ? <MenuItems /> : null}
-                      <ModIcon />
-                    </div>
+        <div className="hide-on-mobile ml-6 flex items-center gap-2">
+          {currentProfile ? <MenuItems /> : null}
+          <ModIcon />
+        </div>
       </NavbarContainer>
       {showSearch ? (
         <div className="m-3 md:hidden">

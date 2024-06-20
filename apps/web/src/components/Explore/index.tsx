@@ -4,6 +4,7 @@ import type { NextPage } from 'next';
 import WhoToFollow from '@components/Home/Sidebar/WhoToFollow';
 import FeedFocusType from '@components/Shared/FeedFocusType';
 import Footer from '@components/Shared/Footer';
+import Search from '@components/Shared/Navbar/Search';
 import { EXPLORE, PAGEVIEW } from '@good/data/tracking';
 import { ExplorePublicationsOrderByType } from '@good/lens';
 import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
@@ -15,8 +16,6 @@ import { useEffect, useState } from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 import Feed from './Feed';
-import Search from '@components/Shared/Navbar/Search';
-
 
 const Explore: NextPage = () => {
   const router = useRouter();
@@ -38,7 +37,6 @@ const Explore: NextPage = () => {
   ];
 
   return (
-    
     <GridLayout>
       <GridItemEight className="space-y-5">
         <TabGroup
@@ -51,15 +49,17 @@ const Explore: NextPage = () => {
             );
           }}
         >
-          <div className="mb-5">        
-             <Search/>
+          <div className="mb-5">
+            <Search />
           </div>
           <TabList className="divider space-x-8">
             {tabs.map((tab, index) => (
               <Tab
                 className={({ selected }) =>
                   cn(
-                    { 'border-b-2 border-black dark:border-pink-500': selected },
+                    {
+                      'border-b-2 border-black dark:border-pink-500': selected
+                    },
                     'px-4 pb-2 text-xs font-medium outline-none sm:text-sm'
                   )
                 }
@@ -85,7 +85,7 @@ const Explore: NextPage = () => {
           </TabPanels>
         </TabGroup>
       </GridItemEight>
-     <GridItemFour>
+      <GridItemFour>
         {currentProfile ? <WhoToFollow /> : null}
         <Footer />
       </GridItemFour>

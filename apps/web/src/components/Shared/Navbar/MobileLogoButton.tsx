@@ -19,12 +19,10 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
+import LoginButton from '../LoginButton';
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
-import LoginButton from '../LoginButton';
-import ModIcon from './ModIcon';
-import NavPost from '@components/Composer/Post/NavPost';
 
 interface NavItemProps {
   current: boolean;
@@ -148,51 +146,51 @@ const MobileLogoButton: React.FC = () => {
                   </MenuItem>
                   <div className="divider" />
                   <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <NavItem
-                  current={pathname === '/messages'}
-                  icon={
-                    pathname === '/messages' ? (
-                      <EnvelopeIconSolid className="size-8" />
-                    ) : (
-                      <EnvelopeIconOutline className="size-8" />
-                    )
-                  }
-                  name="Messages"
-                  url="/messages"
-                />
-              </MenuItem>
-              <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <MoreNavItems />
-              </MenuItem>
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <NavItem
+                      current={pathname === '/messages'}
+                      icon={
+                        pathname === '/messages' ? (
+                          <EnvelopeIconSolid className="size-8" />
+                        ) : (
+                          <EnvelopeIconOutline className="size-8" />
+                        )
+                      }
+                      name="Messages"
+                      url="/messages"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <MoreNavItems />
+                  </MenuItem>
                 </>
               ) : null}
-        
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <LoginButton /> : null}
               </MenuItem>
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <SignupButton /> : null}
-              </MenuItem>             
+              </MenuItem>
             </MenuItems>
           </MenuTransition>
         </>
