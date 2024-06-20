@@ -86,6 +86,10 @@ export const get: Handler = async (_, res) => {
 
     // Format response times in milliseconds and return
     return res.status(200).json({
+      meta: {
+        deployment: process.env.RAILWAY_DEPLOYMENT_ID || 'unknown',
+        snapshot: process.env.RAILWAY_SNAPSHOT_ID || 'unknown'
+      },
       ping: 'pong',
       responseTimes: {
         clickhouse: `${Number(clickhouseTime / BigInt(1000000))}ms`,
