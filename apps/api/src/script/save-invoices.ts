@@ -1,4 +1,4 @@
-import logger from '@hey/helpers/logger';
+import logger from '@good/helpers/logger';
 import fs from 'fs';
 import path from 'path';
 import puppeteer from 'puppeteer';

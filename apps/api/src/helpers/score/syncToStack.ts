@@ -1,6 +1,6 @@
 import type { Address } from 'viem';
 
-import logger from '@hey/helpers/logger';
+import logger from '@good/helpers/logger';
 import { StackClient } from '@stackso/js-core';
 
 const stack = new StackClient({
