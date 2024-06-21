@@ -1,12 +1,12 @@
 import type { Profile } from '@good/lens';
 import type { FC } from 'react';
 
-import { MenuItem } from '@headlessui/react';
-import { Leafwatch } from '@helpers/leafwatch';
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { PROFILE } from '@good/data/tracking';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import cn from '@good/ui/cn';
+import { MenuItem } from '@headlessui/react';
+import { Leafwatch } from '@helpers/leafwatch';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
 interface CopyAddressProps {
