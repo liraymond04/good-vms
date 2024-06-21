@@ -47,32 +47,75 @@ const MoreNavItems: FC = () => {
                   >
                     <Bookmarks />
                   </MenuItem>
-                  <MenuItem
-                    as="div"
-                    className={({ focus }: { focus: boolean }) =>
-                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                    }
-                  >
-                    <MoreLink href="https://gitcoin.co" text="Gitcoin" />
-                  </MenuItem>
-                  <MenuItem
-                    as="div"
-                    className={({ focus }: { focus: boolean }) =>
-                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                    }
-                  >
-                    <MoreLink href="https://giveth.io" text="Giveth" />
-                  </MenuItem>
-                  <MenuItem
-                    as="div"
-                    className={({ focus }: { focus: boolean }) =>
-                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                    }
-                  >
-                    <MoreLink
-                      href="https://thegivingblock.com"
-                      text="The Giving Block"
-                    />
+                  <MenuItem>
+                    <Menu as="div" className="relative m-2 rounded-lg">
+                      {({ open }) => (
+                        <>
+                          <MenuButton
+                            className={cn(
+                              'flex w-full cursor-pointer items-center space-x-2 rounded-md px-2 py-1 text-left text-sm tracking-wide md:px-3',
+                              {
+                                'bg-gray-200 text-black dark:bg-gray-800 dark:text-white':
+                                  open,
+                                'text-white-700 dark:text-white-300 hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white':
+                                  !open
+                              }
+                            )}
+                          >
+                            <EllipsisHorizontalCircleIcon className="ml-[-3px] size-4" />
+                            <span className="nav-text text-m text-black dark:text-white">
+                              More
+                            </span>
+                          </MenuButton>
+                          <MenuTransition>
+                            <MenuItems>
+                              <MenuItem
+                                as="div"
+                                className={({ focus }: { focus: boolean }) =>
+                                  cn(
+                                    { 'dropdown-active': focus },
+                                    'm-2 rounded-lg'
+                                  )
+                                }
+                              >
+                                <MoreLink
+                                  href="https://giveth.io"
+                                  text="Giveth"
+                                />
+                              </MenuItem>
+                              <MenuItem
+                                as="div"
+                                className={({ focus }: { focus: boolean }) =>
+                                  cn(
+                                    { 'dropdown-active': focus },
+                                    'm-2 rounded-lg'
+                                  )
+                                }
+                              >
+                                <MoreLink
+                                  href="https://thegivingblock.com"
+                                  text="The Giving Block"
+                                />
+                              </MenuItem>
+                              <MenuItem
+                                as="div"
+                                className={({ focus }: { focus: boolean }) =>
+                                  cn(
+                                    { 'dropdown-active': focus },
+                                    'm-2 rounded-lg'
+                                  )
+                                }
+                              >
+                                <MoreLink
+                                  href="https://gitcoin.co"
+                                  text="Gitcoin"
+                                />
+                              </MenuItem>
+                            </MenuItems>
+                          </MenuTransition>
+                        </>
+                      )}
+                    </Menu>
                   </MenuItem>
                   <div className="divider" />
                 </>
