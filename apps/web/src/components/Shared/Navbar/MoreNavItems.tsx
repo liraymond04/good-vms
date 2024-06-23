@@ -83,7 +83,7 @@ const MoreNavItems: FC = () => {
                           >
                             <CurrencyDollarIcon className="ml-[-3px] size-4" />
                             <span className="nav-text text-m text-black dark:text-white">
-                              Donate Now
+                              Donate
                             </span>
                           </MenuButton>
                           <MenuTransition>

@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer';
 
 import lensPg from '../db/lensPg';
 
-const baseUrl = 'https://invoice.hey.xyz/signup/';
+const baseUrl = 'https://invoice.bcharity.net/signup/';
 const rate = 83;
 const outputDir = path.join(__dirname, 'pdfs');
 const startDate = new Date('2024-02-20');

@@ -74,7 +74,7 @@ const MobileLogoButton: React.FC = () => {
               <img
                 alt="Logo"
                 className="h-12 w-12"
-                src="apps/web/public/logo1.svg"
+                src="/logo1.svg"
               />
             </div>
             <span className="nav-text ml-3 mr-3 flex flex-grow">Goodcast</span>

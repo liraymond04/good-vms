@@ -3,11 +3,11 @@ import { POYGON_WRITE_RPC } from '@good/data/rpcs';
 import logger from '@good/helpers/logger';
 import axios from 'axios';
 import {
-  type Address,
   createPublicClient,
   decodeEventLog,
   http,
-  parseAbi
+  parseAbi,
+  type Address
 } from 'viem';
 import { polygon } from 'viem/chains';
 
@@ -77,7 +77,7 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
       return;
     }
 
-    const { data: rates } = await axios.get('https://api.hey.xyz/lens/rate');
+    const { data: rates } = await axios.get('https://api.bcharity.net/lens/rate');
     const maticRate = rates.result.find(
       (rate: any) => rate.symbol === 'WMATIC'
     ).fiat;
@@ -98,12 +98,12 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
         {
           short: false,
           title: 'Profile',
-          value: `https://hey.xyz/u/${handle}`
+          value: `https://bcharity.net/u/${handle}`
         },
         {
           short: false,
           title: 'Invoice',
-          value: `https://invoice.hey.xyz/signup/${handle}?rate=${maticRate}`
+          value: `https://invoice.bcharity.net/signup/${handle}?rate=${maticRate}`
         },
         {
           short: false,
@@ -111,7 +111,7 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
           value: `${maticRate * 8} USD`
         }
       ],
-      text: ':tada: A new profile has been signed up to :hey:'
+      text: ':tada: A new profile has been signed up to :good:'
     });
 
     logger.info(
