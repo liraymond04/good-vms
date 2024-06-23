@@ -1,5 +1,5 @@
 import { POLYGONSCAN_URL } from '@good/data/constants';
-import { POYGON_WRITE_RPC } from '@good/data/rpcs';
+import { POLYGON_RPCS } from '@good/data/rpcs';
 import logger from '@good/helpers/logger';
 import axios from 'axios';
 import {
@@ -55,7 +55,7 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
   try {
     const client = createPublicClient({
       chain: polygon,
-      transport: http(POYGON_WRITE_RPC)
+      transport: http(POLYGON_RPCS[1])
     });
 
     const receipt = await fetchTransactionReceiptWithRetry(client, hash);
