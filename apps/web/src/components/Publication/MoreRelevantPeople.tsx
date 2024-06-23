@@ -18,7 +18,7 @@ const MoreRelevantPeople: FC<MoreRelevantPeopleProps> = ({ profiles }) => {
       <Virtuoso
         className="virtual-profile-list"
         computeItemKey={(index, profile) => `${profile.id}-${index}`}
-        // remove the first 5 profiles from the list because theabc are already shown in the sidebar
+        // remove the first 5 profiles from the list because they are already shown in the sidebar
         data={profiles.slice(5)}
         itemContent={(_, profile) => {
           return (

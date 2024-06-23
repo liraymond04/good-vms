@@ -12,7 +12,7 @@
     "typecheck": "tsc --pretty"
   },
   "dependencies": {
-    "@apollo/client": "^3.10.5",
+    "@apollo/client": "^3.10.6",
     "@good/data": "workspace:*",
     "@good/lens": "workspace:*",
     "@good/types": "workspace:*",
