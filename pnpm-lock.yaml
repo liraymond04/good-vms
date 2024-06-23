@@ -5237,7 +5237,7 @@ packages:
       '@motionone/generators': 10.18.0
       '@motionone/types': 10.17.1
       '@motionone/utils': 10.18.0
-      good-listen: 1.0.8
+      hey-listen: 1.0.8
       tslib: 2.6.3
     dev: false
 
@@ -5271,7 +5271,7 @@ packages:
     resolution: {integrity: sha512-3XVF7sgyTSI2KWvTf6uLlBJ5iAgRgmvp3bpuOiQJvInd4nZ19ET8lX5unn30SlmRH7hXbBbH+Gxd0m0klJ3Xtw==}
     dependencies:
       '@motionone/types': 10.17.1
-      good-listen: 1.0.8
+      hey-listen: 1.0.8
       tslib: 2.6.3
     dev: false
 
@@ -15318,7 +15318,7 @@ packages:
       source-map: 0.7.4
     dev: false
 
-  /good-listen@1.0.8:
+  /hey-listen@1.0.8:
     resolution: {integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==}
     dev: false
 
