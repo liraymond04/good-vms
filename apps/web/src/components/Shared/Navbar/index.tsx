@@ -252,8 +252,8 @@ const Navbar: FC = () => {
           </div>
 
 
-          <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
-            <div className="relative flex h-fit flex-col items-start">
+          <div className="max-h-[70vh] overflow-y-scroll pr-4 pt-5 sm:ml-6 md:block">
+              <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="mt-5 w-full">
                 <NavPost />
