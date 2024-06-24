@@ -1,37 +1,38 @@
 import { GoodDonation } from '@good/abis';
+import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
+import logger from '@good/helpers/logger';
 import { createPublicClient, webSocket } from 'viem';
 import { polygon, polygonAmoy } from 'viem/chains';
-import prisma from '../helpers/prisma';
-import logger from '@good/helpers/logger';
-import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
 import { z } from 'zod';
+
+import prisma from '../helpers/prisma';
 
 interface DonationCreateInput {
   amount: number;
-  txHash: string;
   fromAddress: string;
-  toAddress: string;
   fromProfileId: string;
-  toProfileId: string;
   publicationId: string;
+  toAddress: string;
   tokenAddress: string;
+  toProfileId: string;
+  txHash: string;
 }
 
 const donationEventValidator = z.object({
   amount: z.bigint().transform((amount) => Number(amount)),
-  txHash: z.string(),
   fromAddress: z.string(),
-  toAddress: z.string(),
   fromProfileId: z.bigint().transform((id) => id.toString(16)),
-  toProfileId: z.bigint().transform((id) => id.toString(16)),
   publicationId: z.bigint().transform((id) => id.toString(16)),
-  tokenAddress: z.string()
+  toAddress: z.string(),
+  tokenAddress: z.string(),
+  toProfileId: z.bigint().transform((id) => id.toString(16)),
+  txHash: z.string()
 });
 
-async function makeTip(input: DonationCreateInput) {
+async function makeDonation(input: DonationCreateInput) {
   const data = await prisma.causeDonation.create({ data: input });
 
-  logger.info(`Created a tip ${data.id}`);
+  logger.info(`Created a donation ${data.id}`);
 }
 
 export default function listenDonations() {
@@ -41,28 +42,28 @@ export default function listenDonations() {
   });
 
   publicClient.watchContractEvent({
-    address: GOOD_DONATION,
     abi: GoodDonation,
+    address: GOOD_DONATION,
     eventName: 'DonationSent',
-    onLogs: (logs) => {
-      logs.forEach((event) => {
-        const args = event.args;
-        const input = donationEventValidator.safeParse(args);
-        
-        if (!input.success) {
-          logger.error(`Failed to parse event: ${input.error}`);
-          return
-        }
-        
-        try {
-          makeTip(input.data);
-        } catch (error) {
-          logger.error(`Failed to make tip: ${error}`);
-        }
-      });
-    },
     onError(error) {
       logger.error('Failed to watch donation contract event', error);
+    },
+    onLogs: (logs) => {
+      for (const event of logs) {
+        const { args } = event;
+        const input = donationEventValidator.safeParse(args);
+
+        if (!input.success) {
+          logger.error(`Failed to parse event: ${input.error}`);
+          continue;
+        }
+
+        try {
+          makeDonation(input.data);
+        } catch (error) {
+          logger.error(`Failed to make donation: ${error}`);
+        }
+      }
     }
   });
 }

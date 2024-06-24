@@ -1,4 +1,5 @@
 export * from './Bridge';
+export * from './GoodDonation';
 export * from './GoodLensSignup';
 export * from './GoodMembershipNft';
 export * from './GoodPro';
@@ -9,4 +10,3 @@ export * from './PermissionlessCreator';
 export * from './Permit2';
 export * from './Swap';
 export * from './TokenHandleRegistry';
-export * from './GoodDonation';

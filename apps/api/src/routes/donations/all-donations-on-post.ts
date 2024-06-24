@@ -1,9 +1,10 @@
 import type { Handler } from 'express';
 
 import logger from '@good/helpers/logger';
+
 import catchedError from '../../helpers/catchedError';
-import { noBody } from '../../helpers/responses';
 import prisma from '../../helpers/prisma';
+import { noBody } from '../../helpers/responses';
 
 export const get: Handler = async (req, res) => {
   const { id } = req.query;

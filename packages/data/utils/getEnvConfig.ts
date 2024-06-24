@@ -6,10 +6,10 @@ import LensEndpoint from '../lens-endpoints';
 const getEnvConfig = (): {
   defaultCollectToken: string;
   goodApiEndpoint: string;
+  goodDonation: `0x${string}`;
   goodLensSignup: `0x${string}`;
   goodPro: `0x${string}`;
   goodTipping: `0x${string}`;
-  goodDonation: `0x${string}`;
   lensApiEndpoint: string;
   lensHandles: `0x${string}`;
   lensHub: `0x${string}`;
@@ -21,10 +21,10 @@ const getEnvConfig = (): {
       return {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
+        goodDonation: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
-        goodDonation: TestnetContracts.GoodDonation,
         lensApiEndpoint: LensEndpoint.Testnet,
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
@@ -35,10 +35,10 @@ const getEnvConfig = (): {
       return {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Staging,
+        goodDonation: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
-        goodDonation: TestnetContracts.GoodDonation,
         lensApiEndpoint: LensEndpoint.Staging,
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
@@ -49,10 +49,10 @@ const getEnvConfig = (): {
       return {
         defaultCollectToken: MainnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Mainnet,
+        goodDonation: MainnetContracts.GoodDonation,
         goodLensSignup: MainnetContracts.GoodLensSignup,
         goodPro: MainnetContracts.GoodPro,
         goodTipping: MainnetContracts.GoodTipping,
-        goodDonation: MainnetContracts.GoodDonation,
         lensApiEndpoint: LensEndpoint.Mainnet,
         lensHandles: MainnetContracts.LensHandles,
         lensHub: MainnetContracts.LensHub,
