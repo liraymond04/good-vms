@@ -3,11 +3,11 @@ import { POLYGON_RPCS } from '@good/data/rpcs';
 import logger from '@good/helpers/logger';
 import axios from 'axios';
 import {
+  type Address,
   createPublicClient,
   decodeEventLog,
   http,
-  parseAbi,
-  type Address
+  parseAbi
 } from 'viem';
 import { polygon } from 'viem/chains';
 
@@ -77,7 +77,9 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
       return;
     }
 
-    const { data: rates } = await axios.get('https://api.bcharity.net/lens/rate');
+    const { data: rates } = await axios.get(
+      'https://api.bcharity.net/lens/rate'
+    );
     const maticRate = rates.result.find(
       (rate: any) => rate.symbol === 'WMATIC'
     ).fiat;

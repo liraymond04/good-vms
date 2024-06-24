@@ -11,7 +11,9 @@ export const get: Handler = async (req, res) => {
 
     const { result } = response.data;
 
-    logger.info('Lens: Fetched cryptocurrency conversion rates from bcharity.net');
+    logger.info(
+      'Lens: Fetched cryptocurrency conversion rates from bcharity.net'
+    );
     return res
       .status(200)
       .setHeader('Cache-Control', SWR_CACHE_AGE_10_SECS_30_DAYS)
