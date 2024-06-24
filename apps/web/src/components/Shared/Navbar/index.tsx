@@ -29,6 +29,7 @@ import MobileLogoButton from './MobileLogoButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
+import SiteStatus from './SiteStatus';
 import StaffBar from './StaffBar';
 
 const NavbarContainer = styled.div`
@@ -223,6 +224,7 @@ const Navbar: FC = () => {
 
   return (
     <header className="sticky top-0 z-10 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
+      <SiteStatus />
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full">
         <div className="relative flex h-full w-full flex-col items-start justify-start">
@@ -234,11 +236,7 @@ const Navbar: FC = () => {
           <Link className="hide-on-mobile" href="/">
             <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img
-                  alt="Logo"
-                  className="h-12 w-12"
-                  src="apps/web/public/logo1.svg"
-                />
+                <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
               </div>
               <span className="nav-text ml-3 mr-3 flex flex-grow">
                 Goodcast

@@ -28,7 +28,7 @@ export const ADDRESS_PLACEHOLDER = '0x03Ba3...7EF';
 
 // Application
 export const APP_NAME = 'Goodcast';
-export const DESCRIPTION = `${APP_NAME} is a decentralized, and permissionless social media app built with Lens Protocol and hey.xyz.`;
+export const DESCRIPTION = `${APP_NAME} is a decentralized, and permissionless social media app built with Lens Protocol and bcharity.net.`;
 export const APP_VERSION = packageJson.version;
 export const BRAND_COLOR = '#FB3A5D';
 export const MAX_UINT256 = 2n ** 256n - 1n;

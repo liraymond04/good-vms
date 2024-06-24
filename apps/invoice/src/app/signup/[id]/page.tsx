@@ -39,7 +39,7 @@ export default async function Page({ params, searchParams }: Props) {
               <img
                 alt="Logo"
                 className="size-8"
-                src="https://hey.xyz/logo.png"
+                src="https://bcharity.net/logo.png"
               />
               <h1 className="text-brand-600 mt-4 text-xl font-bold">
                 Yoginth from Hey
@@ -62,7 +62,7 @@ export default async function Page({ params, searchParams }: Props) {
                 <br />
                 India
                 <br />
-                billing@hey.xyz
+                billing@bcharity.net
                 <br />
                 <div className="pt-2" />
                 <b className="text-gray-500">GST: 29AYKPY4219R1Z8</b>

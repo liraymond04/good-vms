@@ -25,7 +25,7 @@ const sendEmail = async ({
         Body: { Html: { Charset: 'UTF-8', Data: body } },
         Subject: { Charset: 'UTF-8', Data: subject }
       },
-      Source: 'no-reply@hey.xyz'
+      Source: 'no-reply@he'
     });
     const response = await sesClient.send(command);
 
