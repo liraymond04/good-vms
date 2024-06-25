@@ -1,5 +1,15 @@
 import type { FC } from 'react';
 
+import React, { useEffect } from 'react';
+
+export interface FieldMetadata {
+  isLensID?: boolean;
+  isNumber?: boolean;
+  isRequired?: boolean;
+  isURL?: boolean;
+  name: string;
+}
+
 interface InputFieldProps {
   errorMessage?: string;
   isLensID?: boolean;
@@ -12,31 +22,28 @@ interface InputFieldProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   placeholder: string;
+  register: (metadata: FieldMetadata) => void;
   type: 'text' | 'textarea';
   value: string;
 }
 
-export interface FormFields {
-  description: string;
-  donationAmount: string;
-  donorProfileID: string;
-  evidenceURL: string;
-  organizationName: string;
-  projectURL: string;
-  transactionURL: string;
-  volunteerHours: string;
-}
-
 export const InputField: FC<InputFieldProps> = ({
   errorMessage,
+  isNumber = false,
   isRequired = false,
+  isURL = false,
   label,
   name,
   onChange,
   placeholder,
+  register,
   type,
   value
 }) => {
+  useEffect(() => {
+    register({ isNumber, isRequired, isURL, name });
+  }, [name, isRequired, isNumber, isURL, register]);
+
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
@@ -49,11 +56,9 @@ export const InputField: FC<InputFieldProps> = ({
             errorMessage ? 'border-red-500' : 'border-gray-300'
           } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
           name={name}
-          onChange={(e) => {
-            onChange(e);
-          }}
+          onChange={onChange}
           placeholder={placeholder}
-          type={type}
+          type="text"
           value={value}
         />
       ) : (
@@ -62,14 +67,11 @@ export const InputField: FC<InputFieldProps> = ({
             errorMessage ? 'border-red-500' : 'border-gray-300'
           } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
           name={name}
-          onChange={(e) => {
-            onChange(e);
-          }}
+          onChange={onChange}
           placeholder={placeholder}
           value={value}
         />
       )}
-      {/* Display error message based on input field type */}
       {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
     </div>
   );
