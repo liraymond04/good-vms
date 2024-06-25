@@ -24,7 +24,7 @@ const imageKit = (url: string, name?: string): string => {
   }
 
   if (url.includes(IPFS_GATEWAY)) {
-    return name ? `${GOOD_IMAGEKIT_URL}/fallback/${name},q-80/${url}` : url;
+    return name ? `${GOOD_IMAGEKIT_URL}fallback/${name},q-80/${url}` : url;
   }
 
   return url;
