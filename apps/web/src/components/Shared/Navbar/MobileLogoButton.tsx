@@ -22,8 +22,8 @@ import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import LoginButton from '../LoginButton';
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
-import SignupButton from './SignupButton';
 import SignedUser from './SignedUser';
+import SignupButton from './SignupButton';
 
 interface NavItemProps {
   current: boolean;
@@ -188,10 +188,9 @@ const MobileLogoButton: React.FC = () => {
               >
                 {!currentProfile ? <SignupButton /> : null}
               </MenuItem>
-                <div className = "ml-2">
+              <div className="ml-2">
                 {currentProfile ? <SignedUser /> : null}
-
-                </div>
+              </div>
             </MenuItems>
           </MenuTransition>
         </>

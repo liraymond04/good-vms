@@ -5,6 +5,7 @@ import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
 import QueuedPublication from '@components/Publication/QueuedPublication';
 import SinglePublication from '@components/Publication/SinglePublication';
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
+import { GOOD_CURATED_ID } from '@good/data/constants';
 import { useFeedQuery } from '@good/lens';
 import { OptmisticPublicationType } from '@good/types/enums';
 import { Card, EmptyState, ErrorMessage } from '@good/ui';
@@ -15,7 +16,6 @@ import { useImpressionsStore } from 'src/store/non-persisted/useImpressionsStore
 import { useTipsStore } from 'src/store/non-persisted/useTipsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useTransactionStore } from 'src/store/persisted/useTransactionStore';
-import { GOOD_CURATED_ID } from '@good/data/constants';
 
 let virtuosoState: any = { ranges: [], screenTop: 0 };
 

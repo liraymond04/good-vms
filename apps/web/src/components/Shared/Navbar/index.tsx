@@ -248,12 +248,11 @@ const Navbar: FC = () => {
             <MobileLogoButton />
           </div>
           <div className="absolute" style={{ left: '-9999px', top: '-9999px' }}>
-           <MenuItems />
+            <MenuItems />
           </div>
 
-
           <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-4 pt-5 sm:ml-6 md:block">
-              <div className="relative flex h-fit flex-col items-start">
+            <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="mt-5 w-full">
                 <NavPost />

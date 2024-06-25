@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 
+import { STALE_TIMES } from '@good/data/constants';
 import getPro from '@good/helpers/api/getPro';
 import getCurrentSession from '@helpers/getCurrentSession';
-import { STALE_TIMES } from '@good/data/constants';
 import { useQuery } from '@tanstack/react-query';
 import { useProStore } from 'src/store/non-persisted/useProStore';
 
