@@ -5,7 +5,7 @@ import { Tooltip } from '@good/ui';
 import { motion } from 'framer-motion';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
-import GiveGiftIcon from '../ReferenceSettings/GiveGiftIcon';
+import GiveGiftIcon from './GiveGiftIcon';
 
 const RequestSettings: FC = () => {
   const { resetRequestConfig, setShowRequestEditor, showRequestEditor } =
