@@ -23,6 +23,7 @@ import LoginButton from '../LoginButton';
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
+import SignedUser from './SignedUser';
 
 interface NavItemProps {
   current: boolean;
@@ -187,6 +188,10 @@ const MobileLogoButton: React.FC = () => {
               >
                 {!currentProfile ? <SignupButton /> : null}
               </MenuItem>
+                <div className = "ml-2">
+                {currentProfile ? <SignedUser /> : null}
+
+                </div>
             </MenuItems>
           </MenuTransition>
         </>

@@ -15,7 +15,7 @@ const Support: FC<SupportProps> = ({ className = '' }) => {
         className
       )}
     >
-      <HandRaisedIcon className="size-4" />
+      <HandRaisedIcon className="size-4 ml-2" />
       <div>Support</div>
     </div>
   );
