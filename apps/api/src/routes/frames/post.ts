@@ -1,4 +1,4 @@
-import type { ButtonType } from '@hey/types/misc';
+import type { ButtonType } from '@good/types/misc';
 import type { Handler } from 'express';
 
 import { IS_MAINNET } from '@good/data/constants';
