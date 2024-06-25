@@ -1,10 +1,12 @@
 import type { Handler } from 'express';
 
 import axios from 'axios';
-import heyPg from 'src/db/heyPg';
+import goodPg from 'src/db/goodPg';
 import catchedError from 'src/helpers/catchedError';
-import { SCORE_WORKER_URL } from 'src/helpers/constants';
+import { GOOD_USER_AGENT, SCORE_WORKER_URL } from 'src/helpers/constants';
 import createClickhouseClient from 'src/helpers/createClickhouseClient';
+import LensEndpoint from '@good/data/lens-endpoints';
+import { IS_MAINNET } from '@good/data/constants';
 
 const measureQueryTime = async (
   queryFunction: () => Promise<any>
@@ -42,7 +44,7 @@ export const get: Handler = async (_, res) => {
   try {
     // Prepare promises with timings embedded
     const heyPromise = measureQueryTime(() =>
-      heyPg.query(`SELECT 1 as count;`)
+      goodPg.query(`SELECT 1 as count;`)
     );
     const lensPromise = measureQueryTime(pingLensAPI);
     const clickhouseClient = createClickhouseClient();
