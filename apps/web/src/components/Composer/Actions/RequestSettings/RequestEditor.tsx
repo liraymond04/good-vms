@@ -7,7 +7,7 @@ import { XCircleIcon } from '@heroicons/react/24/solid';
 // import plur from 'plur';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
-import GiveGiftIcon from '../ReferenceSettings/GiveGiftIcon';
+import GiveGiftIcon from './GiveGiftIcon';
 import RequestForm from './RequestForm';
 
 // Created based on PollSetting's index.tsx, adjust as required
