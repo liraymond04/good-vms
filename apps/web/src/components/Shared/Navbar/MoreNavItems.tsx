@@ -113,7 +113,7 @@ const MoreNavItems: FC = () => {
                               >
                                 <MoreLink
                                   href="https://thegivingblock.com"
-                                  text="The Giving Block"
+                                  text="GivingBlock"
                                 />
                               </MenuItem>
                               <MenuItem

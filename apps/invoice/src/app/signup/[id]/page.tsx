@@ -42,7 +42,7 @@ export default async function Page({ params, searchParams }: Props) {
                 src="https://bcharity.net/logo.png"
               />
               <h1 className="text-brand-600 mt-4 text-xl font-bold">
-                Yoginth from Hey
+                Ecslew from Good
               </h1>
             </div>
             <div className="text-end">
