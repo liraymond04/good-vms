@@ -9,7 +9,7 @@ import '@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-contract GoodDonation is 
+contract GoodDonation is
   Initializable,
   OwnableUpgradeable,
   ReentrancyGuardUpgradeable,
