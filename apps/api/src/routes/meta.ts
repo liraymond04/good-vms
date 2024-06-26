@@ -1,9 +1,11 @@
 import type { Handler } from 'express';
 
+import { IS_MAINNET } from '@good/data/constants';
+import LensEndpoint from '@good/data/lens-endpoints';
 import axios from 'axios';
 import goodPg from 'src/db/goodPg';
 import catchedError from 'src/helpers/catchedError';
-import { SCORE_WORKER_URL } from 'src/helpers/constants';
+import { GOOD_USER_AGENT, SCORE_WORKER_URL } from 'src/helpers/constants';
 import createClickhouseClient from 'src/helpers/createClickhouseClient';
 
 const measureQueryTime = async (

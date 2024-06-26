@@ -135,6 +135,31 @@ model DraftPublication {
   @@index([createdAt, updatedAt])
 }
 
+model CauseDraftPublication {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profileId     String
+  content       String
+  updatedAt     DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  // Indexes
+  @@index([profileId])
+  @@index([createdAt, updatedAt])
+}
+
+model CauseDonation {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicationId String
+  fromProfileId String
+  fromAddress   String
+  toProfileId   String
+  toAddress     String
+  tokenAddress  String
+  amount        Int
+  txHash        String
+  createdAt     DateTime @default(now())
+}
+
 model CachedProfileScore {
   id        String   @id
   score     Int
