@@ -8,6 +8,35 @@ import Link from 'next/link';
 import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import urlcat from 'urlcat';
 
+const currentYear = new Date().getFullYear();
+
+const links = [
+  { href: '/terms', label: 'Terms' },
+  { href: '/privacy', label: 'Privacy' },
+  {
+    href: 'https://hey.xyz/discord',
+    label: 'Discord',
+    onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_DISCORD)
+  },
+  {
+    href: 'https://status.hey.xyz',
+    label: 'Status',
+    onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_STATUS)
+  },
+  {
+    href: 'https://feedback.hey.xyz',
+    label: 'Feedback',
+    onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_FEEDBACK)
+  },
+  { href: '/rules', label: 'Rules' },
+  {
+    href: 'https://github.com/heyxyz/hey',
+    label: 'GitHub',
+    onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_GITHUB)
+  },
+  { href: '/support', label: 'Support' }
+];
+
 const Footer: FC = () => {
   const { staffMode } = useFeatureFlagsStore();
 
@@ -15,7 +44,7 @@ const Footer: FC = () => {
     <footer className={cn(staffMode ? 'top-28' : 'top-20', 'sticky text-sm')}>
       <div className="mt-4 flex flex-wrap gap-x-[12px] gap-y-2 px-3 lg:px-0">
         <span className="ld-text-gray-500 font-bold">
-          &copy; {new Date().getFullYear()} {APP_NAME}
+          &copy; {currentYear} {APP_NAME}
         </span>
         <Link className="outline-offset-4" href="/terms">
           Terms

@@ -1,16 +1,14 @@
 import { POLYGONSCAN_URL } from '@good/data/constants';
-import { POLYGON_RPCS } from '@good/data/rpcs';
 import logger from '@good/helpers/logger';
-import axios from 'axios';
 import {
   type Address,
   createPublicClient,
   decodeEventLog,
-  http,
   parseAbi
 } from 'viem';
 import { polygon } from 'viem/chains';
 
+import getRpc from '../getRpc';
 import sendSlackMessage from '../slack';
 
 const MAX_RETRIES = 10;
@@ -28,7 +26,7 @@ const fetchTransactionReceiptWithRetry = async (
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       return await client.getTransactionReceipt({ hash });
-    } catch (error) {
+    } catch {
       if (attempt < retries) {
         logger.error(
           `sendSignupNotificationToSlack: Attempt ${attempt} failed. Retrying in ${RETRY_DELAY_MS / 1000} seconds...`
@@ -55,7 +53,7 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
   try {
     const client = createPublicClient({
       chain: polygon,
-      transport: http(POLYGON_RPCS[1])
+      transport: getRpc({ mainnet: true })
     });
 
     const receipt = await fetchTransactionReceiptWithRetry(client, hash);
@@ -77,13 +75,6 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
       return;
     }
 
-    const { data: rates } = await axios.get(
-      'https://api.bcharity.net/lens/rate'
-    );
-    const maticRate = rates.result.find(
-      (rate: any) => rate.symbol === 'WMATIC'
-    ).fiat;
-
     logger.info(
       `sendSignupNotificationToSlack: Sending signup invoice to Slack`
     );
@@ -101,16 +92,6 @@ const sendSignupNotificationToSlack = async (hash: Address) => {
           short: false,
           title: 'Profile',
           value: `https://bcharity.net/u/${handle}`
-        },
-        {
-          short: false,
-          title: 'Invoice',
-          value: `https://invoice.bcharity.net/signup/${handle}?rate=${maticRate}`
-        },
-        {
-          short: false,
-          title: 'Amount',
-          value: `${maticRate * 8} USD`
         }
       ],
       text: ':tada: A new profile has been signed up to :good:'

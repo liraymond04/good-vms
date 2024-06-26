@@ -43,7 +43,7 @@ const pingLensAPI = async (): Promise<string | unknown> => {
 export const get: Handler = async (_, res) => {
   try {
     // Prepare promises with timings embedded
-    const heyPromise = measureQueryTime(() =>
+    const goodPromise = measureQueryTime(() =>
       goodPg.query(`SELECT 1 as count;`)
     );
     const lensPromise = measureQueryTime(pingLensAPI);
@@ -61,22 +61,22 @@ export const get: Handler = async (_, res) => {
     );
 
     // Execute all promises simultaneously
-    const [heyResult, lensResult, clickhouseResult, scoreWorkerResult] =
+    const [goodResult, lensResult, clickhouseResult, scoreWorkerResult] =
       await Promise.all([
-        heyPromise,
+        goodPromise,
         lensPromise,
         clickhousePromise,
         scoreWorkerPromise
       ]);
 
     // Check responses
-    const [hey, heyTime] = heyResult;
+    const [good, goodTime] = goodResult;
     const [lens, lensTime] = lensResult;
     const [clickhouseRows, clickhouseTime] = clickhouseResult;
     const [scoreWorker, scoreWorkerTime] = scoreWorkerResult;
 
     if (
-      Number(hey[0].count) !== 1 ||
+      Number(good[0].count) !== 1 ||
       lens !== 'pong' ||
       scoreWorker.data.split(' ')[0] !== 'WITH' ||
       !clickhouseRows.json
@@ -93,7 +93,7 @@ export const get: Handler = async (_, res) => {
       ping: 'pong',
       responseTimes: {
         clickhouse: `${Number(clickhouseTime / BigInt(1000000))}ms`,
-        hey: `${Number(heyTime / BigInt(1000000))}ms`,
+        good: `${Number(goodTime / BigInt(1000000))}ms`,
         lens: `${Number(lensTime / BigInt(1000000))}ms`,
         scoreWorker: `${Number(scoreWorkerTime / BigInt(1000000))}ms`
       }

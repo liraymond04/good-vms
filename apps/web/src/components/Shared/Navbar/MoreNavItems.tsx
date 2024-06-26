@@ -31,7 +31,7 @@ const MoreNavItems: FC = () => {
               }
             )}
           >
-            <EllipsisHorizontalCircleIcon className="ml-[-3px] size-8" />
+            <EllipsisHorizontalCircleIcon className="size-8" />
             <span className="nav-text text-xl text-black dark:text-white">
               More
             </span>
@@ -81,8 +81,8 @@ const MoreNavItems: FC = () => {
                               }
                             )}
                           >
-                            <CurrencyDollarIcon className="ml-[-3px] size-4" />
-                            <span className="nav-text text-m text-black dark:text-white">
+                            <CurrencyDollarIcon className="ml-[-1px] size-4" />
+                            <span className="text-m text-black dark:text-white">
                               Donate
                             </span>
                           </MenuButton>
@@ -113,7 +113,7 @@ const MoreNavItems: FC = () => {
                               >
                                 <MoreLink
                                   href="https://thegivingblock.com"
-                                  text="The Giving Block"
+                                  text="GivingBlock"
                                 />
                               </MenuItem>
                               <MenuItem

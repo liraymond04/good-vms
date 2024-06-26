@@ -20,16 +20,19 @@ const LoginButton: FC<LoginButtonProps> = ({
 }) => {
   const { setShowAuthModal } = useGlobalModalStateStore();
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setShowAuthModal(true);
+    Leafwatch.track(AUTH.OPEN_LOGIN);
+  };
+
   return (
     <Button
       className={
         'mb-2 inline-flex w-10/12 items-center justify-center rounded-full border border-white bg-black p-2 text-base text-white sm:w-full'
       }
-      onClick={(e) => {
-        e.stopPropagation();
-        setShowAuthModal(true);
-        Leafwatch.track(AUTH.OPEN_LOGIN);
-      }}
+      onClick={handleClick}
+      size={isBig ? 'lg' : 'md'}
     >
       {title}
     </Button>

@@ -13,7 +13,7 @@ class Logger {
     const axiomToken = process.env.AXIOM_TOKEN;
     if (axiomToken) {
       transports.push(
-        new AxiomTransport({ dataset: 'hey', token: axiomToken })
+        new AxiomTransport({ dataset: 'good', token: axiomToken })
       );
     }
 

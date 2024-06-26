@@ -19,7 +19,7 @@ const Club: FC<MarkupLinkProps> = ({ title }) => {
     <a
       className="cursor-pointer outline-none focus:underline"
       onClick={(event) => {
-        toast.success('Clubs coming soon to Hey!');
+        toast.success('Clubs coming soon to Good!');
         stopEventPropagation(event);
         Leafwatch.track(PUBLICATION.CLICK_CLUB, { club: clubHandle });
       }}

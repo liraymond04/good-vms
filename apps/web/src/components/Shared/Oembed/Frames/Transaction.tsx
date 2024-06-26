@@ -1,15 +1,15 @@
-import type { FrameTransaction, Frame as IFrame } from '@hey/types/misc';
+import type { FrameTransaction, Frame as IFrame } from '@good/types/misc';
 import type { Dispatch, FC, SetStateAction } from 'react';
 
+import { Errors } from '@good/data';
+import { GOOD_API_URL } from '@good/data/constants';
+import formatAddress from '@good/helpers/formatAddress';
+import getNftChainId from '@good/helpers/getNftChainId';
+import getNftChainInfo from '@good/helpers/getNftChainInfo';
+import { Button } from '@good/ui';
 import errorToast from '@helpers/errorToast';
 import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
-import { Errors } from '@hey/data';
-import { HEY_API_URL } from '@hey/data/constants';
-import formatAddress from '@hey/helpers/formatAddress';
-import getNftChainId from '@hey/helpers/getNftChainId';
-import getNftChainInfo from '@hey/helpers/getNftChainInfo';
-import { Button } from '@hey/ui';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -102,7 +102,7 @@ const Transaction: FC<TransactionProps> = ({
 
       const { data: postedData }: { data: { frame: IFrame } } =
         await axios.post(
-          `${HEY_API_URL}/frames/post`,
+          `${GOOD_API_URL}/frames/post`,
           {
             buttonIndex: +1,
             postUrl:

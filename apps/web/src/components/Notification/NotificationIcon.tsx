@@ -14,17 +14,19 @@ const NotificationIcon: FC = () => {
     setLastOpenedNotificationId
   } = useNotificationStore();
 
+  const handleClick = () => {
+    if (latestNotificationId) {
+      setLastOpenedNotificationId(latestNotificationId);
+    }
+  };
+
   const isNotificationPage = pathname === '/notifications';
 
   return (
     <Link
       className="mb-4 flex cursor-pointer items-center space-x-2 rounded-md px-2 py-1 hover:bg-gray-300/20 md:flex"
       href="/notifications"
-      onClick={() => {
-        if (latestNotificationId) {
-          setLastOpenedNotificationId(latestNotificationId);
-        }
-      }}
+      onClick={handleClick}
     >
       {isNotificationPage ? (
         <BellIconSolid className="size-8 text-red-500" />
