@@ -30,7 +30,20 @@ const donationEventValidator = z.object({
 });
 
 async function makeDonation(input: DonationCreateInput) {
-  const data = await prisma.causeDonation.create({ data: input });
+  const cause = await prisma.cause.findFirstOrThrow({
+    where: { publicationId: input.publicationId }
+  });
+
+  const data = await prisma.causeDonation.create({
+    data: {
+      amount: input.amount,
+      causeId: cause.id,
+      fromProfileId: input.fromProfileId,
+      fromAddress: input.fromAddress,
+      tokenAddress: input.tokenAddress,
+      txHash: input.txHash
+    }
+  });
 
   logger.info(`Created a donation ${data.id}`);
 }

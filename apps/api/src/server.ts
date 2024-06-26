@@ -9,6 +9,7 @@ import { router } from 'express-file-routing';
 import ViteExpress from 'vite-express';
 
 import listenDonations from './listeners/donation-listener';
+import listenCauses from './listeners/cause-listener';
 
 const app = express();
 
@@ -28,6 +29,7 @@ const setupRoutes = async () => {
 
 const setupListeners = () => {
   listenDonations();
+  listenCauses();
 };
 
 try {
