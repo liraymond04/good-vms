@@ -3,8 +3,10 @@ import type { FC } from 'react';
 import { Button } from '@good/ui';
 import React, { useRef, useState } from 'react';
 
+import type { PropsHandle } from './getProfile';
 import type { FieldMetadata } from './InputField';
 
+import getProfile from './getProfile';
 import { InputField } from './InputField';
 
 interface FormFields {
@@ -21,7 +23,7 @@ interface FormFields {
 const inputErrorMessages = {
   donationOrHours:
     'One or both of Donation Amount or Volunteer Hours must be filled.',
-  isLensID: 'Invalid Lens ID',
+  isLensID: 'Lens ID not found.',
   isNumber: 'Enter a number with at most 2 decimal places.',
   isRequired: 'This field is required.',
   isRequiredIfVHR: 'This field is required if Volunteer Hours is filled.',
@@ -33,8 +35,18 @@ const regexValidation = {
   URL: RegExp(/[\w#%+.:=@~-]{1,256}\.[\d()a-z]{1,6}\b([\w#%&()+./:=?@~-]*)/gi)
 };
 
-const checkLensID = (lensID: string): boolean => {
-  return lensID !== 'error';
+const checkLensID = async (lensID: string): Promise<boolean> => {
+  const root = 'lens';
+  const formattedLensID = `${root}/${lensID}`;
+  try {
+    const profile = await getProfile({
+      handle: formattedLensID
+    } as PropsHandle);
+    return profile ? true : false;
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return false;
+  }
 };
 
 const RequestForm: FC = () => {
@@ -73,10 +85,9 @@ const RequestForm: FC = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: Partial<FormFields> = {};
 
-    // Check fields based on metadata
     for (const field of fieldMetadataRef.current) {
       const value = formData[field.name as keyof FormFields];
 
@@ -92,17 +103,16 @@ const RequestForm: FC = () => {
       if (field.isURL && value && !regexValidation.URL.test(value)) {
         newErrors[field.name as keyof FormFields] = inputErrorMessages.isURL;
       }
+
+      if (field.isLensID && value && !(await checkLensID(value))) {
+        newErrors[field.name as keyof FormFields] = inputErrorMessages.isLensID;
+      }
     }
 
     // Check if both donationAmount and volunteerHours are empty
     if (!formData.donationAmount && !formData.volunteerHours) {
       newErrors.donationAmount = inputErrorMessages.donationOrHours;
       newErrors.volunteerHours = inputErrorMessages.donationOrHours;
-    }
-
-    // Check LensID if present
-    if (formData.donorProfileID && !checkLensID(formData.donorProfileID)) {
-      newErrors.donorProfileID = inputErrorMessages.isLensID;
     }
 
     // Check if evidenceURL is required if volunteerHours is filled
@@ -138,7 +148,6 @@ const RequestForm: FC = () => {
           type="text"
           value={formData.organizationName}
         />
-        {/* VERIFY VALID LENS ID */}
         <InputField
           errorMessage={errors.donorProfileID}
           isLensID
@@ -150,7 +159,6 @@ const RequestForm: FC = () => {
           type="text"
           value={formData.donorProfileID}
         />
-        {/* LIMIT OF $1-$1000? */}
         <InputField
           errorMessage={errors.donationAmount}
           isNumber
@@ -196,10 +204,8 @@ const RequestForm: FC = () => {
           type="text"
           value={formData.volunteerHours}
         />
-        {/* REQUIRED IF VOLUNTEER HOURS IS FILLED */}
         <InputField
           errorMessage={errors.evidenceURL}
-          // isRequired={true}
           isURL
           label="Evidence of Volunteer Activities URL"
           name="evidenceURL"

@@ -29,6 +29,7 @@ interface InputFieldProps {
 
 export const InputField: FC<InputFieldProps> = ({
   errorMessage,
+  isLensID = false,
   isNumber = false,
   isRequired = false,
   isURL = false,
@@ -41,8 +42,8 @@ export const InputField: FC<InputFieldProps> = ({
   value
 }) => {
   useEffect(() => {
-    register({ isNumber, isRequired, isURL, name });
-  }, [name, isRequired, isNumber, isURL, register]);
+    register({ isLensID, isNumber, isRequired, isURL, name });
+  }, [isLensID, name, isRequired, isNumber, isURL, register]);
 
   return (
     <div className="space-y-2">
