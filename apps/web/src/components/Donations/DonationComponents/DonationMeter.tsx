@@ -125,10 +125,10 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
       <div className="text-gray-400">
        <Goal>raised of ${goal} goal</Goal>
       </div>
-      <Button style={{ background: '#8080D7' }} className="w-full rounded mb-5 mt-5 py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#da5597' }} className="w-full rounded mb-5 mt-5 py-2 px-4 text-sm text-white">
         Donate Now
       </Button>
-      <Button style={{ background: '#A7A7FE' }} className="w-full rounded py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#de78ab' }} className="w-full rounded py-2 px-4 text-sm text-white">
         Share
       </Button>
     </div>
@@ -147,12 +147,12 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
         <TickMark top="80%" background="#000000" />
         <TickMark top="90%" background="#000000" />
         
-        <Amount background="#8080D7" height={height} />
+        <Amount background="#da5597" height={height} />
       </Glass>
 
       <Bulb background="#e5e5e5" height="50px" top="-20px" right="0px" width="50px">
-        <RedCircle background="#8080D7" />
-        <Filler background="#8080D7" height="30px" width="20px" top="-65px" right="-15px">
+        <RedCircle background="#da5597" />
+        <Filler background="#da5597" height="30px" width="20px" top="-65px" right="-15px">
           <span></span>
         </Filler>
       </Bulb>
