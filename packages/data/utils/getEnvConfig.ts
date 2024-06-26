@@ -34,7 +34,7 @@ const getEnvConfig = (): {
     case 'staging':
       return {
         defaultCollectToken: TestnetContracts.DefaultToken,
-        goodApiEndpoint: GoodEndpoint.Staging,
+        goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,

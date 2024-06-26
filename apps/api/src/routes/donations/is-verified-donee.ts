@@ -12,12 +12,12 @@ const publicClient = createPublicClient({
   transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
 });
 
-async function verifyDoneeId(doneeId: string) {
+async function verifyDoneeId(doneeId: `0x${string}`) {
   const verified = await publicClient.readContract({
     abi: GoodDonation,
     address: GOOD_DONATION,
     functionName: "isVerifiedDonee",
-    args: []
+    args: [doneeId]
   });
 
   return verified
@@ -26,13 +26,18 @@ async function verifyDoneeId(doneeId: string) {
 export const get: Handler = async (req, res) => {
   const { id } = req.query;
 
-  logger.info(`checked verification status of id ${id}`)
   if (!id) {
     return noBody(res);
   }
+  logger.info(`checked verification status of id ${id}`)
 
   try {
-    const verified = await verifyDoneeId(id.toString())
+    let idString = id.toString()
+    if (idString.indexOf('0x') !== 0) {
+      throw "Invalid id. Expected a string of the form `0x${string}`"
+    }
+
+    const verified = await verifyDoneeId(idString as any)
     return res.status(200).json({ verified, success: true });
   } catch (error) {
     catchedError(res, error);

@@ -12,7 +12,7 @@ export enum MainnetContracts {
 
 export enum TestnetContracts {
   DefaultToken = '0x3d2bD0e15829AA5C362a4144FdF4A1112fa29B5c',
-  GoodDonation = '0x4BA2c86221e4e57d69101dF49C3a91dff1Bd076b',
+  GoodDonation = '0xA6A26C724c59A40e5203c17fe88a1e3EAA70717d',
   GoodLensSignup = '0x82Bcb5DA51c6F3D0Ce942bDBEbb0B8A7774d62e8',
   GoodPro = '0x8f5C228E4b9C4Ff01e84C0C4DBDdFe969F6Ca0Ed',
   GoodTipping = '0xAadeC94DCD26555F464455d309a5E896f78cC65f',
