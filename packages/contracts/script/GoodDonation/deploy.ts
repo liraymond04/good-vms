@@ -1,7 +1,7 @@
 import hre from 'hardhat';
 
 async function deployProxy() {
-  const owner = '0xa6Aa32af2D6787c22AE3F43a0954cc5f03438650';
+  const owner = '0xADDRESS';
   const feesBps = '500'; // 5%
 
   const GoodDonation = await hre.ethers.getContractFactory('GoodDonation');
