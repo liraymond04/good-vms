@@ -11,6 +11,8 @@ import DonationThumbnail from './DonationComponents/DonationThumbnail';
 import DonationInfo from './DonationComponents/DonationInfo';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import WordsOfSupport from './DonationComponents/WordsOfSupport';
+import Donors from './DonationComponents/Donors';
+import { Profile } from '@good/lens';
 
 
 const DonationDetails: NextPage = () => {
@@ -25,14 +27,19 @@ const DonationDetails: NextPage = () => {
   },  [id]); 
   
 
+ if (!currentProfile) {
+  return <div>Not signed in</div>; 
+}
+
+
   const DonationPostDetails = {
     title: 'Food Bank',
     missionThumbnail: "https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all",
-    organizer: currentProfile, //this will be profile of the donations post creator
+    organizer: currentProfile, //this will be profile of the donations post creator, placeholder for now
     DonationInfo: [
       {
         mission: "Body text of donation post, explains purpose of the donation/cause",
-        updated: new Date(), // date of donations post updates
+        updated: new Date(), // date of donation's post updates
         updateText: "Text for any updates to the donations post, accompanied by the date it was updated",
         updateImages: [
           "https://picsum.photos/200/300",
@@ -49,7 +56,7 @@ const DonationDetails: NextPage = () => {
     ]
   };
   
-  const Supporters: Profile[] = [
+  const Supporters= [
    currentProfile,
    currentProfile,
    currentProfile
@@ -63,18 +70,34 @@ const DonationDetails: NextPage = () => {
     'Thank you for preparing meals'
   ];
 
+  const topDonors = [
+    { supporter: currentProfile, amount: 100 },
+    { supporter: currentProfile, amount: 200 },
+    { supporter: currentProfile, amount: 150 },
+    { supporter: currentProfile, amount: 120 },
+    { supporter: currentProfile, amount: 180 },
+    { supporter: currentProfile, amount: 250 },
+  ];
+  
+  const newDonors = [
+    { supporter:currentProfile, amount: 80 },
+    { supporter: currentProfile, amount: 110 },
+    { supporter: currentProfile, amount: 95 },
+    { supporter: currentProfile, amount: 180 },
+    { supporter: currentProfile, amount: 250 },
+  ];
+  
+
   return (
     <>
     {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
     <GridLayout>
         <GridItemEight className="space-y-5">
-          {/* Donation Thumbnail Component */}
           <DonationThumbnail
             title={DonationPostDetails.title}
             missionThumbnail={DonationPostDetails.missionThumbnail}
           />
 
-          {/* Donation Info Component */}
           <DonationInfo
             organizer={DonationPostDetails.organizer}
             mission={DonationPostDetails.DonationInfo[0].mission}
@@ -87,10 +110,13 @@ const DonationDetails: NextPage = () => {
             amount = {DonatedAmounts}
             description={Descriptions}
             />
+          <Donors
+          topDonors={topDonors}
+          newDonors={newDonors}
+          />
         </GridItemEight>
 
         <GridItemFour>
-          {/* Donation Meter Component */}
           <DonationMeter
             goal={DonationPostDetails.DonatedAmount[0].goal}
             total={DonationPostDetails.DonatedAmount[0].current}

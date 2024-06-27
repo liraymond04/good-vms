@@ -1,5 +1,5 @@
 import { Button } from '@headlessui/react';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface DonationMeterProps {
@@ -113,6 +113,18 @@ const TickMark = styled.div<StyledDivProps>`
 
 
 const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
+  const [showShare, setShowShare] = useState(false);
+  const [showDonate, setShowDonate] = useState(false);
+
+  
+  const handleShowShare = () => {
+    setShowShare(true);
+  };
+
+  const handleShowDonate = () => {
+    setShowDonate(true);
+  };
+
   const fillPercentage = total/goal * 100;
   const height = `${fillPercentage}%`;
   return (
@@ -125,10 +137,10 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
       <div className="text-gray-400">
        <Goal>raised of ${goal} goal</Goal>
       </div>
-      <Button style={{ background: '#da5597' }} className="w-full rounded-full mb-5 mt-5 py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#da5597' }} onClick={handleShowShare} className="w-full rounded-full mb-5 mt-5 py-2 px-4 text-sm text-white">
         Donate Now
       </Button>
-      <Button style={{ background: '#de78ab' }} className="w-full rounded-full py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#de78ab' }} onClick={handleShowDonate} className="w-full rounded-full py-2 px-4 text-sm text-white">
         Share
       </Button>
     </div>
