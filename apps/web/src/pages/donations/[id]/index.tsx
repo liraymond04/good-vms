@@ -1,3 +1,3 @@
-import ViewDonationsProfile from '@components/Donations';
+import ViewDonationsProfile from '@components/DonationProfile';
 
 export default ViewDonationsProfile;

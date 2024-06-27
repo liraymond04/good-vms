@@ -6,12 +6,12 @@ import { useEffect } from 'react';
 import { Leafwatch } from '@helpers/leafwatch';
 import { PAGEVIEW } from '@good/data/tracking';
 import { GridLayout, GridItemEight, GridItemFour } from '@good/ui';
-import DonationMeter from './DonationComponents/DonationMeter';
-import DonationThumbnail from './DonationComponents/DonationThumbnail';
-import DonationInfo from './DonationComponents/DonationInfo';
+import DonationMeter from './DonationProfileComponents/DonationMeter';
+import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
+import DonationInfo from './DonationProfileComponents/DonationInfo';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import WordsOfSupport from './DonationComponents/WordsOfSupport';
-import Donors from './DonationComponents/Donors';
+import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
+import Donors from './DonationProfileComponents/Donors';
 import { Profile } from '@good/lens';
 
 
