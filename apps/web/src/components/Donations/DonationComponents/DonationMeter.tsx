@@ -125,10 +125,10 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
       <div className="text-gray-400">
        <Goal>raised of ${goal} goal</Goal>
       </div>
-      <Button style={{ background: '#da5597' }} className="w-full rounded mb-5 mt-5 py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#da5597' }} className="w-full rounded-full mb-5 mt-5 py-2 px-4 text-sm text-white">
         Donate Now
       </Button>
-      <Button style={{ background: '#de78ab' }} className="w-full rounded py-2 px-4 text-sm text-white">
+      <Button style={{ background: '#de78ab' }} className="w-full rounded-full py-2 px-4 text-sm text-white">
         Share
       </Button>
     </div>

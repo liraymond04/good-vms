@@ -10,6 +10,7 @@ import DonationMeter from './DonationComponents/DonationMeter';
 import DonationThumbnail from './DonationComponents/DonationThumbnail';
 import DonationInfo from './DonationComponents/DonationInfo';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
+import WordsOfSupport from './DonationComponents/WordsOfSupport';
 
 
 const DonationDetails: NextPage = () => {
@@ -24,48 +25,78 @@ const DonationDetails: NextPage = () => {
   },  [id]); 
   
 
-  return (
-    <>
-    {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
-      <GridLayout>
-      <GridItemEight className="space-y-5">
-        <DonationThumbnail
-          title="Food Bank"
-          missionThumbnail="https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all"
-        />
-        <DonationInfo 
-        organizer={currentProfile}
-        mission="Lorem ipsum dolor sit amet,
-         consectetur adipiscing elit. Sed dapibus fringilla ligula, 
-         eget feugiat eros dictum at. Class aptent taciti sociosqu ad 
-         litora torquent per conubianostra, per inceptos himenaeos. In commodo erat sit amet ex condimentum, 
-         vel pharetra tellus ultricies. Maecenas a nisl purus. Proin et felis in  risus rhoncus commodo vel ut arcu.
-          In condimentum erat ac libero sollicitudin blandit."
-
-        update="Sed sit amet est sed libero finibus aliquam sed vel eros. 
-          Ut vulputate mollis molestie. Aenean ornare fringilla urna, ut 
-          venenatis tellus tempus ut. Duis id nunc laoreet, interdum nulla congue, 
-          commodo justo. In efficitur nulla eu ultricies pulvinar. Fusce suscipit 
-          ut ex vitae vulputate. " 
-
-        updateDate = { new Date(8.64) }
-
-        updateImages={[
+  const DonationPostDetails = {
+    title: 'Food Bank',
+    missionThumbnail: "https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all",
+    organizer: currentProfile, //this will be profile of the donations post creator
+    DonationInfo: [
+      {
+        mission: "Body text of donation post, explains purpose of the donation/cause",
+        updated: new Date(), // date of donations post updates
+        updateText: "Text for any updates to the donations post, accompanied by the date it was updated",
+        updateImages: [
           "https://picsum.photos/200/300",
           "https://picsum.photos/200/300",
           "https://picsum.photos/200/300"
-        ]}/>
+        ] //any images for the updates, can be null. Images displayed in a 3 columns layout
+      }
+    ],
+    DonatedAmount: [
+      {
+        goal: 1000,
+        current: 200
+      }
+    ]
+  };
+  
+  const Supporters: Profile[] = [
+   currentProfile,
+   currentProfile,
+   currentProfile
+  ];
+  
+  const DonatedAmounts: number[] = [100, 50, 200]; 
+  
+  const Descriptions: string[] = [
+    'Thank you for your supporting those in need',
+    'Thank you for your care',
+    'Thank you for preparing meals'
+  ];
 
-      </GridItemEight>
-        <GridItemFour>
-        <DonationMeter
-            goal={1000}
-            total={200}        
+  return (
+    <>
+    {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
+    <GridLayout>
+        <GridItemEight className="space-y-5">
+          {/* Donation Thumbnail Component */}
+          <DonationThumbnail
+            title={DonationPostDetails.title}
+            missionThumbnail={DonationPostDetails.missionThumbnail}
+          />
+
+          {/* Donation Info Component */}
+          <DonationInfo
+            organizer={DonationPostDetails.organizer}
+            mission={DonationPostDetails.DonationInfo[0].mission}
+            update={DonationPostDetails.DonationInfo[0].updateText}
+            updateDate={DonationPostDetails.DonationInfo[0].updated}
+            updateImages={DonationPostDetails.DonationInfo[0].updateImages}
+          />
+          <WordsOfSupport
+            supporters = {Supporters}
+            amount = {DonatedAmounts}
+            description={Descriptions}
             />
+        </GridItemEight>
+
+        <GridItemFour>
+          {/* Donation Meter Component */}
+          <DonationMeter
+            goal={DonationPostDetails.DonatedAmount[0].goal}
+            total={DonationPostDetails.DonatedAmount[0].current}
+          />
         </GridItemFour>
       </GridLayout>
-      <div className="App">
-    </div>   
     </>
   );
 };
