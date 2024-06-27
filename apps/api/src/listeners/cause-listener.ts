@@ -10,17 +10,22 @@ import prisma from '../helpers/prisma';
 interface CauseCreateInput {
   publicationId: string;
   profileId: string;
-  profileAddress: string;
+  profileOwner: string;
 }
 
 const donationEventValidator = z.object({
   publicationId: z.bigint().transform((id) => id.toString(16)),
-  profileAddress: z.string(),
   profileId: z.bigint().transform((id) => id.toString(16)),
+  profileOwner: z.string(),
 });
 
 async function makeCause(input: CauseCreateInput) {
-  const data = await prisma.cause.create({ data: input });
+  const prismaInput = {
+    profileAddress: input.profileOwner,
+    publicationId: input.publicationId,
+    profileId: input.profileId
+  }
+  const data = await prisma.cause.create({ data: prismaInput});
 
   logger.info(`Created a cause ${data.id}`);
 }
@@ -41,6 +46,7 @@ export default function listenCauses() {
     onLogs: (logs) => {
       for (const event of logs) {
         const { args } = event;
+        console.log(args)
         const input = donationEventValidator.safeParse(args);
 
         if (!input.success) {
