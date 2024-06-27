@@ -158,7 +158,7 @@ model Cause {
 model CauseDonation {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   cause         Cause    @relation(fields: [causeId], references: [id])
-  causeId       String
+  causeId       String   @db.Uuid
   fromProfileId String
   fromAddress   String
   tokenAddress  String

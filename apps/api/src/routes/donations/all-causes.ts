@@ -14,17 +14,11 @@ export const get: Handler = async (req, res) => {
   }
 
   try {
-    const data = await prisma.causeDonation.findMany({
-      where: {
-        cause: {
-          publicationId: id.toString()
-        }
-      }
-    });
+    const data = await prisma.cause.findMany();
 
-    logger.info(`Lens: Fetched all donations on post for score for ${id}`);
+    logger.info(`Lens: Fetched all causes`);
 
-    return res.status(200).json({ donations: data, success: true });
+    return res.status(200).json({ causes: data, success: true });
   } catch (error) {
     catchedError(res, error);
   }
