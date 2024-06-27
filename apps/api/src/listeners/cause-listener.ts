@@ -1,32 +1,26 @@
 import { GoodDonation } from '@good/abis';
-import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
+import { GOOD_DONATION } from '@good/data/constants';
 import logger from '@good/helpers/logger';
-import { Client, WebSocketTransport, createPublicClient, webSocket } from 'viem';
-import { polygon, polygonAmoy } from 'viem/chains';
 import { z } from 'zod';
 
 import prisma from '../helpers/prisma';
 import { ListenerClient } from 'src/server';
 
-interface CauseCreateInput {
-  publicationId: string;
-  profileId: string;
-  profileOwner: string;
-}
-
 const donationEventValidator = z.object({
   publicationId: z.bigint().transform((id) => id.toString(16)),
   profileId: z.bigint().transform((id) => id.toString(16)),
-  profileOwner: z.string(),
+  profileOwner: z.string()
 });
+
+interface CauseCreateInput extends z.infer<typeof donationEventValidator> {}
 
 async function makeCause(input: CauseCreateInput) {
   const prismaInput = {
     profileAddress: input.profileOwner,
     publicationId: input.publicationId,
     profileId: input.profileId
-  }
-  const data = await prisma.cause.create({ data: prismaInput});
+  };
+  const data = await prisma.cause.create({ data: prismaInput });
 
   logger.info(`Created a cause ${data.id}`);
 }
@@ -42,7 +36,6 @@ export default function listenCauses(client: ListenerClient) {
     onLogs: (logs) => {
       for (const event of logs) {
         const { args } = event;
-        console.log(args)
         const input = donationEventValidator.safeParse(args);
 
         if (!input.success) {
