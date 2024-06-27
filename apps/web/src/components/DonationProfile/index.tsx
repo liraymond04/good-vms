@@ -1,19 +1,19 @@
 // pages/donations/[id]/index.tsx
 
-import { NextPage } from 'next';
+import type { NextPage } from 'next';
+
+import { PAGEVIEW } from '@good/data/tracking';
+import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
+import { Leafwatch } from '@helpers/leafwatch';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Leafwatch } from '@helpers/leafwatch';
-import { PAGEVIEW } from '@good/data/tracking';
-import { GridLayout, GridItemEight, GridItemFour } from '@good/ui';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
+
+import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
-import DonationInfo from './DonationProfileComponents/DonationInfo';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
 import Donors from './DonationProfileComponents/Donors';
-import { Profile } from '@good/lens';
-
+import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
@@ -24,46 +24,43 @@ const DonationDetails: NextPage = () => {
     if (id) {
       Leafwatch.track(PAGEVIEW, { page: `donations/${id}` });
     }
-  },  [id]); 
-  
+  }, [id]);
 
- if (!currentProfile) {
-  return <div>Not signed in</div>; 
-}
-
+  if (!currentProfile) {
+    return <div>Not signed in</div>;
+  }
 
   const DonationPostDetails = {
-    title: 'Food Bank',
-    missionThumbnail: "https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all",
-    organizer: currentProfile, //this will be profile of the donations post creator, placeholder for now
-    DonationInfo: [
-      {
-        mission: "Body text of donation post, explains purpose of the donation/cause",
-        updated: new Date(), // date of donation's post updates
-        updateText: "Text for any updates to the donations post, accompanied by the date it was updated",
-        updateImages: [
-          "https://picsum.photos/200/300",
-          "https://picsum.photos/200/300",
-          "https://picsum.photos/200/300"
-        ] //any images for the updates, can be null. Images displayed in a 3 columns layout
-      }
-    ],
     DonatedAmount: [
       {
-        goal: 1000,
-        current: 200
+        current: 200,
+        goal: 1000
       }
-    ]
+    ],
+    DonationInfo: [
+      {
+        mission:
+          'Body text of donation post, explains purpose of the donation/cause',
+        updated: new Date(), // date of donation's post updates
+        updateImages: [
+          'https://picsum.photos/200/300',
+          'https://picsum.photos/200/300',
+          'https://picsum.photos/200/300'
+        ], //any images for the updates, can be null. Images displayed in a 3 columns layout
+        updateText:
+          'Text for any updates to the donations post, accompanied by the date it was updated'
+      }
+    ],
+    missionThumbnail:
+      'https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all',
+    organizer: currentProfile, //this will be profile of the donations post creator, placeholder for now
+    title: 'Food Bank'
   };
-  
-  const Supporters= [
-   currentProfile,
-   currentProfile,
-   currentProfile
-  ];
-  
-  const DonatedAmounts: number[] = [100, 50, 200]; 
-  
+
+  const Supporters = [currentProfile, currentProfile, currentProfile];
+
+  const DonatedAmounts: number[] = [100, 50, 200];
+
   const Descriptions: string[] = [
     'Thank you for your supporting those in need',
     'Thank you for your care',
@@ -71,49 +68,45 @@ const DonationDetails: NextPage = () => {
   ];
 
   const topDonors = [
-    { supporter: currentProfile, amount: 100 },
-    { supporter: currentProfile, amount: 200 },
-    { supporter: currentProfile, amount: 150 },
-    { supporter: currentProfile, amount: 120 },
-    { supporter: currentProfile, amount: 180 },
-    { supporter: currentProfile, amount: 250 },
+    { amount: 100, supporter: currentProfile },
+    { amount: 200, supporter: currentProfile },
+    { amount: 150, supporter: currentProfile },
+    { amount: 120, supporter: currentProfile },
+    { amount: 180, supporter: currentProfile },
+    { amount: 250, supporter: currentProfile }
   ];
-  
+
   const newDonors = [
-    { supporter:currentProfile, amount: 80 },
-    { supporter: currentProfile, amount: 110 },
-    { supporter: currentProfile, amount: 95 },
-    { supporter: currentProfile, amount: 180 },
-    { supporter: currentProfile, amount: 250 },
+    { amount: 80, supporter: currentProfile },
+    { amount: 110, supporter: currentProfile },
+    { amount: 95, supporter: currentProfile },
+    { amount: 180, supporter: currentProfile },
+    { amount: 250, supporter: currentProfile }
   ];
-  
 
   return (
     <>
-    {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
-    <GridLayout>
+      {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
+      <GridLayout>
         <GridItemEight className="space-y-5">
           <DonationThumbnail
-            title={DonationPostDetails.title}
             missionThumbnail={DonationPostDetails.missionThumbnail}
+            title={DonationPostDetails.title}
           />
 
           <DonationInfo
-            organizer={DonationPostDetails.organizer}
             mission={DonationPostDetails.DonationInfo[0].mission}
+            organizer={DonationPostDetails.organizer}
             update={DonationPostDetails.DonationInfo[0].updateText}
             updateDate={DonationPostDetails.DonationInfo[0].updated}
             updateImages={DonationPostDetails.DonationInfo[0].updateImages}
           />
           <WordsOfSupport
-            supporters = {Supporters}
-            amount = {DonatedAmounts}
+            amount={DonatedAmounts}
             description={Descriptions}
-            />
-          <Donors
-          topDonors={topDonors}
-          newDonors={newDonors}
+            supporters={Supporters}
           />
+          <Donors newDonors={newDonors} topDonors={topDonors} />
         </GridItemEight>
 
         <GridItemFour>

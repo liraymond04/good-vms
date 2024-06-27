@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 interface DonationMeterProps {
   goal: number;
-  total: number;  
+  total: number;
 }
 
 interface StyledSpanProps {
@@ -15,11 +15,11 @@ interface StyledSpanProps {
 interface StyledDivProps {
   background: string;
   borderRadius?: string;
-  top?: string;
-  right?: string;
-  width?: string;
   height?: string;
   position?: string;
+  right?: string;
+  top?: string;
+  width?: string;
   zIndex?: string;
 }
 
@@ -52,7 +52,6 @@ const Total = styled.strong`
   font-size: 24px;
   position: flex;
   right: 35px;
-
 `;
 
 const Amount = styled.span<StyledSpanProps>`
@@ -61,7 +60,7 @@ const Amount = styled.span<StyledSpanProps>`
   display: block;
   width: 20px;
   position: absolute;
-  right:0px;
+  right: 0px;
   bottom: 5px;
   height: ${(props) => props.height};
 `;
@@ -101,22 +100,19 @@ const Filler = styled.span<StyledDivProps>`
 
 const TickMark = styled.div<StyledDivProps>`
   background: ${(props) => props.background || '#000000'};
-  height: 2px; 
-  width: 10px; 
+  height: 2px;
+  width: 10px;
   position: absolute;
   top: calc(${(props) => props.top || '0%'} - 1px);
-  right: 75%; 
-  transform: translateX(50%); 
-  z-index:1;
+  right: 75%;
+  transform: translateX(50%);
+  z-index: 1;
 `;
-
-
 
 const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
   const [showShare, setShowShare] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
 
-  
   const handleShowShare = () => {
     setShowShare(true);
   };
@@ -125,53 +121,75 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
     setShowDonate(true);
   };
 
-  const fillPercentage = total/goal * 100;
+  const fillPercentage = (total / goal) * 100;
   const height = `${fillPercentage}%`;
   return (
     <div className="flex flex-row">
-  <div className="flex flex-col justify-center items-center w-1/2">
-    <div id="left" className="relative text-center text-black dark:text-white">
-      <div>     
-         <Total>${total}</Total>
+      <div className="flex w-1/2 flex-col items-center justify-center">
+        <div
+          className="relative text-center text-black dark:text-white"
+          id="left"
+        >
+          <div>
+            <Total>${total}</Total>
+          </div>
+          <div className="text-gray-400">
+            <Goal>raised of ${goal} goal</Goal>
+          </div>
+          <Button
+            className="mb-5 mt-5 w-full rounded-full px-4 py-2 text-sm text-white"
+            onClick={handleShowShare}
+            style={{ background: '#da5597' }}
+          >
+            Donate Now
+          </Button>
+          <Button
+            className="w-full rounded-full px-4 py-2 text-sm text-white"
+            onClick={handleShowDonate}
+            style={{ background: '#de78ab' }}
+          >
+            Share
+          </Button>
+        </div>
       </div>
-      <div className="text-gray-400">
-       <Goal>raised of ${goal} goal</Goal>
+
+      <div className="flex w-1/2 flex-col">
+        <DonationMeterContainer className="donation-meter flex flex-col items-center">
+          <Glass background="#e5e5e5">
+            <TickMark background="#000000" top="10%" />
+            <TickMark background="#000000" top="20%" />
+            <TickMark background="#000000" top="30%" />
+            <TickMark background="#000000" top="40%" />
+            <TickMark background="#000000" top="50%" />
+            <TickMark background="#000000" top="60%" />
+            <TickMark background="#000000" top="70%" />
+            <TickMark background="#000000" top="80%" />
+            <TickMark background="#000000" top="90%" />
+
+            <Amount background="#da5597" height={height} />
+          </Glass>
+
+          <Bulb
+            background="#e5e5e5"
+            height="50px"
+            right="0px"
+            top="-20px"
+            width="50px"
+          >
+            <RedCircle background="#da5597" />
+            <Filler
+              background="#da5597"
+              height="30px"
+              right="-15px"
+              top="-65px"
+              width="20px"
+            >
+              <span />
+            </Filler>
+          </Bulb>
+        </DonationMeterContainer>
       </div>
-      <Button style={{ background: '#da5597' }} onClick={handleShowShare} className="w-full rounded-full mb-5 mt-5 py-2 px-4 text-sm text-white">
-        Donate Now
-      </Button>
-      <Button style={{ background: '#de78ab' }} onClick={handleShowDonate} className="w-full rounded-full py-2 px-4 text-sm text-white">
-        Share
-      </Button>
     </div>
-  </div>
-
-  <div className="flex flex-col w-1/2">
-    <DonationMeterContainer className="flex flex-col donation-meter items-center">
-      <Glass background="#e5e5e5">
-        <TickMark top="10%" background="#000000" />
-        <TickMark top="20%" background="#000000" />
-        <TickMark top="30%" background="#000000" />
-        <TickMark top="40%" background="#000000" />
-        <TickMark top="50%" background="#000000" />
-        <TickMark top="60%" background="#000000" />
-        <TickMark top="70%" background="#000000" />
-        <TickMark top="80%" background="#000000" />
-        <TickMark top="90%" background="#000000" />
-        
-        <Amount background="#da5597" height={height} />
-      </Glass>
-
-      <Bulb background="#e5e5e5" height="50px" top="-20px" right="0px" width="50px">
-        <RedCircle background="#da5597" />
-        <Filler background="#da5597" height="30px" width="20px" top="-65px" right="-15px">
-          <span></span>
-        </Filler>
-      </Bulb>
-    </DonationMeterContainer>
-  </div>
-</div>
-
   );
 };
 

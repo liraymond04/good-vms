@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Profile } from '@good/lens';
+import type { Profile } from '@good/lens';
+
+import getAvatar from '@good/helpers/getAvatar';
 import { Image } from '@good/ui';
 import { Button } from '@headlessui/react';
-import getAvatar from '@good/helpers/getAvatar';
+import React, { useState } from 'react';
 
 interface DonorsProps {
-  topDonors: { supporter: Profile; amount: number }[];
-  newDonors: { supporter: Profile; amount: number }[];
+  newDonors: { amount: number; supporter: Profile }[];
+  topDonors: { amount: number; supporter: Profile }[];
 }
 
-const Donors: React.FC<DonorsProps> = ({ topDonors, newDonors }) => {
+const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
   const [showAllTopDonors, setShowAllTopDonors] = useState(false);
   const [showAllNewDonors, setShowAllNewDonors] = useState(false);
 
@@ -22,16 +22,22 @@ const Donors: React.FC<DonorsProps> = ({ topDonors, newDonors }) => {
     setShowAllNewDonors(true);
   };
 
-  const renderSupporters = (donors: { supporter: Profile; amount: number }[], showAll: boolean) => {
+  const renderSupporters = (
+    donors: { amount: number; supporter: Profile }[],
+    showAll: boolean
+  ) => {
     const displayedDonors = showAll ? donors : donors.slice(0, 5);
 
     return displayedDonors.map((donor, index) => (
-      <div key={index} className="supporter-details flex flex-col mb-5 items-center">
+      <div
+        className="supporter-details mb-5 flex flex-col items-center"
+        key={index}
+      >
         <div className="flex items-center">
           <Image
-            src={getAvatar(donor.supporter)}
             alt={donor.supporter.id}
             className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
+            src={getAvatar(donor.supporter)}
           />
           <div className="ml-4">
             <p>{donor.supporter?.handle?.localName}</p>
@@ -43,7 +49,7 @@ const Donors: React.FC<DonorsProps> = ({ topDonors, newDonors }) => {
   };
 
   return (
-    <div className="rounded items-center justify-center -top-10">
+    <div className="-top-10 items-center justify-center rounded">
       <div className="flex justify-center">
         <div className="w-1/2 pr-4">
           <div className="mb-5 text-lg">
@@ -51,16 +57,15 @@ const Donors: React.FC<DonorsProps> = ({ topDonors, newDonors }) => {
           </div>
           <div className="flex flex-col items-center">
             {renderSupporters(topDonors, showAllTopDonors)}
-              <div className="mt-5 w-full">
-                <Button
-                  style={{ background: '#da5597' }}
-                  className="w-1/2 rounded-full py-2 px-4 text-lg text-white"
-                  onClick={handleShowAllTopDonors}
-                >
-                  Show All
-                </Button>
-              </div>
-            
+            <div className="mt-5 w-full">
+              <Button
+                className="w-1/2 rounded-full px-4 py-2 text-lg text-white"
+                onClick={handleShowAllTopDonors}
+                style={{ background: '#da5597' }}
+              >
+                Show All
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -70,17 +75,16 @@ const Donors: React.FC<DonorsProps> = ({ topDonors, newDonors }) => {
           </div>
           <div className="flex flex-col items-center">
             {renderSupporters(newDonors, showAllNewDonors)}
-          
-              <div className="mt-5 w-full text-center">
-                <Button
-                  style={{ background: '#da5597' }}
-                  className="w-1/2 rounded-full py-2 px-4 text-lg text-white"
-                  onClick={handleShowAllNewDonors}
-                >
-                  Show All
-                </Button>
-              </div>
-            
+
+            <div className="mt-5 w-full text-center">
+              <Button
+                className="w-1/2 rounded-full px-4 py-2 text-lg text-white"
+                onClick={handleShowAllNewDonors}
+                style={{ background: '#da5597' }}
+              >
+                Show All
+              </Button>
+            </div>
           </div>
         </div>
       </div>
