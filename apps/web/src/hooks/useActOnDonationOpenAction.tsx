@@ -1,9 +1,9 @@
+import { GOOD_DONATION } from '@good/data/constants';
 import { encodeAbiParameters } from 'viem';
 
 import type { CreatePublicationProps } from './useActOnUnknownOpenAction';
 
 import useActOnUnknownOpenAction from './useActOnUnknownOpenAction';
-import { GOOD_DONATION } from '@good/data/constants';
 
 export interface DonationData {
   amount: bigint; // uint256

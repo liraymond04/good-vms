@@ -1,19 +1,20 @@
+import type { ListenerClient } from 'src/server';
+
 import { GoodDonation } from '@good/abis';
 import { GOOD_DONATION } from '@good/data/constants';
 import logger from '@good/helpers/logger';
 import { z } from 'zod';
 
 import prisma from '../helpers/prisma';
-import { ListenerClient } from 'src/server';
 
 const donationEventValidator = z.object({
-  fromProfileId: z.bigint().transform((id) => id.toString(16)),
-  toProfileId: z.bigint().transform((id) => id.toString(16)),
-  publicationId: z.bigint().transform((id) => id.toString(16)),
-  token: z.string(),
+  amount: z.bigint(),
   from: z.string(),
+  fromProfileId: z.bigint().transform((id) => id.toString(16)),
+  publicationId: z.bigint().transform((id) => id.toString(16)),
   to: z.string(),
-  amount: z.bigint()
+  token: z.string(),
+  toProfileId: z.bigint().transform((id) => id.toString(16))
 });
 
 interface MakeDonationInput extends z.infer<typeof donationEventValidator> {
@@ -23,8 +24,8 @@ interface MakeDonationInput extends z.infer<typeof donationEventValidator> {
 async function makeDonation(input: MakeDonationInput) {
   const cause = await prisma.cause.findFirstOrThrow({
     where: {
-      publicationId: input.publicationId,
-      profileId: input.fromProfileId
+      profileId: input.fromProfileId,
+      publicationId: input.publicationId
     }
   });
 
@@ -32,8 +33,8 @@ async function makeDonation(input: MakeDonationInput) {
     data: {
       amount: input.amount,
       causeId: cause.id,
-      fromProfileId: input.fromProfileId,
       fromAddress: input.from,
+      fromProfileId: input.fromProfileId,
       tokenAddress: input.token,
       txHash: input.txHash
     }

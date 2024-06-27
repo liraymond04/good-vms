@@ -7,7 +7,7 @@ import prisma from '../../helpers/prisma';
 import { noBody } from '../../helpers/responses';
 
 export const get: Handler = async (req, res) => {
-  const { publicationId, profileId } = req.query;
+  const { profileId, publicationId } = req.query;
 
   if (!publicationId || !profileId) {
     return noBody(res);
@@ -17,13 +17,15 @@ export const get: Handler = async (req, res) => {
     const data = await prisma.causeDonation.findMany({
       where: {
         cause: {
-          publicationId: publicationId.toString(),
-          profileId: profileId?.toString()
+          profileId: profileId?.toString(),
+          publicationId: publicationId.toString()
         }
       }
     });
 
-    logger.info(`Lens: Fetched all donations on post for score for ${profileId}-${publicationId}`);
+    logger.info(
+      `Lens: Fetched all donations on post for score for ${profileId}-${publicationId}`
+    );
 
     return res.status(200).json({ donations: data, success: true });
   } catch (error) {

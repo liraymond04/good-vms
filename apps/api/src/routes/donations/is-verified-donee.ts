@@ -10,7 +10,7 @@ import { polygon, polygonAmoy } from 'viem/chains';
 
 const publicClient = createPublicClient({
   chain: IS_MAINNET ? polygon : polygonAmoy,
-  transport: http("https://polygon-amoy-bor-rpc.publicnode.com")
+  transport: http('https://polygon-amoy-bor-rpc.publicnode.com')
 });
 
 async function verifyDoneeId(doneeId: `0x${string}`) {
