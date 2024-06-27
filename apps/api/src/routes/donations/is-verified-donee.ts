@@ -5,12 +5,12 @@ import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
 import logger from '@good/helpers/logger';
 import catchedError from 'src/helpers/catchedError';
 import { noBody } from 'src/helpers/responses';
-import { createPublicClient, webSocket } from 'viem';
+import { createPublicClient, http } from 'viem';
 import { polygon, polygonAmoy } from 'viem/chains';
 
 const publicClient = createPublicClient({
   chain: IS_MAINNET ? polygon : polygonAmoy,
-  transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
+  transport: http('https://polygon-amoy-bor-rpc.publicnode.com')
 });
 
 async function verifyDoneeId(doneeId: `0x${string}`) {
