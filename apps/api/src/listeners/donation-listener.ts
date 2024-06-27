@@ -1,37 +1,31 @@
 import { GoodDonation } from '@good/abis';
-import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
+import { GOOD_DONATION } from '@good/data/constants';
 import logger from '@good/helpers/logger';
-import { createPublicClient, webSocket } from 'viem';
-import { polygon, polygonAmoy } from 'viem/chains';
 import { z } from 'zod';
 
 import prisma from '../helpers/prisma';
+import { ListenerClient } from 'src/server';
 
-interface DonationCreateInput {
-  amount: number;
-  fromAddress: string;
-  fromProfileId: string;
-  publicationId: string;
-  toAddress: string;
-  tokenAddress: string;
-  toProfileId: string;
+const donationEventValidator = z.object({
+  fromProfileId: z.bigint().transform((id) => id.toString(16)),
+  toProfileId: z.bigint().transform((id) => id.toString(16)),
+  publicationId: z.bigint().transform((id) => id.toString(16)),
+  token: z.string(),
+  from: z.string(),
+  to: z.string(),
+  amount: z.bigint()
+});
+
+interface MakeDonationInput extends z.infer<typeof donationEventValidator> {
   txHash: string;
 }
 
-const donationEventValidator = z.object({
-  amount: z.bigint().transform((amount) => Number(amount)),
-  fromAddress: z.string(),
-  fromProfileId: z.bigint().transform((id) => id.toString(16)),
-  publicationId: z.bigint().transform((id) => id.toString(16)),
-  toAddress: z.string(),
-  tokenAddress: z.string(),
-  toProfileId: z.bigint().transform((id) => id.toString(16)),
-  txHash: z.string()
-});
-
-async function makeDonation(input: DonationCreateInput) {
+async function makeDonation(input: MakeDonationInput) {
   const cause = await prisma.cause.findFirstOrThrow({
-    where: { publicationId: input.publicationId }
+    where: {
+      publicationId: input.publicationId,
+      profileId: input.fromProfileId
+    }
   });
 
   const data = await prisma.causeDonation.create({
@@ -39,8 +33,8 @@ async function makeDonation(input: DonationCreateInput) {
       amount: input.amount,
       causeId: cause.id,
       fromProfileId: input.fromProfileId,
-      fromAddress: input.fromAddress,
-      tokenAddress: input.tokenAddress,
+      fromAddress: input.from,
+      tokenAddress: input.token,
       txHash: input.txHash
     }
   });
@@ -48,13 +42,8 @@ async function makeDonation(input: DonationCreateInput) {
   logger.info(`Created a donation ${data.id}`);
 }
 
-export default function listenDonations() {
-  const publicClient = createPublicClient({
-    chain: IS_MAINNET ? polygon : polygonAmoy,
-    transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
-  });
-
-  publicClient.watchContractEvent({
+export default function listenDonations(client: ListenerClient) {
+  client.watchContractEvent({
     abi: GoodDonation,
     address: GOOD_DONATION,
     eventName: 'DonationSent',
@@ -72,7 +61,7 @@ export default function listenDonations() {
         }
 
         try {
-          makeDonation(input.data);
+          makeDonation({ ...input.data, txHash: event.transactionHash });
         } catch (error) {
           logger.error(`Failed to make donation: ${error}`);
         }

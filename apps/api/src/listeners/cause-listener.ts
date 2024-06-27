@@ -1,11 +1,12 @@
 import { GoodDonation } from '@good/abis';
 import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
 import logger from '@good/helpers/logger';
-import { createPublicClient, webSocket } from 'viem';
+import { Client, WebSocketTransport, createPublicClient, webSocket } from 'viem';
 import { polygon, polygonAmoy } from 'viem/chains';
 import { z } from 'zod';
 
 import prisma from '../helpers/prisma';
+import { ListenerClient } from 'src/server';
 
 interface CauseCreateInput {
   publicationId: string;
@@ -30,13 +31,8 @@ async function makeCause(input: CauseCreateInput) {
   logger.info(`Created a cause ${data.id}`);
 }
 
-export default function listenCauses() {
-  const publicClient = createPublicClient({
-    chain: IS_MAINNET ? polygon : polygonAmoy,
-    transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
-  });
-
-  publicClient.watchContractEvent({
+export default function listenCauses(client: ListenerClient) {
+  client.watchContractEvent({
     abi: GoodDonation,
     address: GOOD_DONATION,
     eventName: 'CauseCreated',

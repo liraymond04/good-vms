@@ -10,6 +10,9 @@ import ViteExpress from 'vite-express';
 
 import listenDonations from './listeners/donation-listener';
 import listenCauses from './listeners/cause-listener';
+import { IS_MAINNET } from '@good/data/constants';
+import { createPublicClient, webSocket } from 'viem';
+import { polygon, polygonAmoy } from 'viem/chains';
 
 const app = express();
 
@@ -27,9 +30,17 @@ const setupRoutes = async () => {
   });
 };
 
+const createClient = () => createPublicClient({
+    chain: IS_MAINNET ? polygon : polygonAmoy,
+    transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
+  });
+
+export type ListenerClient = ReturnType<typeof createClient>
+
 const setupListeners = () => {
-  listenDonations();
-  listenCauses();
+  const publicClient = createClient()
+  listenDonations(publicClient);
+  listenCauses(publicClient);
 };
 
 try {
