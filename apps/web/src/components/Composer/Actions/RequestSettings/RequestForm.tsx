@@ -23,16 +23,21 @@ interface FormFields {
 const inputErrorMessages = {
   donationOrHours:
     'One or both of Donation Amount or Volunteer Hours must be filled.',
-  isLensID: 'Lens ID not found.',
-  isNumber: 'Enter a number with at most 2 decimal places.',
-  isRequired: 'This field is required.',
-  isRequiredIfVHR: 'This field is required if Volunteer Hours is filled.',
-  isURL: 'Invalid URL.'
+  invalidNumber: 'Enter a positive number with at most 2 decimal places.',
+  invalidTransactionURL:
+    'URL must link to a transaction on polygonscan.com. Ex. polygonscan.com/tx/<hash>',
+  invalidURL: 'Invalid URL.',
+  lensIdNotFound: 'Lens ID not found.',
+  requiredIfVHR: 'This field is required if Volunteer Hours is filled.',
+  requiredNotFilled: 'This field is required.'
 };
 
 const regexValidation = {
-  number: RegExp(/^\d+(\.\d{0,2})?$/),
-  URL: RegExp(/[\w#%+.:=@~-]{1,256}\.[\d()a-z]{1,6}\b([\w#%&()+./:=?@~-]*)/gi)
+  number: RegExp(/^\d+(\.\d{1,2})?$/),
+  transactionURL: RegExp(
+    /^(https?:\/\/)?([\w-]+\.)?polygonscan\.com\/tx\/0x[\da-f]{64}$/i
+  ),
+  URL: RegExp(/^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/.*)?$/i)
 };
 
 const checkLensID = async (lensID: string): Promise<boolean> => {
@@ -49,6 +54,22 @@ const checkLensID = async (lensID: string): Promise<boolean> => {
   }
 };
 
+const DebugFormState: FC<{ errors: any; formData: any }> = ({
+  errors,
+  formData
+}) => (
+  <div className="mt-4 rounded-md border bg-gray-50 p-4">
+    <h3 className="text-sm font-medium text-gray-700">Form Data</h3>
+    <pre className="overflow-x-auto text-xs text-gray-600">
+      {JSON.stringify(formData, null, 2)}
+    </pre>
+    <h3 className="mt-2 text-sm font-medium text-gray-700">Errors</h3>
+    <pre className="overflow-x-auto text-xs text-gray-600">
+      {JSON.stringify(errors, null, 2)}
+    </pre>
+  </div>
+);
+
 const RequestForm: FC = () => {
   const emptyForm: FormFields = {
     description: '',
@@ -64,8 +85,10 @@ const RequestForm: FC = () => {
   const [formData, setFormData] = useState<FormFields>(emptyForm);
   const [errors, setErrors] = useState<Partial<FormFields>>({});
 
+  // Store field metadata
   const fieldMetadataRef = useRef<FieldMetadata[]>([]);
 
+  // Register field metadata
   const registerField = (metadata: FieldMetadata) => {
     fieldMetadataRef.current = [
       ...fieldMetadataRef.current.filter(
@@ -74,7 +97,6 @@ const RequestForm: FC = () => {
       metadata
     ];
   };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -85,27 +107,50 @@ const RequestForm: FC = () => {
     });
   };
 
+  // Check form requirements and input
   const handleSubmit = async () => {
     const newErrors: Partial<FormFields> = {};
 
     for (const field of fieldMetadataRef.current) {
       const value = formData[field.name as keyof FormFields];
 
+      // Validate required fields
       if (field.isRequired && !value) {
         newErrors[field.name as keyof FormFields] =
-          inputErrorMessages.isRequired;
+          inputErrorMessages.requiredNotFilled;
+        continue;
       }
 
+      // Validate number fields
       if (field.isNumber && value && !regexValidation.number.test(value)) {
-        newErrors[field.name as keyof FormFields] = inputErrorMessages.isNumber;
+        newErrors[field.name as keyof FormFields] =
+          inputErrorMessages.invalidNumber;
+        continue;
       }
 
+      // Validate URL fields
       if (field.isURL && value && !regexValidation.URL.test(value)) {
-        newErrors[field.name as keyof FormFields] = inputErrorMessages.isURL;
+        newErrors[field.name as keyof FormFields] =
+          inputErrorMessages.invalidURL;
+        continue;
       }
 
+      // Validate Transaction URL fields
+      if (
+        field.name === 'transactionURL' &&
+        value &&
+        !regexValidation.transactionURL.test(value)
+      ) {
+        newErrors[field.name as keyof FormFields] =
+          inputErrorMessages.invalidTransactionURL;
+        continue;
+      }
+
+      // Validate Lens ID fields
       if (field.isLensID && value && !(await checkLensID(value))) {
-        newErrors[field.name as keyof FormFields] = inputErrorMessages.isLensID;
+        newErrors[field.name as keyof FormFields] =
+          inputErrorMessages.lensIdNotFound;
+        continue;
       }
     }
 
@@ -115,18 +160,23 @@ const RequestForm: FC = () => {
       newErrors.volunteerHours = inputErrorMessages.donationOrHours;
     }
 
-    // Check if evidenceURL is required if volunteerHours is filled
+    // Check evidenceURL is required if volunteerHours is filled
     if (formData.volunteerHours && !formData.evidenceURL) {
-      newErrors.evidenceURL = inputErrorMessages.isRequiredIfVHR;
+      newErrors.evidenceURL = inputErrorMessages.requiredIfVHR;
     }
 
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      console.log('submission successful!');
+    // Set errors only if there are any
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      console.info('submission successful!');
+      setErrors({});
     }
+
+    return;
   };
 
+  // Clear form if reject
   const handleReject = () => {
     setFormData(emptyForm);
     setErrors({});
@@ -177,7 +227,7 @@ const RequestForm: FC = () => {
           label="Transaction URL"
           name="transactionURL"
           onChange={handleChange}
-          placeholder="https://example.com"
+          placeholder="https://polygonscan.com/tx/0x..."
           register={registerField}
           type="text"
           value={formData.transactionURL}
@@ -233,6 +283,7 @@ const RequestForm: FC = () => {
         </Button>
         <Button onClick={handleSubmit}>Approve</Button>
       </div>
+      <DebugFormState errors={errors} formData={formData} />
     </div>
   );
 };
