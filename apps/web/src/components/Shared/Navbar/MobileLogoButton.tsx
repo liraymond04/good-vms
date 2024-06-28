@@ -19,12 +19,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
+import LoginButton from '../LoginButton';
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
+import SignedUser from './SignedUser';
 import SignupButton from './SignupButton';
-import LoginButton from '../LoginButton';
-import ModIcon from './ModIcon';
-import NavPost from '@components/Composer/Post/NavPost';
 
 interface NavItemProps {
   current: boolean;
@@ -73,11 +72,7 @@ const MobileLogoButton: React.FC = () => {
             )}
           >
             <div className="pl-6 text-3xl font-black">
-              <img
-                alt="Logo"
-                className="h-12 w-12"
-                src="apps/web/public/logo1.svg"
-              />
+              <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
             </div>
             <span className="nav-text ml-3 mr-3 flex flex-grow">Goodcast</span>
           </MenuButton>
@@ -148,51 +143,54 @@ const MobileLogoButton: React.FC = () => {
                   </MenuItem>
                   <div className="divider" />
                   <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <NavItem
-                  current={pathname === '/messages'}
-                  icon={
-                    pathname === '/messages' ? (
-                      <EnvelopeIconSolid className="size-8" />
-                    ) : (
-                      <EnvelopeIconOutline className="size-8" />
-                    )
-                  }
-                  name="Messages"
-                  url="/messages"
-                />
-              </MenuItem>
-              <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <MoreNavItems />
-              </MenuItem>
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <NavItem
+                      current={pathname === '/messages'}
+                      icon={
+                        pathname === '/messages' ? (
+                          <EnvelopeIconSolid className="size-8" />
+                        ) : (
+                          <EnvelopeIconOutline className="size-8" />
+                        )
+                      }
+                      name="Messages"
+                      url="/messages"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <MoreNavItems />
+                  </MenuItem>
                 </>
               ) : null}
-        
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <LoginButton /> : null}
               </MenuItem>
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <SignupButton /> : null}
-              </MenuItem>             
+              </MenuItem>
+              <div className="ml-2">
+                {currentProfile ? <SignedUser /> : null}
+              </div>
             </MenuItems>
           </MenuTransition>
         </>

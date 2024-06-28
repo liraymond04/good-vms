@@ -1,6 +1,6 @@
 import localFont from 'next/font/local';
 
-export const heyFont = localFont({
+export const goodFont = localFont({
   display: 'swap',
   fallback: ['sans-serif'],
   preload: true,

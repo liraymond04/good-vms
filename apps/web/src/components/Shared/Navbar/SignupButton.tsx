@@ -14,7 +14,7 @@ const SignupButton: FC = () => {
   return (
     <Button
       className={
-        'mb-2 inline-flex  w-10/12 sm:w-full items-center justify-center rounded-full border border-white bg-black p-2 text-base text-white'
+        'mb-2 inline-flex w-10/12 items-center justify-center rounded-full border border-white bg-black p-2 text-base text-white sm:w-full'
       }
       onClick={() => {
         setScreen('choose');
