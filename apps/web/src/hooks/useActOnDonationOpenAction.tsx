@@ -7,7 +7,7 @@ import useActOnUnknownOpenAction from './useActOnUnknownOpenAction';
 
 export interface DonationData {
   amount: bigint; // uint256
-  tokenAddress: `0x${string}`; // token address
+  tokenAddress: `0x${string}`; // address
 }
 
 const useActOnDonationOpenAction = (

@@ -1,5 +1,6 @@
 // Load environment variables
 import dotenv from 'dotenv';
+
 dotenv.config({ override: true });
 
 import { IS_MAINNET } from '@good/data/constants';
