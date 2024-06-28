@@ -5,6 +5,7 @@ import type { FC } from 'react';
 
 import Attachments from '@components/Shared/Attachments';
 import Markup from '@components/Shared/Markup';
+import { GOOD_API_URL } from '@good/data/constants';
 import formatDate from '@good/helpers/datetime/formatDate';
 import getAvatar from '@good/helpers/getAvatar';
 import getProfile from '@good/helpers/getProfile';
@@ -15,7 +16,6 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 
-import { GOOD_API_URL } from '@good/data/constants';
 import DonationModal from './DonationModal';
 
 export interface Donation {
