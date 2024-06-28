@@ -1,18 +1,14 @@
 import { POLYGONSCAN_URL } from '@good/data/constants';
-import { POYGON_WRITE_RPC } from '@good/data/rpcs';
 import logger from '@good/helpers/logger';
-import axios from 'axios';
 import {
   type Address,
   createPublicClient,
   decodeEventLog,
-  http,
   parseAbi
 } from 'viem';
 import { polygon } from 'viem/chains';
 
-import { notionLink, notionNumber, notionTitle } from '../notion/notionBlocks';
-import pushToNotionDatabase from '../notion/pushToNotionDatabase';
+import getRpc from '../getRpc';
 import sendSlackMessage from '../slack';
 
 const MAX_RETRIES = 10;
@@ -30,34 +26,34 @@ const fetchTransactionReceiptWithRetry = async (
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       return await client.getTransactionReceipt({ hash });
-    } catch (error) {
+    } catch {
       if (attempt < retries) {
         logger.error(
-          `saveSignupInvoiceToNotion: Attempt ${attempt} failed. Retrying in ${RETRY_DELAY_MS / 1000} seconds...`
+          `sendSignupNotificationToSlack: Attempt ${attempt} failed. Retrying in ${RETRY_DELAY_MS / 1000} seconds...`
         );
         await sleep(RETRY_DELAY_MS);
       } else {
         throw new Error(
-          `saveSignupInvoiceToNotion: Failed after ${retries} attempts`
+          `sendSignupNotificationToSlack: Failed after ${retries} attempts`
         );
       }
     }
   }
 };
 
-const saveSignupInvoiceToNotion = async (hash: Address, address: Address) => {
+const sendSignupNotificationToSlack = async (hash: Address) => {
   if (!hash) {
     return;
   }
 
   logger.info(
-    `saveSignupInvoiceToNotion: Fetching transaction receipt for ${hash}`
+    `sendSignupNotificationToSlack: Fetching transaction receipt for ${hash}`
   );
 
   try {
     const client = createPublicClient({
       chain: polygon,
-      transport: http(POYGON_WRITE_RPC)
+      transport: getRpc({ mainnet: true })
     });
 
     const receipt = await fetchTransactionReceiptWithRetry(client, hash);
@@ -79,29 +75,9 @@ const saveSignupInvoiceToNotion = async (hash: Address, address: Address) => {
       return;
     }
 
-    const { data: rates } = await axios.get('https://api.hey.xyz/lens/rate');
-    const maticRate = rates.result.find(
-      (rate: any) => rate.symbol === 'WMATIC'
-    ).fiat;
-
     logger.info(
-      `saveSignupInvoiceToNotion: Saving signup invoice for @${handle}`
+      `sendSignupNotificationToSlack: Sending signup invoice to Slack`
     );
-
-    await pushToNotionDatabase('bd37bf6ef3a949f78c6e35d68603edb1', {
-      Amount: notionNumber(maticRate * 8),
-      Hash: notionTitle(hash),
-      Invoice: notionLink(
-        `https://invoice.hey.xyz/signup/${handle}?rate=${maticRate}`
-      ),
-      Profile: notionLink(`https://hey.xyz/u/${handle}`)
-    });
-
-    logger.info(
-      `saveSignupInvoiceToNotion: Signup Invoice for @${handle} saved`
-    );
-
-    logger.info(`saveSignupInvoiceToNotion: Sending signup invoice to Slack`);
 
     await sendSlackMessage({
       channel: '#signups',
@@ -115,31 +91,21 @@ const saveSignupInvoiceToNotion = async (hash: Address, address: Address) => {
         {
           short: false,
           title: 'Profile',
-          value: `https://hey.xyz/u/${handle}`
-        },
-        {
-          short: false,
-          title: 'Invoice',
-          value: `https://invoice.hey.xyz/signup/${handle}?rate=${maticRate}`
-        },
-        {
-          short: false,
-          title: 'Amount',
-          value: `${maticRate * 8} USD`
+          value: `https://bcharity.net/u/${handle}`
         }
       ],
-      text: ':tada: A new profile has been signed up to :hey:'
+      text: ':tada: A new profile has been signed up to :good:'
     });
 
     logger.info(
-      `saveSignupInvoiceToNotion: Signup Invoice for @${handle} sent to Slack`
+      `sendSignupNotificationToSlack: Signup Invoice for @${handle} sent to Slack`
     );
   } catch (error) {
     logger.error(
-      'saveSignupInvoiceToNotion: Failed to save invoice to Notion',
+      'sendSignupNotificationToSlack: Failed to send signup notification to Slack',
       error as Error
     );
   }
 };
 
-export default saveSignupInvoiceToNotion;
+export default sendSignupNotificationToSlack;

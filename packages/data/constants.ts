@@ -21,13 +21,14 @@ export const DEFAULT_COLLECT_TOKEN = getEnvConfig().defaultCollectToken;
 export const PERMISSIONLESS_CREATOR = getEnvConfig().permissionlessCreator;
 export const GOOD_PRO = getEnvConfig().goodPro;
 export const GOOD_TIPPING = getEnvConfig().goodTipping;
+export const GOOD_DONATION = getEnvConfig().goodDonation;
 
 export const IS_MAINNET = LENS_API_URL === LensEndpoint.Mainnet;
 export const ADDRESS_PLACEHOLDER = '0x03Ba3...7EF';
 
 // Application
 export const APP_NAME = 'Goodcast';
-export const DESCRIPTION = `${APP_NAME} is a decentralized, and permissionless social media app built with Lens Protocol and hey.xyz.`;
+export const DESCRIPTION = `${APP_NAME} is a decentralized, and permissionless social media app built with Lens Protocol and bcharity.net.`;
 export const APP_VERSION = packageJson.version;
 export const BRAND_COLOR = '#FB3A5D';
 export const MAX_UINT256 = 2n ** 256n - 1n;
@@ -104,7 +105,7 @@ export const PLACEHOLDER_IMAGE = `${STATIC_IMAGES_URL}/placeholder.png`;
 export const MOONPAY_URL = IS_MAINNET
   ? 'https://buy.moonpay.com'
   : 'https://buy-sandbox.moonpay.com';
-export const GOOD_IMAGEKIT_URL = 'https://ik.imagekit.io/bcharitydev/';
+export const GOOD_IMAGEKIT_URL = 'https://ik.imagekit.io/bcharitydev';
 
 // Tokens / Keys
 export const WALLETCONNECT_PROJECT_ID = 'cd542acc70c2b30f9901a52e70c8';
@@ -136,4 +137,12 @@ export const KNOWN_ATTRIBUTES = {
   HIDE_OEMBED: 'hideOembed',
   POLL_ID: 'pollId',
   SWAP_OA_DEFAULT_AMOUNT: 'swapOADefaultAmount'
+};
+
+// Tanstack Stale Times
+
+export const STALE_TIMES = {
+  FIVE_MINUTES: 5 * 60 * 1000,
+  SIX_HOURS: 6 * 60 * 60 * 1000,
+  THIRTY_MINUTES: 30 * 60 * 1000
 };

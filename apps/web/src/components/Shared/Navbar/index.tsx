@@ -5,12 +5,14 @@ import Search from '@components/Search';
 import cn from '@good/ui/cn';
 import {
   BellIcon as BellIconOutline,
+  CurrencyDollarIcon as CurrencyDollarIconOutline,
   EnvelopeIcon as EnvelopeIconOutline,
   HomeIcon as HomeIconOutline,
   MagnifyingGlassIcon as MagnifyingGlassIconOutline
 } from '@heroicons/react/24/outline';
 import {
   BellIcon as BellIconSolid,
+  CurrencyDollarIcon as CurrencyIconSolid,
   EnvelopeIcon as EnvelopeIconSolid,
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
@@ -29,6 +31,7 @@ import MobileLogoButton from './MobileLogoButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
+import SiteStatus from './SiteStatus';
 import StaffBar from './StaffBar';
 
 const NavbarContainer = styled.div`
@@ -216,13 +219,26 @@ const Navbar: FC = () => {
           name="Messages"
           url="/messages"
         />
+        <NavItem
+          current={pathname === '/donations'}
+          icon={
+            pathname === '/donations' ? (
+              <CurrencyIconSolid className="size-8" />
+            ) : (
+              <CurrencyDollarIconOutline className="size-8" />
+            )
+          }
+          name="Donations"
+          url="/donations"
+        />
         <MoreNavItems />
       </>
     );
   };
 
   return (
-    <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
+      <SiteStatus />
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full">
         <div className="relative flex h-full w-full flex-col items-start justify-start">
@@ -234,34 +250,29 @@ const Navbar: FC = () => {
           <Link className="hide-on-mobile" href="/">
             <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img
-                  alt="Logo"
-                  className="h-12 w-12"
-                  src="apps/web/public/logo1.svg"
-                />
+                <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
               </div>
               <span className="nav-text ml-3 mr-3 flex flex-grow">
                 Goodcast
               </span>
             </div>
           </Link>
-         
+
           <div className="display-on-mobile">
-          <MenuItems/>
             <MobileLogoButton />
           </div>
+          <div className="absolute" style={{ left: '-9999px', top: '-9999px' }}>
+            <MenuItems />
+          </div>
 
-          <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
+          <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
-              <div className=" mt-5 w-full">
+              <div className="mt-5 w-full">
                 <NavPost />
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
-                <div
-                  className=""
-                   
-                >
+                <div className="">
                   <Link
                     className={cn(
                       'max-h-[100vh] md:hidden',
@@ -280,20 +291,16 @@ const Navbar: FC = () => {
                   <div
                     className="mt-4 flex items-start justify-between"
                     id="profile"
-                  >  
-                  </div>
-                  
+                  />
                 </div>
-                
               </div>
-              
             </div>
           </div>
         </div>
-        <div className="hide-on-mobile flex items-center ml-6 gap-2">
-                      {currentProfile ? <MenuItems /> : null}
-                      <ModIcon />
-                    </div>
+        <div className="hide-on-mobile ml-6 flex items-center gap-2">
+          {currentProfile ? <MenuItems /> : null}
+          <ModIcon />
+        </div>
       </NavbarContainer>
       {showSearch ? (
         <div className="m-3 md:hidden">
