@@ -12,6 +12,7 @@ import getProfile from '@good/helpers/getProfile';
 import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
+import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
@@ -121,7 +122,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
             className="mr-4 flex items-center"
             onClick={() => setShowModal(true)}
           >
-            <div className="mr-1" />
+            <CurrencyDollarIcon className="mr-1 size-4" />
             {donationsCount} Donations
           </div>
           <div className="mr-4 flex items-center">
