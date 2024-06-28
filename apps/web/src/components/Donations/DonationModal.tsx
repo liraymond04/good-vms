@@ -1,13 +1,19 @@
-import React from 'react';
+import type { Donation } from '@components/Donations/DonationPost';
+import type { FC } from 'react';
 
-const DonationModal = ({ onClose, post, show }: any) => {
-  if (!show || !post) {
-    return null;
-  }
+import DonatorCard from '@components/Donations/DonatorCard';
+import { EmptyState } from '@good/ui';
+import { GiftIcon } from '@heroicons/react/24/outline';
 
+interface DonationModalProps {
+  donations: Donation[];
+  onClose: () => void;
+}
+
+const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
   // Calculate the total amount donated
-  const totalAmountDonated = post.donations.reduce(
-    (total: any, donation: any) => total + donation.amount,
+  const totalAmountDonated = donations.reduce(
+    (total, donation) => total + Number(donation.amount),
     0
   );
 
@@ -15,7 +21,7 @@ const DonationModal = ({ onClose, post, show }: any) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Gitcoin</h2>
+          <h2 className="text-xl font-bold">Donations</h2>
           <button
             className="text-gray-500 hover:text-gray-800"
             onClick={onClose}
@@ -25,30 +31,24 @@ const DonationModal = ({ onClose, post, show }: any) => {
         </div>
         <div className="flex space-x-4">
           <div className="w-1/2 overflow-y-auto" style={{ maxHeight: '300px' }}>
-            {post.donations &&
-              post.donations.map((donation: any, index: any) => (
-                <div className="mb-4 flex items-center" key={index}>
-                  <img
-                    alt={donation.user.name}
-                    className="mr-4 h-10 w-10 rounded-full"
-                    src={donation.user.avatar}
-                  />
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {donation.user.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Just Donated {donation.amount} {donation.currency}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            {donations.length > 0 ? (
+              donations.map((donation) => (
+                <DonatorCard donation={donation} key={donation.id} />
+              ))
+            ) : (
+              <EmptyState
+                icon={<GiftIcon className="size-8" />}
+                message="Be the first one to donate!"
+              />
+            )}
           </div>
           <div className="flex w-1/2 flex-col justify-between">
             <div>
               <p className="text-lg">
-                Total Amount Donated:
-                <span className="font-semibold">${totalAmountDonated} USD</span>
+                Total Amount Donated:{' '}
+                <span className="font-semibold">
+                  {totalAmountDonated} Tokens
+                </span>
               </p>
               <p className="text-lg">
                 Goal: <span className="font-semibold">$5,000 USD</span>

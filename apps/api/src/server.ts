@@ -1,5 +1,6 @@
 // Load environment variables
 import dotenv from 'dotenv';
+
 dotenv.config({ override: true });
 
 import logger from '@good/helpers/logger';
@@ -8,8 +9,8 @@ import express from 'express';
 import { router } from 'express-file-routing';
 import ViteExpress from 'vite-express';
 
-import listenDonations from './listeners/donation-listener';
 import listenCauses from './listeners/cause-listener';
+import listenDonations from './listeners/donation-listener';
 
 const app = express();
 

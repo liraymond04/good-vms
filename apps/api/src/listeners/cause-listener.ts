@@ -8,15 +8,15 @@ import { z } from 'zod';
 import prisma from '../helpers/prisma';
 
 interface CauseCreateInput {
-  publicationId: string;
-  profileId: string;
   profileAddress: string;
+  profileId: string;
+  publicationId: string;
 }
 
 const donationEventValidator = z.object({
-  publicationId: z.bigint().transform((id) => id.toString(16)),
   profileAddress: z.string(),
   profileId: z.bigint().transform((id) => id.toString(16)),
+  publicationId: z.bigint().transform((id) => id.toString(16))
 });
 
 async function makeCause(input: CauseCreateInput) {
