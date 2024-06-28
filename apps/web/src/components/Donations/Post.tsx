@@ -1,5 +1,6 @@
 'use client';
 
+import { CurrencyDollarIcon as CurrencyDollarIconOutline } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 import DonationModal from './DonationModal';
@@ -39,7 +40,7 @@ const Post = ({ index, length, post }: any) => {
             className="mr-4 flex items-center"
             onClick={() => handleDonateClick(post)}
           >
-            <div className="mr-1" />
+            <CurrencyDollarIconOutline className="mr-1 size-8" />
             {post.donations.length} Donations
           </div>
           <div className="mr-4 flex items-center">

@@ -1,8 +1,8 @@
 'use client';
-import Footer from '@components/Shared/Footer';
 import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
 
 import DonationsFeed from './DonationsFeed';
+import Sidebar from './Sidebar';
 
 const Donations = () => {
   return (
@@ -16,7 +16,7 @@ const Donations = () => {
       </GridItemEight>
 
       <GridItemFour>
-        <Footer />
+        <Sidebar />
       </GridItemFour>
     </GridLayout>
   );
