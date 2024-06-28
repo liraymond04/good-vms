@@ -162,7 +162,7 @@ model CauseDonation {
   fromProfileId String
   fromAddress   String
   tokenAddress  String
-  amount        Int
+  amount        BigInt
   txHash        String
   createdAt     DateTime @default(now())
 }

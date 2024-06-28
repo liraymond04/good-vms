@@ -28,6 +28,7 @@
     "@good/abis": "workspace:*",
     "@good/data": "workspace:*",
     "@good/helpers": "workspace:*",
+    "@good/ui": "workspace:*",
     "@irys/sdk": "^0.2.5",
     "@lens-protocol/metadata": "^1.2.0",
     "@prisma/client": "^5.15.1",

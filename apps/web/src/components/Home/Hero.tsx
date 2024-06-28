@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
             </div>
             <div className="leading-9 text-gray-900 dark:text-gray-300">
               <h3>An open social media for the public good</h3>
-              <h3>built on Lens Protocol and good.xyz.</h3>
+              <h3>built on Lens Protocol and hey.xyz.</h3>
             </div>
           </div>
           <div className="hidden w-full flex-1 flex-shrink-0 sm:block" />

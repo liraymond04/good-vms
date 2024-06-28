@@ -1,37 +1,33 @@
+import type { ListenerClient } from 'src/server';
+
 import { GoodDonation } from '@good/abis';
-import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
+import { GOOD_DONATION } from '@good/data/constants';
 import logger from '@good/helpers/logger';
-import { createPublicClient, webSocket } from 'viem';
-import { polygon, polygonAmoy } from 'viem/chains';
 import { z } from 'zod';
 
 import prisma from '../helpers/prisma';
 
-interface CauseCreateInput {
-  profileAddress: string;
-  profileId: string;
-  publicationId: string;
-}
-
 const donationEventValidator = z.object({
-  profileAddress: z.string(),
   profileId: z.bigint().transform((id) => id.toString(16)),
+  profileOwner: z.string(),
   publicationId: z.bigint().transform((id) => id.toString(16))
 });
 
+interface CauseCreateInput extends z.infer<typeof donationEventValidator> {}
+
 async function makeCause(input: CauseCreateInput) {
-  const data = await prisma.cause.create({ data: input });
+  const prismaInput = {
+    profileAddress: input.profileOwner,
+    profileId: input.profileId,
+    publicationId: input.publicationId
+  };
+  const data = await prisma.cause.create({ data: prismaInput });
 
   logger.info(`Created a cause ${data.id}`);
 }
 
-export default function listenCauses() {
-  const publicClient = createPublicClient({
-    chain: IS_MAINNET ? polygon : polygonAmoy,
-    transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
-  });
-
-  publicClient.watchContractEvent({
+export default function listenCauses(client: ListenerClient) {
+  client.watchContractEvent({
     abi: GoodDonation,
     address: GOOD_DONATION,
     eventName: 'CauseCreated',

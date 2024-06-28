@@ -41,7 +41,7 @@
 
 ##  About Goodcast
 
-Goodcast is a cutting-edge social media for the public good that leverages the power of [Lens Protocol](https://lens.xyz) and [good.xyz](https://good.xyz/) to create a decentralized and permissionless platform for the public to interact, share, and engage with one another. With a focus on privacy, security, and user control, Good aims to revolutionize the social media landscape by providing a more transparent and equitable digital environment for its users.
+Goodcast is a cutting-edge social media for the public good that leverages the power of [Lens Protocol](https://lens.xyz) and [hey.xyz](https://hey.xyz/) to create a decentralized and permissionless platform for the public to interact, share, and engage with one another. With a focus on privacy, security, and user control, Good aims to revolutionize the social media landscape by providing a more transparent and equitable digital environment for its users.
 
 ## 📦 Environments
 

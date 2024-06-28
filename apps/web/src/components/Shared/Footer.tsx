@@ -14,17 +14,17 @@ const links = [
   { href: '/terms', label: 'Terms' },
   { href: '/privacy', label: 'Privacy' },
   {
-    href: 'https://hey.xyz/discord',
+    href: 'https://bcharity.net/discord',
     label: 'Discord',
     onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_DISCORD)
   },
   {
-    href: 'https://status.hey.xyz',
+    href: 'https://status.bcharity.net',
     label: 'Status',
     onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_STATUS)
   },
   {
-    href: 'https://feedback.hey.xyz',
+    href: 'https://feedback.bcharity.net',
     label: 'Feedback',
     onClick: () => Leafwatch.track(MISCELLANEOUS.FOOTER.OPEN_FEEDBACK)
   },

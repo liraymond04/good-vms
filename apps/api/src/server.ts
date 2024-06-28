@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 
 dotenv.config({ override: true });
 
+import { IS_MAINNET } from '@good/data/constants';
 import logger from '@good/helpers/logger';
 import cors from 'cors';
 import express from 'express';
 import { router } from 'express-file-routing';
+import { createPublicClient, webSocket } from 'viem';
+import { polygon, polygonAmoy } from 'viem/chains';
 import ViteExpress from 'vite-express';
 
 import listenCauses from './listeners/cause-listener';
@@ -28,9 +31,18 @@ const setupRoutes = async () => {
   });
 };
 
+const createClient = () =>
+  createPublicClient({
+    chain: IS_MAINNET ? polygon : polygonAmoy,
+    transport: webSocket('wss://polygon-amoy-bor-rpc.publicnode.com')
+  });
+
+export type ListenerClient = ReturnType<typeof createClient>;
+
 const setupListeners = () => {
-  listenDonations();
-  listenCauses();
+  const publicClient = createClient();
+  listenDonations(publicClient);
+  listenCauses(publicClient);
 };
 
 try {

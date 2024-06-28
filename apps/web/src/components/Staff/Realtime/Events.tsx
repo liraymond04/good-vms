@@ -86,8 +86,8 @@ const Events: FC = () => {
                   <div className="ld-text-gray-500 linkify truncate text-sm">
                     <Link href={event.url} target="_blank">
                       {event.url.replace(
-                        'https://hey.xyz//',
-                        'https://hey.xyz/'
+                        'https://bcharity.net//',
+                        'https://bcharity.net/'
                       )}
                     </Link>
                   </div>
