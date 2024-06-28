@@ -8,6 +8,7 @@ import type { FieldMetadata } from './InputField';
 
 import getProfile from './getProfile';
 import { InputField } from './InputField';
+import { useDeprecatedAnimatedState } from 'framer-motion';
 
 interface FormFields {
   description: string;
@@ -85,6 +86,9 @@ const RequestForm: FC = () => {
   const [formData, setFormData] = useState<FormFields>(emptyForm);
   const [errors, setErrors] = useState<Partial<FormFields>>({});
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [successful, setSuccessful] = useState<boolean>(false);
+
   // Store field metadata
   const fieldMetadataRef = useRef<FieldMetadata[]>([]);
 
@@ -109,6 +113,7 @@ const RequestForm: FC = () => {
 
   // Check form requirements and input
   const handleSubmit = async () => {
+    setIsLoading(true);
     const newErrors: Partial<FormFields> = {};
 
     for (const field of fieldMetadataRef.current) {
@@ -167,12 +172,15 @@ const RequestForm: FC = () => {
 
     // Set errors only if there are any
     if (Object.keys(newErrors).length > 0) {
+      setSuccessful(false);
       setErrors(newErrors);
     } else {
+      setSuccessful(true);
       console.info('submission successful!');
       setErrors({});
     }
 
+    setIsLoading(false);
     return;
   };
 
@@ -281,8 +289,15 @@ const RequestForm: FC = () => {
         <Button className="ml-auto" onClick={handleReject} variant="danger">
           Reject
         </Button>
-        <Button onClick={handleSubmit}>Approve</Button>
+        <Button disabled={isLoading} onClick={handleSubmit}>
+          Approve
+        </Button>
       </div>
+      {successful && (
+        <p className="mt-2 text-right text-sm text-green-500">
+          Information successfully embedded!
+        </p>
+      )}
       <DebugFormState errors={errors} formData={formData} />
     </div>
   );
