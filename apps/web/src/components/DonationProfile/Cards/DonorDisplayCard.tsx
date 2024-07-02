@@ -60,14 +60,14 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
       <div className="p-4">
         <div className="flex justify-center space-x-4 mb-4">
           <Button
-            style={{ backgroundColor: selectedTab === 'top' ? '#da5597' : '' }}
+            style={{ backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('top')}
           >
             Top Donors
           </Button>
           <Button
-            style={{ backgroundColor: selectedTab === 'new' ? '#da5597' : '' }}
+            style={{ backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('new')}
           >
