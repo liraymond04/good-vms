@@ -51,6 +51,9 @@ importers:
       '@good/helpers':
         specifier: workspace:*
         version: link:../../packages/helpers
+      '@good/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@irys/sdk':
         specifier: ^0.2.5
         version: 0.2.5(arweave@1.15.1)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
