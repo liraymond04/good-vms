@@ -7,6 +7,7 @@ const getEnvConfig = (): {
   defaultCollectToken: string;
   goodApiEndpoint: string;
   goodDonation: `0x${string}`;
+  goodReferral: `0x${string}`;
   goodLensSignup: `0x${string}`;
   goodPro: `0x${string}`;
   goodTipping: `0x${string}`;
@@ -22,6 +23,7 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
+        goodReferral: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
@@ -36,6 +38,7 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
+        goodReferral: MainnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
@@ -50,6 +53,7 @@ const getEnvConfig = (): {
         defaultCollectToken: MainnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Mainnet,
         goodDonation: MainnetContracts.GoodDonation,
+        goodReferral: MainnetContracts.GoodDonation,
         goodLensSignup: MainnetContracts.GoodLensSignup,
         goodPro: MainnetContracts.GoodPro,
         goodTipping: MainnetContracts.GoodTipping,
