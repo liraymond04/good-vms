@@ -17,7 +17,7 @@ import { ILensHub } from 'lens-modules/contracts/interfaces/ILensHub.sol';
 import { LensModule } from 'lens-modules/contracts/modules/LensModule.sol';
 
 /// @custom:security-contact security@bcharity.net
-contract GoodDonationActionModule is
+contract GoodReferralActionModule is
   Initializable,
   PausableUpgradeable,
   AccessControlUpgradeable,
@@ -32,27 +32,9 @@ contract GoodDonationActionModule is
   string private moduleMetadataURI;
 
   bytes32 public constant PAUSER_ROLE = keccak256('PAUSER_ROLE');
-  bytes32 public constant VERIFIED_DONEE_ROLE =
-    keccak256('VERIFIED_DONEE_ROLE');
-
-  event CauseCreated(
-    uint256 indexed profileId,
-    uint256 indexed publicationId,
-    address indexed profileOwner
-  );
-
-  event DonationSent(
-    uint256 indexed fromProfileId,
-    uint256 indexed toProfileId,
-    uint256 indexed publicationId,
-    address token,
-    address from,
-    address to,
-    uint256 amount
-  );
 
   error InvalidTokenAddress();
-  error DonationAmountCannotBeZero();
+  error AmountCannotBeZero();
   error UnverifiedDonee(address donee);
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -101,67 +83,45 @@ contract GoodDonationActionModule is
     return moduleMetadataURI;
   }
 
-  function isVerifiedDonee(address account) public view returns (bool) {
-    return hasRole(VERIFIED_DONEE_ROLE, account);
-  }
-
-  function addVerifiedDonee(address account) external {
-    grantRole(VERIFIED_DONEE_ROLE, account);
-  }
-
-  function removeVerifiedDonee(address account) external {
-    revokeRole(VERIFIED_DONEE_ROLE, account);
-  }
-
   function initializePublicationAction(
     uint256 profileId,
     uint256 pubId,
     address transactionExecutor,
     bytes calldata /* data */
-  ) external override whenNotPaused onlyHub returns (bytes memory) {
-    if (!isVerifiedDonee(transactionExecutor)) {
-      revert UnverifiedDonee(transactionExecutor);
-    }
-
-    emit CauseCreated(profileId, pubId, transactionExecutor);
-
+  ) external view override whenNotPaused onlyHub returns (bytes memory) {
     return abi.encode(profileId, pubId, transactionExecutor);
   }
 
   function processPublicationAction(
     Types.ProcessActionParams calldata params
   ) external override whenNotPaused onlyHub returns (bytes memory) {
-    address sender = params.transactionExecutor;
-    address recipient = lensHub.ownerOf(params.publicationActedProfileId);
-
-    if (!isVerifiedDonee(recipient)) {
-      revert UnverifiedDonee(recipient);
-    }
+    address buyer = params.transactionExecutor;
+    address seller = lensHub.ownerOf(params.publicationActedProfileId);
 
     (address tokenAddress, uint256 amount) = abi.decode(
       params.actionModuleData,
       (address, uint256)
     );
 
+    if (amount == 0) {
+      revert AmountCannotBeZero();
+    }
     if (tokenAddress == address(0)) {
       revert InvalidTokenAddress();
     }
 
-    if (amount == 0) {
-      revert DonationAmountCannotBeZero();
+    IERC20 token = IERC20(tokenAddress);
+    uint256 remaining = amount;
+    for (uint8 i = 0; i < 3 && i < params.referrerProfileIds.length; i++) {
+      uint256 referrerAmount = (i == 0 ? amount * 3 : amount) / 10;
+      if (referrerAmount == 0) {
+        break;
+      }
+      remaining -= referrerAmount; 
+      token.safeTransferFrom(buyer, lensHub.ownerOf(params.referrerProfileIds[i]), referrerAmount);
     }
 
-    IERC20(tokenAddress).safeTransferFrom(sender, recipient, amount);
-
-    emit DonationSent(
-      params.actorProfileId,
-      params.publicationActedProfileId,
-      params.publicationActedId,
-      tokenAddress,
-      sender,
-      recipient,
-      amount
-    );
+    token.safeTransferFrom(buyer, seller, remaining);
 
     return
       abi.encode(
@@ -169,8 +129,6 @@ contract GoodDonationActionModule is
         params.publicationActedProfileId,
         params.publicationActedId,
         tokenAddress,
-        sender,
-        recipient,
         amount
       );
   }
