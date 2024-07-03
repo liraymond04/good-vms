@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import DonatorCard from '@components/Donations/DonatorCard';
 import { EmptyState } from '@good/ui';
-import { GiftIcon } from '@heroicons/react/24/outline';
+import { GiftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface DonationModalProps {
   donations: Donation[];
@@ -19,14 +19,14 @@ const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-gray-300 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">Donations</h2>
           <button
-            className="text-gray-500 hover:text-gray-800"
+            className="rounded-full text-gray-800 hover:bg-gray-200 hover:text-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
             onClick={onClose}
           >
-            &times;
+            <XMarkIcon className="size-5" />
           </button>
         </div>
         <div className="flex space-x-4">
