@@ -32,9 +32,13 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <span className="nav-text text-xl text-black dark:text-white">
+            <a
+              className="nav-text text-xl text-black dark:text-white"
+              href="/donations"
+              target="_blank"
+            >
               More
-            </span>
+            </a>
           </MenuButton>
           <MenuTransition>
             <MenuItems

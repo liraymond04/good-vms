@@ -141,10 +141,11 @@ const Navbar: FC = () => {
     current: boolean;
     icon: ReactNode;
     name: string;
+    target: any;
     url: string;
   }
 
-  const NavItem: FC<NavItemProps> = ({ current, icon, name, url }) => {
+  const NavItem: FC<NavItemProps> = ({ current, icon, name, target, url }) => {
     return (
       <Link
         className={cn(
@@ -156,6 +157,7 @@ const Navbar: FC = () => {
           }
         )}
         href={url}
+        target={target ? '_blank' : '_self'}
       >
         {icon}
         <div className="nav-text text-black dark:text-white">
@@ -181,6 +183,7 @@ const Navbar: FC = () => {
             )
           }
           name="Home"
+          target={false}
           url="/"
         />
         <NavItem
@@ -193,6 +196,7 @@ const Navbar: FC = () => {
             )
           }
           name="Explore"
+          target={false}
           url="/explore"
         />
         <NavItem
@@ -205,6 +209,7 @@ const Navbar: FC = () => {
             )
           }
           name="Notifications"
+          target={false}
           url="/notifications"
         />
         <NavItem
@@ -217,6 +222,7 @@ const Navbar: FC = () => {
             )
           }
           name="Messages"
+          target={false}
           url="/messages"
         />
         <NavItem
@@ -229,6 +235,7 @@ const Navbar: FC = () => {
             )
           }
           name="Donations"
+          target={true}
           url="/donations"
         />
         <MoreNavItems />
