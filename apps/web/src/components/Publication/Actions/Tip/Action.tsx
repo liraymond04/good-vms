@@ -87,7 +87,16 @@ const Action: FC<ActionProps> = ({
     query: { refetchInterval: 2000 }
   });
 
-  const { data: txHash, writeContractAsync } = useWriteContract();
+  const { data: txHash, writeContractAsync } = useWriteContract({
+    mutation: {
+      onError: (error: Error) => {
+        console.error('Error: ', error);
+      },
+      onSuccess: (hash: string) => {
+        console.log('Transaction hash:', hash);
+    }
+  }
+  });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransactionReceipt({
     hash: txHash,
@@ -148,6 +157,7 @@ const Action: FC<ActionProps> = ({
         args: [GOOD_TIPPING, MAX_UINT256],
         functionName: 'approve'
       });
+      console.log('Tipping enabled');
       Leafwatch.track(PUBLICATION.TIP.ENABLE, {
         address,
         currency: selectedCurrency?.symbol
@@ -195,11 +205,11 @@ const Action: FC<ActionProps> = ({
         { headers: getAuthApiHeaders() }
       );
 
-      Leafwatch.track(PUBLICATION.TIP.TIP, {
-        address,
-        amount,
-        currency: selectedCurrency?.symbol
-      });
+      // Leafwatch.track(PUBLICATION.TIP.TIP, {
+      //   address,
+      //   amount,
+      //   currency: selectedCurrency?.symbol
+      // });
       addTip(publication.id);
       closePopover();
       triggerConfetti();
@@ -208,6 +218,7 @@ const Action: FC<ActionProps> = ({
       onError(error);
     } finally {
       setIsLoading(false);
+      // console.log("DEBUG: finally block")
     }
   };
 
