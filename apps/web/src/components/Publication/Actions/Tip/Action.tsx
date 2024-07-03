@@ -94,8 +94,8 @@ const Action: FC<ActionProps> = ({
       },
       onSuccess: (hash: string) => {
         console.log('Transaction hash:', hash);
+      }
     }
-  }
   });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransactionReceipt({
