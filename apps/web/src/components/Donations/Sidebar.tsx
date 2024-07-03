@@ -1,4 +1,7 @@
-import React from 'react';
+import {
+  MagnifyingGlassIcon,
+  MicrophoneIcon
+} from '@heroicons/react/24/outline';
 
 const suggestedPeople = [
   {
@@ -48,7 +51,7 @@ const communities = [
 
 const Communities = () => {
   return (
-    <div className="mt-6 rounded-lg bg-white p-4 shadow-md">
+    <div className="mt-6 rounded-lg bg-white p-4 shadow-md dark:border dark:border-gray-700 dark:bg-black dark:shadow-none">
       <h3 className="mb-4 text-sm font-bold">Communities you might like</h3>
       <ul>
         {communities.map((community, index) => (
@@ -60,7 +63,7 @@ const Communities = () => {
             />
             <div>
               <p className="text-sm font-semibold">{community.name}</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-100">
                 {community.members} members
               </p>
             </div>
@@ -73,7 +76,7 @@ const Communities = () => {
 
 const SuggestedPeople = () => {
   return (
-    <div className="rounded-lg bg-white p-4 shadow-md">
+    <div className="rounded-lg bg-white p-4 shadow-md dark:border dark:border-gray-700 dark:bg-black dark:shadow-none">
       <h3 className="mb-4 text-sm font-bold">Suggested people</h3>
       <ul>
         {suggestedPeople.map((person, index) => (
@@ -85,7 +88,9 @@ const SuggestedPeople = () => {
             />
             <div>
               <p className="text-sm font-semibold">{person.name}</p>
-              <p className="text-xs text-gray-500">{person.handle}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-100">
+                {person.handle}
+              </p>
             </div>
           </li>
         ))}
@@ -96,14 +101,16 @@ const SuggestedPeople = () => {
 
 const SearchBar = () => {
   return (
-    <div className="mb-4 flex items-center rounded-full bg-white p-2 shadow-md">
-      {/* <FasSearch className="text-gray-500 mr-2" /> */}
+    <div className="flex flex-row items-center rounded-full bg-[#F0F0F0] dark:bg-[#828282] dark:bg-opacity-[35%]">
+      <MagnifyingGlassIcon className="ml-3 size-5 dark:text-[#888888]" />
       <input
-        className="w-full rounded-full p-2 outline-none"
+        className="w-full border-none bg-transparent p-2 focus:ring-0 dark:placeholder:text-[#888888]"
         placeholder="Search"
         type="text"
       />
-      {/* <FaMicrophone className="text-gray-500 ml-2" /> */}
+      <button className="mr-3 size-5">
+        <MicrophoneIcon className="dark:text-[#888888]" />
+      </button>
     </div>
   );
 };

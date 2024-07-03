@@ -63,7 +63,8 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
     isError
   } = useQuery({
     queryFn: () => fetchDonationsOnPost(post.id),
-    queryKey: ['donationsOnPost', post.id]
+    queryKey: ['donationsOnPost', post.id],
+    refetchOnMount: false
   });
 
   if (isError) {
@@ -90,10 +91,10 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
       className={cn(
         isFirstInFeed && 'rounded-t-lg border-t',
         isLastInFeed && 'rounded-b-lg border-b',
-        'border-l border-r border-gray-200 bg-white p-2'
+        'border-l border-r border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-black'
       )}
     >
-      <div className="rounded-lg bg-white p-4" key={post.id}>
+      <div className="p-4">
         <div className="mb-4 flex items-center">
           <Image
             alt={profile.displayName}
@@ -104,7 +105,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
           />
           <div className="ml-3">
             <div className="text-sm font-semibold">{profile.displayName}</div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-500 dark:text-gray-100">
               {formatDate(post.createdAt)}
             </div>
           </div>
@@ -117,7 +118,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
             <Attachments asset={postAsset} attachments={postAttachments} />
           </div>
         )}
-        <div className="flex items-center text-sm text-gray-500">
+        <div className="ld-text-gray-500 flex items-center text-sm text-gray-500 dark:text-gray-100">
           <div
             className="mr-4 flex items-center"
             onClick={() => setShowModal(true)}
@@ -137,8 +138,8 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
       </div>
       {/* Separator between posts */}
       {!isLastInFeed && (
-        <div className="bg-white py-6">
-          <hr className="mx-2 border-gray-300" />
+        <div className="bg-white py-6 dark:bg-black">
+          <hr className="mx-2 border-gray-300 dark:border-gray-700" />
         </div>
       )}
       {showModal && (
