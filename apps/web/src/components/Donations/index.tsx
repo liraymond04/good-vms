@@ -12,7 +12,6 @@ const Donations = () => {
           <div className="px-2 py-1">Donations Feed</div>
         </div>
         <DonationsFeed />
-        <hr className="my-6 border-gray-300" />
       </GridItemEight>
 
       <GridItemFour>

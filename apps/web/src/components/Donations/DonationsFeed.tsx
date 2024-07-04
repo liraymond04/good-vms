@@ -1,12 +1,18 @@
+import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
+
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
 import { EmptyState, ErrorMessage } from '@good/ui';
 import { HeartIcon } from '@heroicons/react/24/outline';
+import { useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import useExploreCauses from 'src/hooks/useExploreCauses';
 
 import DonationPost from './DonationPost';
 
+let virtuosoState: any = { ranges: [], screenTop: 0 };
+
 const DonationsFeed = () => {
+  const virtuoso = useRef<VirtuosoHandle>(null);
   const {
     data: posts,
     error,
@@ -32,10 +38,20 @@ const DonationsFeed = () => {
     );
   }
 
+  const onScrolling = (scrolling: boolean) => {
+    if (!scrolling) {
+      virtuoso?.current?.getState((state: StateSnapshot) => {
+        virtuosoState = { ...state };
+      });
+    }
+  };
+
   return (
     <Virtuoso
+      computeItemKey={(index, post) => `${post.id}-${index}`}
       data={posts}
       endReached={fetchMore}
+      isScrolling={onScrolling}
       itemContent={(index, post) => {
         return (
           <DonationPost
@@ -46,6 +62,12 @@ const DonationsFeed = () => {
           />
         );
       }}
+      ref={virtuoso}
+      restoreStateFrom={
+        virtuosoState.ranges.length === 0
+          ? virtuosoState?.current?.getState((state: StateSnapshot) => state)
+          : virtuosoState
+      }
       useWindowScroll
     />
   );

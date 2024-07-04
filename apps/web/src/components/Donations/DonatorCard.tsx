@@ -83,7 +83,7 @@ const DonatorCard: FC<DonationCardProps> = ({ donation }) => {
       />
       <div>
         <p className="text-sm font-semibold">{profile.displayName}</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-300">
           Just Donated {donation.amount} {tokenSymbol ?? '???'}
         </p>
       </div>
