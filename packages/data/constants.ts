@@ -12,7 +12,7 @@ export const LENS_NETWORK = process.env.NEXT_PUBLIC_LENS_NETWORK || 'mainnet';
 export const LENS_API_URL = getEnvConfig().lensApiEndpoint;
 export const GOOD_API_URL = IS_PRODUCTION
   ? getEnvConfig().goodApiEndpoint
-  : 'http://localhost:4784';
+  : process.env.NEXT_PUBLIC_API_URL;
 export const LENS_HUB = getEnvConfig().lensHub;
 export const LENS_HANDLES = getEnvConfig().lensHandles;
 export const TOKEN_HANDLE_REGISTRY = getEnvConfig().tokenHandleRegistry;
