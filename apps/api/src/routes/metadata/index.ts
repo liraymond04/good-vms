@@ -37,9 +37,10 @@ export const post: Handler = async (req, res) => {
 
     logger.info(`Uploaded metadata to Irys: ar://${receipt.id}`);
 
-    res.header('Access-Control-Allow-Origin', '*');
-
-    return res.status(200).json({ id: receipt.id, success: true });
+    return res
+      .header('Access-Control-Allow-Origin', '*')
+      .status(200)
+      .json({ id: receipt.id, success: true });
   } catch (error) {
     return catchedError(res, error);
   }
