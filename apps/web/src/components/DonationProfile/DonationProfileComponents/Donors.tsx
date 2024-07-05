@@ -5,6 +5,8 @@ import { Image } from '@good/ui';
 import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 
+import DonorsDisplayCard from '../Cards/DonorDisplayCard';
+
 interface DonorsProps {
   newDonors: { amount: number; supporter: Profile }[];
   topDonors: { amount: number; supporter: Profile }[];
@@ -57,14 +59,12 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
           </div>
           <div className="flex flex-col items-center">
             {renderSupporters(topDonors, showAllTopDonors)}
-            <div className="mt-5 w-full">
-              <Button
-                className="w-1/2 rounded-full px-4 py-2 text-lg text-white"
-                onClick={handleShowAllTopDonors}
-                style={{ background: '#da5597' }}
-              >
-                Show All
-              </Button>
+            <div className="mt-5 w-full text-center">
+            <DonorsDisplayCard
+          allNewDonors = {newDonors}
+          allTopDonors = {topDonors}
+          top = {true}
+          />
             </div>
           </div>
         </div>
@@ -77,13 +77,10 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             {renderSupporters(newDonors, showAllNewDonors)}
 
             <div className="mt-5 w-full text-center">
-              <Button
-                className="w-1/2 rounded-full px-4 py-2 text-lg text-white"
-                onClick={handleShowAllNewDonors}
-                style={{ background: '#da5597' }}
-              >
-                Show All
-              </Button>
+                <DonorsDisplayCard
+                allNewDonors = {newDonors}
+                allTopDonors = {topDonors}
+                top = {false}/>
             </div>
           </div>
         </div>
