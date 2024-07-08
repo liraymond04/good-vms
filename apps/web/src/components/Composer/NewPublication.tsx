@@ -1,8 +1,5 @@
 import type {
   MirrorablePublication,
-  MomokaCommentRequest,
-  MomokaPostRequest,
-  MomokaQuoteRequest,
   OnchainCommentRequest,
   OnchainPostRequest,
   OnchainQuoteRequest,
@@ -17,6 +14,7 @@ import QuotedPublication from '@components/Publication/QuotedPublication';
 import { AudioPublicationSchema } from '@components/Shared/Audio';
 import Wrapper from '@components/Shared/Embed/Wrapper';
 import { KNOWN_ATTRIBUTES } from '@good/data/constants';
+import { TestnetContracts } from '@good/data/contracts';
 import { Errors } from '@good/data/errors';
 import { PUBLICATION } from '@good/data/tracking';
 import checkDispatcherPermissions from '@good/helpers/checkDispatcherPermissions';
@@ -404,49 +402,12 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         openActionModules.push({ unknownOpenAction: openAction });
       }
 
-      // Payload for the Momoka post/comment/quote
-      const momokaRequest:
-        | MomokaCommentRequest
-        | MomokaPostRequest
-        | MomokaQuoteRequest = {
-        ...(isComment && { commentOn: publication?.id }),
-        ...(isQuote && { quoteOn: quotedPublication?.id }),
-        contentURI: `ar://${arweaveId}`
-      };
-
-      if (useMomoka && !nftOpenActionEmbed) {
-        if (canUseLensManager) {
-          if (isComment) {
-            return await createCommentOnMomka(
-              momokaRequest as MomokaCommentRequest
-            );
-          }
-
-          if (isQuote) {
-            return await createQuoteOnMomka(
-              momokaRequest as MomokaQuoteRequest
-            );
-          }
-
-          return await createPostOnMomka(momokaRequest);
+      openActionModules.push({
+        unknownOpenAction: {
+          address: TestnetContracts.GoodReferral,
+          data: '0x00'
         }
-
-        if (isComment) {
-          return await createMomokaCommentTypedData({
-            variables: { request: momokaRequest as MomokaCommentRequest }
-          });
-        }
-
-        if (isQuote) {
-          return await createMomokaQuoteTypedData({
-            variables: { request: momokaRequest as MomokaQuoteRequest }
-          });
-        }
-
-        return await createMomokaPostTypedData({
-          variables: { request: momokaRequest }
-        });
-      }
+      });
 
       // Payload for the post/comment/quote
       const onChainRequest:

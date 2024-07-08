@@ -7,9 +7,9 @@ const getEnvConfig = (): {
   defaultCollectToken: string;
   goodApiEndpoint: string;
   goodDonation: `0x${string}`;
-  goodReferral: `0x${string}`;
   goodLensSignup: `0x${string}`;
   goodPro: `0x${string}`;
+  goodReferral: `0x${string}`;
   goodTipping: `0x${string}`;
   lensApiEndpoint: string;
   lensHandles: `0x${string}`;
@@ -23,9 +23,9 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
-        goodReferral: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
+        goodReferral: TestnetContracts.GoodReferral,
         goodTipping: TestnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Testnet,
         lensHandles: TestnetContracts.LensHandles,
@@ -38,9 +38,9 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
-        goodReferral: MainnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
+        goodReferral: MainnetContracts.GoodReferral,
         goodTipping: TestnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Staging,
         lensHandles: TestnetContracts.LensHandles,
@@ -53,9 +53,9 @@ const getEnvConfig = (): {
         defaultCollectToken: MainnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Mainnet,
         goodDonation: MainnetContracts.GoodDonation,
-        goodReferral: MainnetContracts.GoodDonation,
         goodLensSignup: MainnetContracts.GoodLensSignup,
         goodPro: MainnetContracts.GoodPro,
+        goodReferral: MainnetContracts.GoodReferral,
         goodTipping: MainnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Mainnet,
         lensHandles: MainnetContracts.LensHandles,
