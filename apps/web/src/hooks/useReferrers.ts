@@ -35,6 +35,7 @@ const useReferrers = (publicationId: string) => {
     let err = '';
     let referrers: Address[] = [];
     loop: while (nextPublicationId) {
+      console.log('npid', nextPublicationId);
       const { data, error: referrersQueryError } = await fetchMore({
         variables: { request: { forId: nextPublicationId } }
       });
@@ -52,7 +53,8 @@ const useReferrers = (publicationId: string) => {
           const actionModule = data.publication.openActionModules.find(
             (m) =>
               m.__typename === 'UnknownOpenActionModuleSettings' &&
-              m.contract.address === getEnvConfig().goodReferral
+              m.contract.address.toLowerCase() ===
+                getEnvConfig().goodReferral.toLowerCase()
           );
           if (!actionModule) {
             console.error(
