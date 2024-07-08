@@ -6,25 +6,61 @@ import { PAGEVIEW } from '@good/data/tracking';
 import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
 import { Leafwatch } from '@helpers/leafwatch';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
+
+import getPublicationData from '@good/helpers/getPublicationData';
+import { useQuery, gql } from '@apollo/client';
 
 import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
 import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
+import type { Post } from '@good/lens';
+
+import { GOOD_API_URL } from '@good/data/constants';
+
+interface DonationDetailsProps{
+  post: Post;
+}
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
   const { currentProfile } = useProfileStore();
   const { id } = router.query;
+  const [donationDetails, setDonationDetails] = useState<any>(null);
 
   useEffect(() => {
+    const fetchDonationDetails = async () => {
+      try {
+        const params = new URLSearchParams()
+        const parts = id?.toString().split('-')!
+        console.log(id)
+        console.log(parts)
+        params.append('profileId',parts[1].substring(2))
+        params.append('publicationId', parts[0].substring(2))
+        const response = await fetch( `http://api-testnet.bcharity.net/donations/all-donations-on-post?${params}`)
+        console.log(response);
+        if (!response.ok) {
+          throw new Error('Failed to fetch donation details');
+        }
+        const data = await response.json();
+   
+        console.log( data)
+    
+        Leafwatch.track(PAGEVIEW, { page: `donations/${id}` });
+
+      } catch (error) {
+        console.error('Error fetching donation details:', error);
+      }
+    };
+  
     if (id) {
-      Leafwatch.track(PAGEVIEW, { page: `donations/${id}` });
+      fetchDonationDetails();
     }
   }, [id]);
+  
 
   if (!currentProfile) {
     return <div>Not signed in</div>;
