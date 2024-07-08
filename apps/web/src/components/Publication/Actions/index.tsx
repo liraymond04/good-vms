@@ -8,6 +8,7 @@ import { isMirrorPublication } from '@good/helpers/publicationHelpers';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import isFeatureAvailable from '@helpers/isFeatureAvailable';
 import { memo } from 'react';
+import useReferrers from 'src/hooks/useReferrers';
 import { useImpressionsStore } from 'src/store/non-persisted/useImpressionsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
@@ -15,6 +16,7 @@ import OpenAction from '../OpenAction';
 import Comment from './Comment';
 import Like from './Like';
 import Mod from './Mod';
+import Refer from './Refer';
 import ShareMenu from './Share';
 import Tip from './Tip';
 import Views from './Views';
@@ -44,6 +46,8 @@ const PublicationActions: FC<PublicationActionsProps> = ({
     publicationViews,
     targetPublication.id
   );
+  const { error, loading, referrers } = useReferrers(targetPublication.id);
+  const canRefer = !loading && !error && referrers.length > 0;
 
   return (
     <span
@@ -60,6 +64,9 @@ const PublicationActions: FC<PublicationActionsProps> = ({
       ) : null}
       <Tip publication={targetPublication} showCount={showCount} />
       {views > 0 ? <Views showCount={showCount} views={views} /> : null}
+      {canRefer ? (
+        <Refer publication={targetPublication} referrers={referrers} />
+      ) : null}
       {isFeatureAvailable(FeatureFlag.Gardener) ? (
         <Mod isFullPublication={showCount} publication={targetPublication} />
       ) : null}

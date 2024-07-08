@@ -22,6 +22,7 @@ export const PERMISSIONLESS_CREATOR = getEnvConfig().permissionlessCreator;
 export const GOOD_PRO = getEnvConfig().goodPro;
 export const GOOD_TIPPING = getEnvConfig().goodTipping;
 export const GOOD_DONATION = getEnvConfig().goodDonation;
+export const GOOD_REFERRAL = getEnvConfig().goodReferral;
 
 export const IS_MAINNET = LENS_API_URL === LensEndpoint.Mainnet;
 export const ADDRESS_PLACEHOLDER = '0x03Ba3...7EF';
