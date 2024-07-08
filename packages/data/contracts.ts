@@ -1,6 +1,7 @@
 export enum MainnetContracts {
   DefaultToken = '0x3d2bD0e15829AA5C362a4144FdF4A1112fa29B5c',
   GoodDonation = '0x(NO CONTRACT CURRENTLY)',
+  SendTokens = '0x(NO CONTRACT CURRENTLY)',
   GoodLensSignup = '0x4b8845ACb8148dE64D1D99Cf27A3890a91F55E53',
   GoodPro = '0xd95dA09bF6a60d9b66D23397FA55abE12F28D477',
   GoodTipping = '0x2e40D58695Bcb7Bb4Fc9DCBDAaB82c1678C9Caa3',
@@ -13,6 +14,7 @@ export enum MainnetContracts {
 export enum TestnetContracts {
   DefaultToken = '0x2d4139144F9Dc09C4A97Dd1fFA83acAf60ff275E',
   GoodDonation = '0x03df64ebE8579b4ce89C261021cD22068E025aEc',
+  SendTokens = '0xfab2c82b23e54c00afb981b20d0574407273f1d7',
   GoodLensSignup = '0x82Bcb5DA51c6F3D0Ce942bDBEbb0B8A7774d62e8',
   GoodPro = '0x8f5C228E4b9C4Ff01e84C0C4DBDdFe969F6Ca0Ed',
   GoodTipping = '0xd2C94E4e003ad18fBf59aacD9053872F1bc972F2',
