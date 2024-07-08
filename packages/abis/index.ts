@@ -4,6 +4,7 @@ export * from './GoodLensSignup';
 export * from './GoodMembershipNft';
 export * from './GoodPro';
 export * from './GoodTipping';
+export * from './GoodReferral';
 export * from './LensHandles';
 export * from './LensHub';
 export * from './PermissionlessCreator';

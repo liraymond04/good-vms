@@ -11,6 +11,7 @@ export enum ModFeedType {
 }
 
 export enum OpenAction {
+  Referral = 'Referral',
   RentableBillboard = 'Rentable Billboard',
   Swap = 'Swap'
 }

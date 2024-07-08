@@ -35,6 +35,12 @@ const OpenActionsList: FC = () => {
           title="Token Swap"
           type={OpenAction.Swap}
         />
+        <OpenActionItem
+          description="Allow referral"
+          icon={<BanknotesIcon className="size-6" />}
+          title="Referral"
+          type={OpenAction.Referral}
+        />
       </div>
       <SaveOrCancel
         onSave={() => setShowModal(false)}
