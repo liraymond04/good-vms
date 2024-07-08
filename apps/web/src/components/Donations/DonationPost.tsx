@@ -4,7 +4,6 @@ import type { Post } from '@good/lens';
 import type { FC } from 'react';
 
 import Attachments from '@components/Shared/Attachments';
-import Markup from '@components/Shared/Markup';
 import { GOOD_API_URL } from '@good/data/constants';
 import formatDate from '@good/helpers/datetime/formatDate';
 import getAvatar from '@good/helpers/getAvatar';
@@ -12,7 +11,13 @@ import getProfile from '@good/helpers/getProfile';
 import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
-import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import {
+  ArchiveBoxIcon,
+  ArrowsRightLeftIcon,
+  ChatBubbleLeftEllipsisIcon,
+  CurrencyDollarIcon,
+  HeartIcon
+} from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
@@ -56,6 +61,18 @@ async function fetchDonationsOnPost(
 
 const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
+
+  const truncateText = (text: any, length: any) => {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
+  };
 
   const {
     data: donationsData,
@@ -111,7 +128,15 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
           </div>
         </div>
         {/* Post Contents */}
-        <Markup className="mb-4">{postContent}</Markup>
+        {/* <Markup className="mb-4">{postContent}</Markup> */}
+        <div className="mb-4 text-sm">
+          {showMore ? postContent : truncateText(postContent, 100)}
+          {postContent.length > 100 && (
+            <button className="ml-2 text-blue-500" onClick={toggleShowMore}>
+              {showMore ? 'Show less' : 'Show more'}
+            </button>
+          )}
+        </div>
         {/* Post Attachments/Media */}
         {hasAttachments && (
           <div className="mb-4 h-auto w-full rounded-lg">
@@ -127,12 +152,20 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
             {donationsCount} Donations
           </div>
           <div className="mr-4 flex items-center">
-            <div className="mr-1" />
-            {post.stats.reactions} likes
+            <ChatBubbleLeftEllipsisIcon className="mr-1 h-5 w-5" />
+            {post.stats.comments}
+          </div>
+          <div className="mr-4 flex items-center">
+            <ArrowsRightLeftIcon className="mr-1 h-5 w-5" />
+            {post.stats.mirrors}
+          </div>
+          <div className="mr-4 flex items-center">
+            <HeartIcon className="mr-1 h-5 w-5" />
+            {post.stats.reactions}
           </div>
           <div className="flex items-center">
-            <div className="mr-1" />
-            {post.stats.comments} comments
+            <ArchiveBoxIcon className="mr-1 h-5 w-5" />
+            {post.stats.bookmarks}
           </div>
         </div>
       </div>
