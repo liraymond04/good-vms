@@ -19,11 +19,10 @@ const store = create<State>((set) => ({
 export const useReferralActionStore = createTrackedSelector(store);
 
 const ReferralConfig: FC = () => {
-  const { openAction, setOpenAction, setShowModal } = useOpenActionStore();
+  const { setOpenAction, setShowModal } = useOpenActionStore();
 
   const onSave = () => {
     setOpenAction({ address: GOOD_REFERRAL, data: '0x00' });
-    console.log(openAction);
     setShowModal(false);
   };
 
@@ -37,7 +36,6 @@ const ReferralConfig: FC = () => {
         on={enabled}
         setOn={() => {
           if (!enabled) {
-            console.log('set enabled, doing save');
             onSave();
           }
           setEnabled(!enabled);

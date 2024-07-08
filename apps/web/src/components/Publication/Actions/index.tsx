@@ -49,8 +49,6 @@ const PublicationActions: FC<PublicationActionsProps> = ({
   const { error, loading, referrers } = useReferrers(targetPublication.id);
   const canRefer = !loading && !error && referrers.length > 0;
 
-  console.log(publication, referrers, canRefer);
-
   return (
     <span
       className="-ml-2 mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 sm:gap-8"

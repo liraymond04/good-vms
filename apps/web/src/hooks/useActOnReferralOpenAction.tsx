@@ -31,7 +31,7 @@ const useActOnReferralOpenAction = (
     );
 
     if (params.referrers.length === 0) {
-      console.error('no referrers found');
+      // console.log('no referrers found');
       return;
     }
 

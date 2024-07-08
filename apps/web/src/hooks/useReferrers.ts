@@ -5,7 +5,7 @@ import { useGetReferrersLazyQuery } from '@good/lens';
 import { useEffect, useState } from 'react';
 
 const makeReferralChain = (profileIds: Address[]) => {
-  console.log('make referral chain', profileIds);
+  // console.log('make referral chain', profileIds);
   let ret: Address[] = [];
   let existingIds = new Set<string>();
 
@@ -16,7 +16,7 @@ const makeReferralChain = (profileIds: Address[]) => {
     }
   }
 
-  console.log('ret', ret);
+  // console.log('ret', ret);
   return ret;
 };
 
@@ -35,7 +35,7 @@ const useReferrers = (publicationId: string) => {
     let err = '';
     let referrers: Address[] = [];
     loop: while (nextPublicationId) {
-      console.log('npid', nextPublicationId);
+      // console.log('npid', nextPublicationId);
       const { data, error: referrersQueryError } = await fetchMore({
         variables: { request: { forId: nextPublicationId } }
       });
@@ -57,10 +57,7 @@ const useReferrers = (publicationId: string) => {
                 getEnvConfig().goodReferral.toLowerCase()
           );
           if (!actionModule) {
-            console.error(
-              'Original post does not contain the referral action module'
-            );
-            err = 'Original post does not contain the referral action module';
+            err = 'original post does not contain the referral action module';
           } else {
             referrers = makeReferralChain(referrers);
           }
@@ -76,7 +73,7 @@ const useReferrers = (publicationId: string) => {
           nextPublicationId = data.publication.mirrorOn.id;
           break;
         default:
-          console.log('no typename, exiting');
+          console.error('no typename, exiting');
           nextPublicationId = '';
       }
     }
