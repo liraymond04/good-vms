@@ -1,42 +1,23 @@
-import type { AllowedToken } from '@good/types/good';
+import type { Address } from 'viem';
 
-import { Button, Card } from '@good/ui';
-import { CheckCircleIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import React from 'react';
-import { Tooltip } from '@good/ui';
+import { SendTokens } from '@good/abis/SendTokens';
 import { Errors } from '@good/data';
-
-import { useState } from 'react';
-
+import { MAX_UINT256, SEND_TOKENS } from '@good/data/constants';
+import { Button, Card, Tooltip } from '@good/ui';
 import errorToast from '@helpers/errorToast';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-
 import useHandleWrongNetwork from 'src/hooks/useHandleWrongNetwork';
-
-import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
-import { useTipsStore } from 'src/store/non-persisted/useTipsStore';
 import { useAllowedTokensStore } from 'src/store/persisted/useAllowedTokensStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useRatesStore } from 'src/store/persisted/useRatesStore';
-import { Address, formatUnits } from 'viem';
 import {
   useAccount,
-  useBalance,
-  useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract
 } from 'wagmi';
-
-import {
-  APP_NAME,
-  DEFAULT_COLLECT_TOKEN,
-  GOOD_API_URL,
-  SEND_TOKENS,
-  MAX_UINT256,
-  STATIC_IMAGES_URL
-} from '@good/data/constants';
-import { SendTokens } from '@good/abis/SendTokens';
 
 const Requests = () => {
   const { currentProfile } = useProfileStore();
@@ -61,25 +42,24 @@ const Requests = () => {
     //   date: "YYYY-MM-DD",
     // },
     {
-      volunteerName: "SEND GOOD TO SELF",
-      volunteerProfile: "0x0",
-      publicationUrl: "0x01",
       amount: 10,
-      currency: "GOOD",
+      currency: 'GOOD',
+      date: '2022-01-01',
       hours: 5,
-      date: "2022-01-01",
+      publicationUrl: '0x01',
+      volunteerName: 'SEND GOOD TO SELF',
+      volunteerProfile: '0x0'
     },
     {
-      volunteerName: "SEND VHR TO SELF",
-      volunteerProfile: "0x0",
-      publicationUrl: "0x01",
       amount: 10,
-      currency: "VHR",
+      currency: 'VHR',
+      date: '2022-01-02',
       hours: 5,
-      date: "2022-01-02",
-    },
+      publicationUrl: '0x01',
+      volunteerName: 'SEND VHR TO SELF',
+      volunteerProfile: '0x0'
+    }
   ];
-  
 
   const { data: txHash, writeContractAsync } = useWriteContract({
     mutation: {
@@ -132,9 +112,8 @@ const Requests = () => {
             type: 'function'
           }
         ],
-        address: allowedTokens.find(
-          (token) => token.symbol === 'VHR'
-        )?.contractAddress as Address,
+        address: allowedTokens.find((token) => token.symbol === 'VHR')
+          ?.contractAddress as Address,
         args: [SEND_TOKENS, MAX_UINT256],
         functionName: 'approve'
       });
@@ -151,22 +130,22 @@ const Requests = () => {
             type: 'function'
           }
         ],
-        address: allowedTokens.find(
-          (token) => token.symbol === 'GOOD'
-        )?.contractAddress as Address,
+        address: allowedTokens.find((token) => token.symbol === 'GOOD')
+          ?.contractAddress as Address,
         args: [SEND_TOKENS, MAX_UINT256],
         functionName: 'approve'
       });
       console.log('Allowance enabled for GOOD');
-      
     } catch (error) {
       onError(error);
     }
     setIsLoading(false);
-    };
+  };
 
   const handleSendTokens = async (request: any) => {
-    if (isLoading) return;
+    if (isLoading) {
+      return;
+    }
     setIsLoading(true);
     if (isSuspended) {
       return toast.error(Errors.Suspended);
@@ -174,23 +153,21 @@ const Requests = () => {
     try {
       let currencyAddress = `` as Address;
       if (request.currency === 'VHR') {
-        currencyAddress = allowedTokens.find(
-          (token) => token.symbol === 'VHR'
-        )?.contractAddress as Address;
-      } 
-      else if (request.currency === 'GOOD') {
-        currencyAddress = allowedTokens.find(
-          (token) => token.symbol === 'GOOD'
-        )?.contractAddress as Address;
+        currencyAddress = allowedTokens.find((token) => token.symbol === 'VHR')
+          ?.contractAddress as Address;
+      } else if (request.currency === 'GOOD') {
+        currencyAddress = allowedTokens.find((token) => token.symbol === 'GOOD')
+          ?.contractAddress as Address;
       }
 
       // get final rate
       const usdRate =
-        fiatRates.find(
-          (rate) => rate.address === currencyAddress.toLowerCase()
-        )?.fiat || 0;
-      const cryptoRate = !usdRate ? request.amount : Number((request.amount / usdRate).toFixed(2));
-      const finalRate = cryptoRate * 10 ** (18);
+        fiatRates.find((rate) => rate.address === currencyAddress.toLowerCase())
+          ?.fiat || 0;
+      const cryptoRate = !usdRate
+        ? request.amount
+        : Number((request.amount / usdRate).toFixed(2));
+      const finalRate = cryptoRate * 10 ** 18;
 
       setIsLoading(true);
       const hash = await writeContractAsync({
@@ -206,13 +183,13 @@ const Requests = () => {
         ],
         functionName: 'sendTokens'
       });
-    return;
-  } catch (error) {
-    onError(error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      return;
+    } catch (error) {
+      onError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card className="space-y-3 p-5">
@@ -238,31 +215,44 @@ const Requests = () => {
 
       {requests.map((request, index) => (
         <div
-          key={index}
           className="flex w-full items-center justify-between space-x-2 rounded-xl border bg-gray-100 px-4 py-2 dark:border-gray-700 dark:bg-gray-900"
           id="goodRequest"
+          key={index}
         >
           <span className="">{request.volunteerName}</span>
-          <span className="">{request.amount} {request.currency === 'VHR' ? 'VHR' : request.currency === 'GOOD' ? 'GOOD' : null}</span>
+          <span className="">
+            {request.amount}{' '}
+            {request.currency === 'VHR'
+              ? 'VHR'
+              : request.currency === 'GOOD'
+                ? 'GOOD'
+                : null}
+          </span>
           <span className="">{request.hours}h</span>
           <span className="">{request.date}</span>
           <span className="py-2">
-          <Tooltip className=""  content="Deny" placement="top">
-            <button className='rounded-full outline-offset-8' style={{ verticalAlign: 'middle' }}>
-              <XCircleIcon className="size-8" />
-            </button>
-          </Tooltip>
-          <Tooltip className="ml-5" content="Accept" placement="top">
-            <button className="rounded-full outline-offset-8" onClick={() => handleSendTokens(request)} style={{ verticalAlign: 'middle' }}>
-              <CheckCircleIcon className="size-8" />
-            </button>
-          </Tooltip>
+            <Tooltip className="" content="Deny" placement="top">
+              <button
+                className="rounded-full outline-offset-8"
+                style={{ verticalAlign: 'middle' }}
+              >
+                <XCircleIcon className="size-8" />
+              </button>
+            </Tooltip>
+            <Tooltip className="ml-5" content="Accept" placement="top">
+              <button
+                className="rounded-full outline-offset-8"
+                onClick={() => handleSendTokens(request)}
+                style={{ verticalAlign: 'middle' }}
+              >
+                <CheckCircleIcon className="size-8" />
+              </button>
+            </Tooltip>
           </span>
         </div>
       ))}
     </Card>
   );
 };
-
 
 export default Requests;

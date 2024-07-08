@@ -7,7 +7,6 @@ const getEnvConfig = (): {
   defaultCollectToken: string;
   goodApiEndpoint: string;
   goodDonation: `0x${string}`;
-  sendTokens: `0x${string}`;
   goodLensSignup: `0x${string}`;
   goodPro: `0x${string}`;
   goodTipping: `0x${string}`;
@@ -15,6 +14,7 @@ const getEnvConfig = (): {
   lensHandles: `0x${string}`;
   lensHub: `0x${string}`;
   permissionlessCreator?: `0x${string}`;
+  sendTokens: `0x${string}`;
   tokenHandleRegistry: `0x${string}`;
 } => {
   switch (LENS_NETWORK) {
@@ -23,7 +23,6 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
-        sendTokens: TestnetContracts.SendTokens,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
@@ -31,6 +30,7 @@ const getEnvConfig = (): {
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
         permissionlessCreator: TestnetContracts.PermissionlessCreator,
+        sendTokens: TestnetContracts.SendTokens,
         tokenHandleRegistry: TestnetContracts.TokenHandleRegistry
       };
     case 'staging':
@@ -38,7 +38,6 @@ const getEnvConfig = (): {
         defaultCollectToken: TestnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Testnet,
         goodDonation: TestnetContracts.GoodDonation,
-        sendTokens: TestnetContracts.SendTokens,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
         goodTipping: TestnetContracts.GoodTipping,
@@ -46,6 +45,7 @@ const getEnvConfig = (): {
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
         permissionlessCreator: TestnetContracts.PermissionlessCreator,
+        sendTokens: TestnetContracts.SendTokens,
         tokenHandleRegistry: TestnetContracts.TokenHandleRegistry
       };
     default:
@@ -53,7 +53,6 @@ const getEnvConfig = (): {
         defaultCollectToken: MainnetContracts.DefaultToken,
         goodApiEndpoint: GoodEndpoint.Mainnet,
         goodDonation: MainnetContracts.GoodDonation,
-        sendTokens: MainnetContracts.SendTokens,
         goodLensSignup: MainnetContracts.GoodLensSignup,
         goodPro: MainnetContracts.GoodPro,
         goodTipping: MainnetContracts.GoodTipping,
@@ -61,6 +60,7 @@ const getEnvConfig = (): {
         lensHandles: MainnetContracts.LensHandles,
         lensHub: MainnetContracts.LensHub,
         permissionlessCreator: MainnetContracts.PermissionlessCreator,
+        sendTokens: MainnetContracts.SendTokens,
         tokenHandleRegistry: MainnetContracts.TokenHandleRegistry
       };
   }
