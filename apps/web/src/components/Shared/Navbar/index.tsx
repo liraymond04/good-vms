@@ -5,14 +5,12 @@ import Search from '@components/Search';
 import cn from '@good/ui/cn';
 import {
   BellIcon as BellIconOutline,
-  CurrencyDollarIcon as CurrencyDollarIconOutline,
   EnvelopeIcon as EnvelopeIconOutline,
   HomeIcon as HomeIconOutline,
   MagnifyingGlassIcon as MagnifyingGlassIconOutline
 } from '@heroicons/react/24/outline';
 import {
   BellIcon as BellIconSolid,
-  CurrencyDollarIcon as CurrencyIconSolid,
   EnvelopeIcon as EnvelopeIconSolid,
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
@@ -224,19 +222,6 @@ const Navbar: FC = () => {
           name="Messages"
           target={false}
           url="/messages"
-        />
-        <NavItem
-          current={pathname === '/donations'}
-          icon={
-            pathname === '/donations' ? (
-              <CurrencyIconSolid className="size-8" />
-            ) : (
-              <CurrencyDollarIconOutline className="size-8" />
-            )
-          }
-          name="Donations"
-          target={true}
-          url="/donations"
         />
         <MoreNavItems />
       </>
