@@ -3,6 +3,7 @@ import type { AllowedToken } from '@good/types/good';
 import type { FC } from 'react';
 import type { Address } from 'viem';
 
+import { ERC20Token } from '@good/abis';
 import { Errors } from '@good/data';
 import {
   DEFAULT_COLLECT_TOKEN,
@@ -76,7 +77,9 @@ const Action: FC<ActionProps> = ({
   const currencyAddress: Address = selectedCurrency
     ? (selectedCurrency.contractAddress as Address)
     : '0x00';
+
   const { data, isLoading: isGettingAllowance } = useReadContract({
+    abi: ERC20Token,
     address: currencyAddress,
     args: [address!, GOOD_REFERRAL],
     functionName: 'allowance',
