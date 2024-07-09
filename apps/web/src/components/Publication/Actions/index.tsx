@@ -1,6 +1,8 @@
 import type { AnyPublication } from '@good/lens';
 import type { FC } from 'react';
 
+import Donate from '@components/Publication/Actions/Donate';
+import { GOOD_DONATION } from '@good/data/constants';
 import { FeatureFlag } from '@good/data/feature-flags';
 import getPublicationViewCountById from '@good/helpers/getPublicationViewCountById';
 import isOpenActionAllowed from '@good/helpers/isOpenActionAllowed';
@@ -49,6 +51,14 @@ const PublicationActions: FC<PublicationActionsProps> = ({
   const { error, loading, referrers } = useReferrers(targetPublication.id);
   const canRefer = !loading && !error && referrers.length > 0;
 
+  const canDonate =
+    hasOpenAction &&
+    targetPublication.openActionModules.some(
+      (module) =>
+        module.__typename === 'UnknownOpenActionModuleSettings' &&
+        module.contract.address.toLowerCase() === GOOD_DONATION.toLowerCase()
+    );
+
   return (
     <span
       className="-ml-2 mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 sm:gap-8"
@@ -67,6 +77,7 @@ const PublicationActions: FC<PublicationActionsProps> = ({
       {canRefer ? (
         <Refer publication={targetPublication} referrers={referrers} />
       ) : null}
+      {canDonate && <Donate publication={targetPublication} />}
       {isFeatureAvailable(FeatureFlag.Gardener) ? (
         <Mod isFullPublication={showCount} publication={targetPublication} />
       ) : null}
