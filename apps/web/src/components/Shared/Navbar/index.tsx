@@ -225,19 +225,6 @@ const Navbar: FC = () => {
           target={false}
           url="/messages"
         />
-        <NavItem
-          current={pathname === '/donations'}
-          icon={
-            pathname === '/donations' ? (
-              <CurrencyIconSolid className="size-8" />
-            ) : (
-              <CurrencyDollarIconOutline className="size-8" />
-            )
-          }
-          name="Donations"
-          target={true}
-          url="/donations"
-        />
         <MoreNavItems />
       </>
     );
