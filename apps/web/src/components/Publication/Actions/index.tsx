@@ -46,8 +46,11 @@ const PublicationActions: FC<PublicationActionsProps> = ({
     publicationViews,
     targetPublication.id
   );
-  const { error, loading, referrers } = useReferrers(targetPublication.id);
-  const canRefer = !loading && !error && referrers.length > 0;
+  const { error, loading, referrers, rootPublicationId } = useReferrers(
+    targetPublication.id
+  );
+  const canRefer =
+    !loading && !error && referrers.length > 0 && rootPublicationId;
 
   return (
     <span
@@ -65,7 +68,11 @@ const PublicationActions: FC<PublicationActionsProps> = ({
       <Tip publication={targetPublication} showCount={showCount} />
       {views > 0 ? <Views showCount={showCount} views={views} /> : null}
       {canRefer ? (
-        <Refer publication={targetPublication} referrers={referrers} />
+        <Refer
+          publication={targetPublication}
+          referrers={referrers}
+          rootPublicationId={rootPublicationId}
+        />
       ) : null}
       {isFeatureAvailable(FeatureFlag.Gardener) ? (
         <Mod isFullPublication={showCount} publication={targetPublication} />

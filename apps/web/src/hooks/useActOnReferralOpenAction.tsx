@@ -38,7 +38,7 @@ const useActOnReferralOpenAction = (
     return actOnUnknownOpenAction({
       address: GOOD_REFERRAL,
       data: d,
-      publicationId: params.referrers[0],
+      publicationId: params.publicationId,
       referrers: params.referrers
         .slice(Math.max(1, params.referrers.length - 3))
         .map((referrer) => ({ profileId: referrer }))
