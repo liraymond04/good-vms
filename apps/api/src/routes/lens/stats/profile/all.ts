@@ -5,10 +5,7 @@ import LensEndpoint from '@good/data/lens-endpoints';
 import logger from '@good/helpers/logger';
 import axios from 'axios';
 import catchedError from 'src/helpers/catchedError';
-import {
-  GOOD_USER_AGENT,
-  SWR_CACHE_AGE_10_MINS_30_DAYS
-} from 'src/helpers/constants';
+import { CACHE_AGE_30_MINS, GOOD_USER_AGENT } from 'src/helpers/constants';
 import { invalidBody, noBody } from 'src/helpers/responses';
 
 async function fetchProfileStats(
@@ -100,7 +97,7 @@ export const get: Handler = async (req, res) => {
 
     return res
       .status(200)
-      .setHeader('Cache-Control', SWR_CACHE_AGE_10_MINS_30_DAYS)
+      .setHeader('Cache-Control', CACHE_AGE_30_MINS)
       .json({ result, success: true });
   } catch (error) {
     catchedError(res, error);

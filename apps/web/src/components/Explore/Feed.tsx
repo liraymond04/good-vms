@@ -36,7 +36,6 @@ const Feed: FC<FeedProps> = ({
   const { fetchAndStoreTips } = useTipsStore();
   const virtuoso = useRef<VirtuosoHandle>(null);
 
-  // Variables
   const request: ExplorePublicationRequest = {
     limit: LimitType.TwentyFive,
     orderBy: feedType,
@@ -68,16 +67,14 @@ const Feed: FC<FeedProps> = ({
   };
 
   const onEndReached = async () => {
-    if (!hasMore) {
-      return;
+    if (hasMore) {
+      const { data } = await fetchMore({
+        variables: { request: { ...request, cursor: pageInfo?.next } }
+      });
+      const ids = data?.explorePublications?.items?.map((p) => p.id) || [];
+      await fetchAndStoreViews(ids);
+      await fetchAndStoreTips(ids);
     }
-
-    const { data } = await fetchMore({
-      variables: { request: { ...request, cursor: pageInfo?.next } }
-    });
-    const ids = data?.explorePublications?.items?.map((p) => p.id) || [];
-    await fetchAndStoreViews(ids);
-    await fetchAndStoreTips(ids);
   };
 
   if (loading) {
@@ -105,15 +102,13 @@ const Feed: FC<FeedProps> = ({
         data={publications}
         endReached={onEndReached}
         isScrolling={onScrolling}
-        itemContent={(index, publication) => {
-          return (
-            <SinglePublication
-              isFirst={index === 0}
-              isLast={index === (publications?.length || 0) - 1}
-              publication={publication as AnyPublication}
-            />
-          );
-        }}
+        itemContent={(index, publication) => (
+          <SinglePublication
+            isFirst={index === 0}
+            isLast={index === (publications?.length || 0) - 1}
+            publication={publication as AnyPublication}
+          />
+        )}
         ref={virtuoso}
         restoreStateFrom={
           virtuosoState.ranges.length === 0

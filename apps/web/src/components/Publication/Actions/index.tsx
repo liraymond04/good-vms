@@ -12,7 +12,6 @@ import isFeatureAvailable from '@helpers/isFeatureAvailable';
 import { memo } from 'react';
 import useReferrers from 'src/hooks/useReferrers';
 import { useImpressionsStore } from 'src/store/non-persisted/useImpressionsStore';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 import OpenAction from '../OpenAction';
 import Comment from './Comment';
@@ -35,13 +34,9 @@ const PublicationActions: FC<PublicationActionsProps> = ({
   const targetPublication = isMirrorPublication(publication)
     ? publication.mirrorOn
     : publication;
-  const { currentProfile } = useProfileStore();
   const { publicationViews } = useImpressionsStore();
   const hasOpenAction = (targetPublication.openActionModules?.length || 0) > 0;
 
-  const canMirror = currentProfile
-    ? targetPublication.operations.canMirror
-    : true;
   const canAct =
     hasOpenAction && isOpenActionAllowed(targetPublication.openActionModules);
   const views = getPublicationViewCountById(
@@ -68,9 +63,7 @@ const PublicationActions: FC<PublicationActionsProps> = ({
       onClick={stopEventPropagation}
     >
       <Comment publication={targetPublication} showCount={showCount} />
-      {canMirror ? (
-        <ShareMenu publication={publication} showCount={showCount} />
-      ) : null}
+      <ShareMenu publication={publication} showCount={showCount} />
       <Like publication={targetPublication} showCount={showCount} />
       {canAct ? (
         <OpenAction publication={targetPublication} showCount={showCount} />

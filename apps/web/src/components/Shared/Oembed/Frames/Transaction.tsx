@@ -1,5 +1,5 @@
-import type { FrameTransaction, Frame as IFrame } from '@good/types/misc';
-import type { Dispatch, FC, SetStateAction } from 'react';
+import type { Frame as IFrame } from '@good/types/misc';
+import type { FC } from 'react';
 
 import { Errors } from '@good/data';
 import { GOOD_API_URL } from '@good/data/constants';
@@ -8,7 +8,7 @@ import getNftChainId from '@good/helpers/getNftChainId';
 import getNftChainInfo from '@good/helpers/getNftChainInfo';
 import { Button } from '@good/ui';
 import errorToast from '@helpers/errorToast';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeadersWithAccessToken } from '@helpers/getAuthApiHeaders';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { useState } from 'react';
@@ -25,6 +25,8 @@ import {
 } from 'viem/chains';
 import { useSendTransaction, useSwitchChain } from 'wagmi';
 
+import { useFramesStore } from '.';
+
 const SUPPORTED_CHAINS = [
   polygon.id,
   polygonAmoy.id,
@@ -37,30 +39,12 @@ const SUPPORTED_CHAINS = [
 
 interface TransactionProps {
   publicationId?: string;
-  setFrameData: Dispatch<SetStateAction<IFrame | null>>;
-  setShowTransaction: Dispatch<
-    SetStateAction<{
-      frame: IFrame | null;
-      index: number;
-      show: boolean;
-      transaction: FrameTransaction | null;
-    }>
-  >;
-  showTransaction: {
-    frame: IFrame | null;
-    index: number;
-    show: boolean;
-    transaction: FrameTransaction | null;
-  };
 }
 
-const Transaction: FC<TransactionProps> = ({
-  publicationId,
-  setFrameData,
-  setShowTransaction,
-  showTransaction
-}) => {
+const Transaction: FC<TransactionProps> = ({ publicationId }) => {
   const { currentProfile } = useProfileStore();
+  const { setFrameData, setShowTransaction, showTransaction } =
+    useFramesStore();
   const [isLoading, setIsLoading] = useState(false);
   const [txnHash, setTxnHash] = useState<`0x${string}` | null>(null);
   const { switchChainAsync } = useSwitchChain();
@@ -95,7 +79,7 @@ const Transaction: FC<TransactionProps> = ({
       const hash = await sendTransactionAsync({
         data: txnData.params.data,
         to: txnData.params.to,
-        value: BigInt(txnData.params.value)
+        value: BigInt(txnData.params.value || 0)
       });
 
       setTxnHash(hash);
@@ -110,7 +94,7 @@ const Transaction: FC<TransactionProps> = ({
               showTransaction.frame?.postUrl,
             pubId: publicationId
           },
-          { headers: getAuthApiHeaders() }
+          { headers: getAuthApiHeadersWithAccessToken() }
         );
 
       if (!postedData.frame) {

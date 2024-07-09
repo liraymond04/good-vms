@@ -2,7 +2,6 @@ import type { Profile } from '@good/lens';
 import type { FC } from 'react';
 
 import { FeatureFlag } from '@good/data/feature-flags';
-import { KillSwitch } from '@good/data/kill-switches';
 import getAvatar from '@good/helpers/getAvatar';
 import getLennyURL from '@good/helpers/getLennyURL';
 import getProfile from '@good/helpers/getProfile';
@@ -10,7 +9,6 @@ import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import isFeatureAvailable from '@helpers/isFeatureAvailable';
-import isFeatureEnabled from '@helpers/isFeatureEnabled';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
@@ -20,7 +18,6 @@ import Slug from '../Slug';
 import { NextLink } from './MenuItems';
 import MobileDrawerMenu from './MobileDrawerMenu';
 import AppVersion from './NavItems/AppVersion';
-import Invites from './NavItems/Invites';
 import Logout from './NavItems/Logout';
 import OptimisticTransactions from './NavItems/OptimisticTransactions';
 // import Score from './NavItems/Score';
@@ -120,16 +117,6 @@ const SignedUser: FC = () => {
             >
               <Settings />
             </MenuItem>
-            {isFeatureEnabled(KillSwitch.Invites) && (
-              <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <Invites />
-              </MenuItem>
-            )}
             <MenuItem
               as="div"
               className={({ focus }) =>

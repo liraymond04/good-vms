@@ -7,7 +7,7 @@ import getAllTokens from '@good/helpers/api/getAllTokens';
 import getPreferences from '@good/helpers/api/getPreferences';
 import getProfileDetails from '@good/helpers/api/getProfileFlags';
 import getScore from '@good/helpers/api/getScore';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import getCurrentSession from '@helpers/getCurrentSession';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -38,10 +38,7 @@ const PreferencesProvider: FC = () => {
   const { setFeatureFlags, setStaffMode } = useFeatureFlagsStore();
 
   const getPreferencesData = async () => {
-    const preferences = await getPreferences(
-      sessionProfileId,
-      getAuthApiHeaders()
-    );
+    const preferences = await getPreferences(getAuthApiHeaders());
 
     setHighSignalNotificationFilter(preferences.highSignalNotificationFilter);
     setAppIcon(preferences.appIcon);
