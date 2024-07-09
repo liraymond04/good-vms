@@ -40,6 +40,7 @@ interface ActionProps {
   closePopover: () => void;
   publication: MirrorablePublication;
   referrers: Address[];
+  rootPublicationId: Address;
   triggerConfetti: () => void;
 }
 
@@ -47,6 +48,7 @@ const Action: FC<ActionProps> = ({
   closePopover,
   publication,
   referrers,
+  rootPublicationId,
   triggerConfetti
 }) => {
   const { currentProfile } = useProfileStore();
@@ -114,7 +116,7 @@ const Action: FC<ActionProps> = ({
   const canPerformReferralAction = Number(balance) >= cryptoRate;
 
   const { makeDonation } = useActOnReferralOpenAction({
-    publicationId: publication.id,
+    publicationId: rootPublicationId,
     referrers
   });
 
