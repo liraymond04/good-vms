@@ -1,11 +1,12 @@
-import { FC, useState, useEffect } from 'react';
-import { Modal, Card } from '@good/ui';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
 import type { Profile } from '@good/lens';
+import type { FC } from 'react';
+
 import getAvatar from '@good/helpers/getAvatar';
+import { Card, Image, Modal } from '@good/ui';
 import { Button } from '@headlessui/react';
-import { Image } from '@good/ui';
+import { useEffect, useState } from 'react';
+import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 interface DonorsDisplayProps {
   allNewDonors: { amount: number; supporter: Profile }[];
@@ -13,9 +14,15 @@ interface DonorsDisplayProps {
   top: boolean;
 }
 
-const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors, top }) => {
+const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
+  allNewDonors,
+  allTopDonors,
+  top
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'top' | 'new'>(top ? 'top' : 'new'); 
+  const [selectedTab, setSelectedTab] = useState<'new' | 'top'>(
+    top ? 'top' : 'new'
+  );
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
 
@@ -33,11 +40,16 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
     }
   }, [showModal, top]);
 
-  const renderSupporters = (donors: { amount: number; supporter: Profile }[]) => {
+  const renderSupporters = (
+    donors: { amount: number; supporter: Profile }[]
+  ) => {
     return (
-      <div className="overflow-y-scroll max-h-96 scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500">
+      <div className="scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500 max-h-96 overflow-y-scroll">
         {donors.map((donor, index) => (
-          <div className="supporter-details mb-5 flex flex-col items-center" key={index}>
+          <div
+            className="supporter-details mb-5 flex flex-col items-center"
+            key={index}
+          >
             <div className="flex items-center">
               <Image
                 alt={donor.supporter.id}
@@ -58,18 +70,22 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
   const modalContent = (
     <Card className="rounded-b-xl rounded-t-none border-none">
       <div className="p-4">
-        <div className="flex justify-center space-x-4 mb-4">
+        <div className="mb-4 flex justify-center space-x-4">
           <Button
-            style={{ backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('top')}
+            style={{
+              backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080'
+            }}
           >
             Top Donors
           </Button>
           <Button
-            style={{ backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('new')}
+            style={{
+              backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080'
+            }}
           >
             New Donors
           </Button>
@@ -91,7 +107,7 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
         Show All
       </Button>
       {showModal && (
-        <Modal show={true} onClose={handleClose} title="Donors">
+        <Modal onClose={handleClose} show={true} title="Donors">
           {modalContent}
         </Modal>
       )}

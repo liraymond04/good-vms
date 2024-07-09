@@ -3,18 +3,21 @@ import type { AllowedToken } from '@good/types/good';
 import type { FC } from 'react';
 import type { Address } from 'viem';
 
+import { ERC20Token } from '@good/abis';
 import { Errors } from '@good/data';
 import {
-  APP_NAME,
   DEFAULT_COLLECT_TOKEN,
+  GOOD_DONATION,
+  MAX_UINT256,
   STATIC_IMAGES_URL
 } from '@good/data/constants';
 import formatAddress from '@good/helpers/formatAddress';
-import { Button, HelpTooltip, Input, Select, Spinner } from '@good/ui';
+import { Button, Input, Select, Spinner } from '@good/ui';
 import cn from '@good/ui/cn';
 import errorToast from '@helpers/errorToast';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import useActOnDonationOpenAction from 'src/hooks/useActOnDonationOpenAction';
 import useHandleWrongNetwork from 'src/hooks/useHandleWrongNetwork';
 import usePreventScrollOnNumberInput from 'src/hooks/usePreventScrollOnNumberInput';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
@@ -23,17 +26,23 @@ import { useAllowedTokensStore } from 'src/store/persisted/useAllowedTokensStore
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useRatesStore } from 'src/store/persisted/useRatesStore';
 import { formatUnits } from 'viem';
-import { useAccount, useBalance } from 'wagmi';
+import {
+  useAccount,
+  useBalance,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi';
 
 const submitButtonClassName = 'w-full py-1.5 text-sm font-semibold';
 
-interface DonateAction {
+interface ActionProps {
   closePopover: () => void;
   publication: MirrorablePublication;
   triggerConfetti: () => void;
 }
 
-const Action: FC<DonateAction> = ({
+const Action: FC<ActionProps> = ({
   closePopover,
   publication,
   triggerConfetti
@@ -63,12 +72,31 @@ const Action: FC<DonateAction> = ({
     token: selectedCurrency?.contractAddress as Address
   });
 
+  const currencyAddress: Address = selectedCurrency
+    ? (selectedCurrency.contractAddress as Address)
+    : '0x00';
+
+  const { data, isLoading: isGettingAllowance } = useReadContract({
+    abi: ERC20Token,
+    address: currencyAddress,
+    args: [address!, GOOD_DONATION],
+    functionName: 'allowance',
+    query: { refetchInterval: 2000 }
+  });
+
+  const { data: txHash, writeContractAsync } = useWriteContract();
+
+  const { isLoading: isWaitingForTransaction } = useWaitForTransactionReceipt({
+    hash: txHash,
+    query: { enabled: Boolean(txHash) }
+  });
+
   const onError = (error: any) => {
     setIsLoading(false);
     errorToast(error);
   };
 
-  const allowance = parseFloat('0');
+  const allowance = parseFloat(data?.toString() || '0');
   const usdRate =
     fiatRates.find(
       (rate) => rate.address === selectedCurrency?.contractAddress.toLowerCase()
@@ -83,6 +111,10 @@ const Action: FC<DonateAction> = ({
     : 0;
   const canDonate = Number(balance) >= cryptoRate;
 
+  const { makeDonation } = useActOnDonationOpenAction({
+    publicationId: publication.id
+  });
+
   const onSetAmount = (amount: number) => {
     setAmount(amount);
     setOther(false);
@@ -93,7 +125,7 @@ const Action: FC<DonateAction> = ({
     setAmount(value);
   };
 
-  const enableTipping = async () => {
+  const enableCurrencyTransfer = async () => {
     if (isSuspended) {
       return toast.error(Errors.Suspended);
     }
@@ -101,6 +133,22 @@ const Action: FC<DonateAction> = ({
     try {
       setIsLoading(true);
       await handleWrongNetwork();
+      await writeContractAsync({
+        abi: [
+          {
+            inputs: [
+              { internalType: 'address', type: 'address' },
+              { internalType: 'uint256', type: 'uint256' }
+            ],
+            name: 'approve',
+            outputs: [{ internalType: 'bool', type: 'bool' }],
+            type: 'function'
+          }
+        ],
+        address: currencyAddress as Address,
+        args: [GOOD_DONATION, MAX_UINT256],
+        functionName: 'approve'
+      });
       return;
     } catch (error) {
       onError(error);
@@ -109,17 +157,23 @@ const Action: FC<DonateAction> = ({
     }
   };
 
-  const handleTip = async () => {
+  const handleDonate = async () => {
     if (isSuspended) {
       return toast.error(Errors.Suspended);
     }
 
     try {
       setIsLoading(true);
-      {
-        /**Add donation */
-        await (async () => {})();
+
+      if (!selectedCurrency) {
+        return toast.error('No currency selected.');
       }
+
+      await makeDonation({
+        amount: BigInt(amount),
+        tokenAddress: selectedCurrency.contractAddress as Address
+      });
+
       closePopover();
       triggerConfetti();
       return;
@@ -131,7 +185,12 @@ const Action: FC<DonateAction> = ({
   };
 
   const hasAllowance = allowance >= finalRate;
-  const amountDisabled = isLoading || !currentProfile || !hasAllowance;
+  const amountDisabled =
+    isLoading ||
+    !currentProfile ||
+    !hasAllowance ||
+    isWaitingForTransaction ||
+    isGettingAllowance;
 
   if (!currentProfile) {
     return (
@@ -195,24 +254,6 @@ const Action: FC<DonateAction> = ({
               )}
             </span>
           </div>
-          <HelpTooltip>
-            <div className="py-1">
-              <b>Fees</b>
-              <div className="flex items-start space-x-10">
-                <div className="flex items-center space-x-2">
-                  <img
-                    className="size-3"
-                    src={`${STATIC_IMAGES_URL}/app-icon/0.png`}
-                  />
-                  <span>{APP_NAME}</span>
-                </div>
-                <b>
-                  {(cryptoRate * 0.05).toFixed(3)} {selectedCurrency?.symbol}{' '}
-                  (5%)
-                </b>
-              </div>
-            </div>
-          </HelpTooltip>
         </div>
       </div>
       <div className="space-x-4">
@@ -265,7 +306,7 @@ const Action: FC<DonateAction> = ({
           />
         </div>
       ) : null}
-      {isLoading ? (
+      {isLoading || isWaitingForTransaction || isGettingAllowance ? (
         <Button
           className={cn('flex justify-center', submitButtonClassName)}
           disabled
@@ -275,15 +316,15 @@ const Action: FC<DonateAction> = ({
         <Button
           className={submitButtonClassName}
           disabled={isLoading}
-          onClick={enableTipping}
+          onClick={enableCurrencyTransfer}
         >
-          Enable tipping for {selectedCurrency?.symbol}
+          Enable donating using {selectedCurrency?.symbol}
         </Button>
       ) : (
         <Button
           className={submitButtonClassName}
           disabled={!amount || isLoading || !canDonate}
-          onClick={handleTip}
+          onClick={handleDonate}
         >
           {usdRate ? (
             <>

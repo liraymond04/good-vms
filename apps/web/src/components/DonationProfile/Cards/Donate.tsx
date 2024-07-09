@@ -4,12 +4,15 @@ import type { FC } from 'react';
 import MenuTransition from '@components/Shared/MenuTransition';
 import { STATIC_IMAGES_URL } from '@good/data/constants';
 import getPublicationTipById from '@good/helpers/getPublicationTipById';
-import nFormatter from '@good/helpers/nFormatter';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
-import { TipIcon } from '@good/icons';
-import { Tooltip } from '@good/ui';
 import cn from '@good/ui/cn';
-import { Button, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import {
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems
+} from '@headlessui/react';
 import { motion } from 'framer-motion';
 import party from 'party-js';
 import { useRef } from 'react';
@@ -54,7 +57,7 @@ const DonateCard: FC<DonateProps> = ({ publication, showCount }) => {
           donation?.tipped
             ? 'text-brand-500 hover:bg-brand-300/20'
             : 'ld-text-gray-500 hover:bg-gray-300/20',
-          'p-1.5 outline-offset-2 w-full' 
+          'w-full p-1.5 outline-offset-2'
         )}
         onClick={stopEventPropagation}
         whileTap={{ scale: 0.9 }}

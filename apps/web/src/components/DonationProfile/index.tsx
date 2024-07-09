@@ -13,7 +13,6 @@ import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
-import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
