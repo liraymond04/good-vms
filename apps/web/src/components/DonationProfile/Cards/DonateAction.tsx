@@ -118,6 +118,7 @@ const Action: FC<DonateAction> = ({
       setIsLoading(true);
       {
         /**Add donation */
+        await (async () => {})();
       }
       closePopover();
       triggerConfetti();
