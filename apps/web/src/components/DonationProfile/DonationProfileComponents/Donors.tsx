@@ -2,7 +2,6 @@ import type { Profile } from '@good/lens';
 
 import getAvatar from '@good/helpers/getAvatar';
 import { Image } from '@good/ui';
-import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 
 import DonorsDisplayCard from '../Cards/DonorDisplayCard';
@@ -60,11 +59,11 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
           <div className="flex flex-col items-center">
             {renderSupporters(topDonors, showAllTopDonors)}
             <div className="mt-5 w-full text-center">
-            <DonorsDisplayCard
-          allNewDonors = {newDonors}
-          allTopDonors = {topDonors}
-          top = {true}
-          />
+              <DonorsDisplayCard
+                allNewDonors={newDonors}
+                allTopDonors={topDonors}
+                top={true}
+              />
             </div>
           </div>
         </div>
@@ -77,10 +76,11 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             {renderSupporters(newDonors, showAllNewDonors)}
 
             <div className="mt-5 w-full text-center">
-                <DonorsDisplayCard
-                allNewDonors = {newDonors}
-                allTopDonors = {topDonors}
-                top = {false}/>
+              <DonorsDisplayCard
+                allNewDonors={newDonors}
+                allTopDonors={topDonors}
+                top={false}
+              />
             </div>
           </div>
         </div>
