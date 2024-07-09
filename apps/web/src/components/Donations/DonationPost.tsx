@@ -12,7 +12,12 @@ import getProfile from '@good/helpers/getProfile';
 import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
-import { CurrencyDollarIcon, HandThumbUpIcon, ChatBubbleBottomCenterTextIcon, ShareIcon } from '@heroicons/react/24/outline';
+import {
+  ChatBubbleBottomCenterTextIcon,
+  CurrencyDollarIcon,
+  HandThumbUpIcon,
+  ShareIcon
+} from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
@@ -56,6 +61,18 @@ async function fetchDonationsOnPost(
 
 const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
+
+  const truncateText = (text: any, length: any) => {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
+  };
 
   const {
     data: donationsData,
@@ -106,14 +123,16 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
           <div className="ml-3 flex-1">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">{profile.displayName}</div>
+                <div className="text-sm font-semibold">
+                  {profile.displayName}
+                </div>
                 <div className="text-xs text-gray-500 dark:text-gray-100">
                   {formatDate(post.createdAt)}
                 </div>
               </div>
             </div>
             {/* Post Contents */}
-            <Markup className="mt-2 mb-4">{postContent}</Markup>
+            <Markup className="mb-4 mt-2">{postContent}</Markup>
             {/* Post Attachments/Media */}
             {hasAttachments && (
               <div className="mb-4 h-auto w-full rounded-lg">
@@ -138,7 +157,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
               </div>
               <div className="flex items-center">
                 <ShareIcon className="mr-1 size-4" />
-                {post.stats.shares} shares
+                {0} shares
               </div>
             </div>
           </div>

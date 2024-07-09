@@ -13,7 +13,6 @@ import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
-import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
@@ -57,16 +56,6 @@ const DonationDetails: NextPage = () => {
     title: 'Food Bank'
   };
 
-  const Supporters = [currentProfile, currentProfile, currentProfile];
-
-  const DonatedAmounts: number[] = [100, 50, 200];
-
-  const Descriptions: string[] = [
-    'Thank you for your supporting those in need',
-    'Thank you for your care',
-    'Thank you for preparing meals'
-  ];
-
   const topDonors = [
     { amount: 100, supporter: currentProfile },
     { amount: 200, supporter: currentProfile },
@@ -101,11 +90,13 @@ const DonationDetails: NextPage = () => {
             updateDate={DonationPostDetails.DonationInfo[0].updated}
             updateImages={DonationPostDetails.DonationInfo[0].updateImages}
           />
-          <WordsOfSupport
+          {/** 
+            <WordsOfSupport
             amount={DonatedAmounts}
             description={Descriptions}
             supporters={Supporters}
           />
+          */}
           <Donors newDonors={newDonors} topDonors={topDonors} />
         </GridItemEight>
 

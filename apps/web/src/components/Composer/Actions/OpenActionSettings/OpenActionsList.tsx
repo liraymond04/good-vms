@@ -4,7 +4,8 @@ import { OpenAction } from '@good/data/enums';
 import isFeatureAvailable from '@helpers/isFeatureAvailable';
 import {
   BanknotesIcon,
-  BuildingStorefrontIcon
+  BuildingStorefrontIcon,
+  GiftIcon
 } from '@heroicons/react/24/outline';
 import {
   ScreenType,
@@ -34,6 +35,18 @@ const OpenActionsList: FC = () => {
           icon={<BanknotesIcon className="size-6" />}
           title="Token Swap"
           type={OpenAction.Swap}
+        />
+        <OpenActionItem
+          description="Allow referral"
+          icon={<BanknotesIcon className="size-6" />}
+          title="Referral"
+          type={OpenAction.Referral}
+        />
+        <OpenActionItem
+          description="Allow donations"
+          icon={<GiftIcon className="size-6" />}
+          title="Donations"
+          type={OpenAction.Donation}
         />
       </div>
       <SaveOrCancel

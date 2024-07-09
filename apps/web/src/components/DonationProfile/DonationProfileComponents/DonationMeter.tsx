@@ -1,6 +1,8 @@
-import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+import DonateCard from '../Cards/Donate';
+import ShareCard from '../Cards/Share';
 
 interface DonationMeterProps {
   goal: number;
@@ -136,20 +138,8 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
           <div className="text-gray-400">
             <Goal>raised of ${goal} goal</Goal>
           </div>
-          <Button
-            className="mb-5 mt-5 w-full rounded-full px-4 py-2 text-sm text-white"
-            onClick={handleShowShare}
-            style={{ background: '#da5597' }}
-          >
-            Donate Now
-          </Button>
-          <Button
-            className="w-full rounded-full px-4 py-2 text-sm text-white"
-            onClick={handleShowDonate}
-            style={{ background: '#de78ab' }}
-          >
-            Share
-          </Button>
+          <DonateCard />
+          <ShareCard />
         </div>
       </div>
 
