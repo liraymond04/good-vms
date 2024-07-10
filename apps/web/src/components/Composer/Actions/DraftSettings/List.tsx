@@ -122,9 +122,6 @@ const List: FC<ListProps> = ({ setShowModal }) => {
               stopEventPropagation(event);
               onDeleteDraft(draft);
             }}
-            outline
-            size="sm"
-            variant="danger"
           >
             Delete
           </Button>

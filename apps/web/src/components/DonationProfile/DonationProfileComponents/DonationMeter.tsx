@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import DonateCard from '../Cards/Donate';
+// import DonateCard from '../Cards/Donate';
 import ShareCard from '../Cards/Share';
 
 interface DonationMeterProps {
@@ -138,7 +138,7 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
           <div className="text-gray-400">
             <Goal>raised of ${goal} goal</Goal>
           </div>
-          <DonateCard />
+          {/* <DonateCard /> */}
           <ShareCard />
         </div>
       </div>
