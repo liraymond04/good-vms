@@ -41,12 +41,9 @@ export const post = [
       const identityToken = req.headers['x-identity-token'] as string;
       const payload = parseJwt(identityToken);
 
-
-=======
       if (id) {
         const result = await heyPg.query(
           `
->>>>>>> 1600c44bb871b7749403e17d50961f098ccc0c02
           UPDATE "DraftPublication"
           SET "content" = $1, "collectModule" = $2
           WHERE "id" = $3
