@@ -145,7 +145,7 @@ const modalContent = (
     <>
     <button 
     className="w-full rounded-full px-4 py-2 text-sm text-white" 
-    style={{ background: '#de78ab' }}
+    style={{ background: '#da5597' }}
     onClick={handleOpen}>
       <span>Share</span>
     </button>

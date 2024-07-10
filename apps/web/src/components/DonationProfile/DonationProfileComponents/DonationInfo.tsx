@@ -1,17 +1,19 @@
 import type { Image as LensImage, Profile } from '@good/lens';
-
 import getAvatar from '@good/helpers/getAvatar';
 import getLennyURL from '@good/helpers/getLennyURL';
 import { Image } from '@good/ui';
 import React from 'react';
 import styled from 'styled-components';
+import { Post } from '@good/lens';
+import { PublicationMetadata } from '@lens-protocol/metadata';
+import getPublicationData from '@good/helpers/getPublicationData';
+import formatDate from '@good/helpers/datetime/formatDate';
+import getProfile from '@good/helpers/getProfile';
+import getPro from '@good/helpers/api/getPro';
 
 interface DonationInfoProps {
-  mission: string;
-  organizer?: null | Profile;
-  update: string;
-  updateDate?: Date;
-  updateImages?: (LensImage | string)[];
+  post?: Post;
+  updateImages?: (string | LensImage)[];
 }
 
 const DonationInfoContainer = styled.div`
@@ -19,74 +21,76 @@ const DonationInfoContainer = styled.div`
 `;
 
 const DonationInfo: React.FC<DonationInfoProps> = ({
-  mission,
-  organizer,
-  update,
-  updateDate,
-  updateImages
+  post,
+  updateImages = []
 }) => {
-  const formatMission = (mission: string) => {
-    return mission.replace(/\. /g, '.');
-  };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
+  const profile = getProfile(post.by);
+
 
   const Avatar = () => (
     <Image
-      alt={organizer?.id}
-      className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
-      onError={({ currentTarget }) => {
-        currentTarget.src = getLennyURL(organizer?.id);
-      }}
-      src={getAvatar(organizer as Profile)}
-    />
+    alt={profile.displayName}
+    className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
+    height={10}
+    src={getAvatar(post?.by)}
+    width={10}
+  />
   );
+
+  const donationMetadata = post?.metadata;
+
+  const postContent = donationMetadata?.content ?? '';
+  const postAttachments = donationMetadata?.attachments ?? [];
+  const postAsset = donationMetadata?.asset;
+  const date = formatDate(post?.createdAt);
+
+  const hasAttachments = postAttachments.length > 0 || !!postAsset;
+
+  const hasUpdates = updateImages.length > 0;
 
   return (
     <DonationInfoContainer className="items-center justify-center">
       <div className="missionText">
-        <div className="mb-3 flex text-lg text-gray-500 dark:text-white">
+        <div className="mb-3 flex text-lg text-black dark:text-white">
           <Avatar />
           <span className="m-auto ml-5 text-center">
-            {organizer?.handle?.localName} is organizing this fundraiser
+            {post?.by.handle?.localName} is organizing this fundraiser
           </span>
+          
         </div>
-
-        <div className="mb-3 text-lg text-gray-500 dark:text-white">
+        <div className="mb-3 text-lg text-black dark:text-white">
           Mission:
         </div>
-        <div
-          className="mb-3"
-          dangerouslySetInnerHTML={{ __html: formatMission(mission) }}
-        />
+        <div className="mb-3">
+          {postContent}
+        </div>
       </div>
 
       <div className="updatesContainer">
         <div className="updatesText mb-5">
-          <div className="mb-3 text-lg text-gray-500 dark:text-white">
+          <div className="mb-3 text-lg text-black dark:text-white">
             Updates:
           </div>
-          {updateDate && <div className="mb-3">{formatDate(updateDate)}</div>}
-          <div>{update}</div>
+          {hasUpdates ? (
+            <>
+              <div className="mb-3">
+                {updateImages.map((image, index) => (
+                  <img
+                    alt={`Image ${index + 1}`}
+                    className="h-auto w-full rounded-lg"
+                    key={index}
+                    src={typeof image === 'string' ? image : image.uri}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="mb-3">
+                No new updates
+            </div>
+          )}
         </div>
-        {updateImages && updateImages.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {updateImages.map((image, index) => (
-              <img
-                alt={`Image ${index + 1}`}
-                className="h-auto w-full rounded-lg"
-                key={index}
-                src={typeof image === 'string' ? image : image.uri}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </DonationInfoContainer>
   );

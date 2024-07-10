@@ -51,9 +51,6 @@ const DonateCard: FC<DonateProps> = ({ publication, showCount }) => {
         aria-label="Tip"
         as={motion.button}
         className={cn(
-          donation?.tipped
-            ? 'text-brand-500 hover:bg-brand-300/20'
-            : 'ld-text-gray-500 hover:bg-gray-300/20',
           'p-1.5 outline-offset-2 w-full' 
         )}
         onClick={stopEventPropagation}

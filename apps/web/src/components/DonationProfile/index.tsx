@@ -1,69 +1,86 @@
-// pages/donations/[id]/index.tsx
-
 import type { NextPage } from 'next';
-
-import { PAGEVIEW } from '@good/data/tracking';
-import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
-import { Leafwatch } from '@helpers/leafwatch';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect,useState } from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-
-import getPublicationData from '@good/helpers/getPublicationData';
-import { useQuery, gql } from '@apollo/client';
-
+import { GridLayout, GridItemEight, GridItemFour } from '@good/ui';
 import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
-import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
-import type { Post } from '@good/lens';
-
-import { GOOD_API_URL } from '@good/data/constants';
-
-interface DonationDetailsProps{
-  post: Post;
-}
+import { Leafwatch } from '@helpers/leafwatch';
+import { Post, Profile } from '@good/lens';
+import useGetSingleCause from 'src/hooks/useGetSingleCause';
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
-  const { currentProfile } = useProfileStore();
   const { id } = router.query;
-  const [donationDetails, setDonationDetails] = useState<any>(null);
+  const currentProfile = useProfileStore();
+  const { data: posts, error, loading } = useGetSingleCause();
+  const [donationPost, setDonationPost] = useState<Post | null>(null);
+  const [allDonors, setAllDonors] = useState<any>(null); 
+  const [topDonors, setTopDonors] = useState<any>(null); 
+  const [newDonors, setNewDonors] = useState<any>(null);
 
   useEffect(() => {
     const fetchDonationDetails = async () => {
       try {
+        if (!id || !posts) return;
+
         const params = new URLSearchParams()
         const parts = id?.toString().split('-')!
-        console.log(id)
-        console.log(parts)
-        params.append('profileId',parts[1].substring(2))
-        params.append('publicationId', parts[0].substring(2))
+        params.append('profileId',parts[0].substring(3))
+        params.append('publicationId', parts[1].substring(2))
         const response = await fetch( `http://api-testnet.bcharity.net/donations/all-donations-on-post?${params}`)
-        console.log(response);
         if (!response.ok) {
           throw new Error('Failed to fetch donation details');
         }
-        const data = await response.json();
-   
-        console.log( data)
-    
-        Leafwatch.track(PAGEVIEW, { page: `donations/${id}` });
+        const donors = await response.json();
+        setAllDonors(donors.donations);
 
+        const topSortedDonors = donors.donations.slice().sort((a: any, b: any) => {
+          return parseFloat(b.amount) - parseFloat(a.amount);
+        });
+        setTopDonors(topSortedDonors);
+
+        const recentSortedDonors = donors.donations.slice().sort((a: any, b: any) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+        setNewDonors(recentSortedDonors);
+        
+        
+
+        const matchingPost = posts.find((post: any) => post.id === id);
+        if (matchingPost) {
+          setDonationPost(matchingPost);
+
+          const topSortedDonors = [...donors].sort((a: any, b: any) => {
+            return parseFloat(b.amount) - parseFloat(a.amount);
+          });
+          setTopDonors(topSortedDonors);
+          
+
+          Leafwatch.track('PAGEVIEW', { page: `donations/${id}` });
+        } else {
+          console.error(`Post with id ${id} not found.`);
+        }
       } catch (error) {
         console.error('Error fetching donation details:', error);
       }
     };
-  
-    if (id) {
-      fetchDonationDetails();
-    }
-  }, [id]);
-  
+
+    fetchDonationDetails();
+  }, [id, posts]);
 
   if (!currentProfile) {
     return <div>Not signed in</div>;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
+
+  if (!donationPost) {
+    return <div>Donation not found</div>; 
   }
 
   const DonationPostDetails = {
@@ -73,67 +90,17 @@ const DonationDetails: NextPage = () => {
         goal: 1000
       }
     ],
-    DonationInfo: [
-      {
-        mission:
-          'Body text of donation post, explains purpose of the donation/cause',
-        updated: new Date(), // date of donation's post updates
-        updateImages: [
-          'https://picsum.photos/200/300',
-          'https://picsum.photos/200/300',
-          'https://picsum.photos/200/300'
-        ], //any images for the updates, can be null. Images displayed in a 3 columns layout
-        updateText:
-          'Text for any updates to the donations post, accompanied by the date it was updated'
-      }
-    ],
-    missionThumbnail:
-      'https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all',
-    organizer: currentProfile, //this will be profile of the donations post creator, placeholder for now
-    title: 'Food Bank'
   };
 
-  const topDonors = [
-    { amount: 100, supporter: currentProfile },
-    { amount: 200, supporter: currentProfile },
-    { amount: 150, supporter: currentProfile },
-    { amount: 120, supporter: currentProfile },
-    { amount: 180, supporter: currentProfile },
-    { amount: 250, supporter: currentProfile }
-  ];
-
-  const newDonors = [
-    { amount: 80, supporter: currentProfile },
-    { amount: 110, supporter: currentProfile },
-    { amount: 95, supporter: currentProfile },
-    { amount: 180, supporter: currentProfile },
-    { amount: 250, supporter: currentProfile }
-  ];
 
   return (
     <>
-      {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
       <GridLayout>
         <GridItemEight className="space-y-5">
-          <DonationThumbnail
-            missionThumbnail={DonationPostDetails.missionThumbnail}
-            title={DonationPostDetails.title}
-          />
+          <DonationThumbnail post={donationPost} />
+          
+          <DonationInfo post={donationPost} />
 
-          <DonationInfo
-            mission={DonationPostDetails.DonationInfo[0].mission}
-            organizer={DonationPostDetails.organizer}
-            update={DonationPostDetails.DonationInfo[0].updateText}
-            updateDate={DonationPostDetails.DonationInfo[0].updated}
-            updateImages={DonationPostDetails.DonationInfo[0].updateImages}
-          />
-          {/** 
-            <WordsOfSupport
-            amount={DonatedAmounts}
-            description={Descriptions}
-            supporters={Supporters}
-          />
-          */}
           <Donors newDonors={newDonors} topDonors={topDonors} />
         </GridItemEight>
 

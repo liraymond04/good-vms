@@ -135,7 +135,7 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
           <div>
             <Total>${total}</Total>
           </div>
-          <div className="text-gray-400">
+          <div className="text-black">
             <Goal>raised of ${goal} goal</Goal>
           </div>
           <DonateCard/>

@@ -7,15 +7,34 @@ import getAvatar from '@good/helpers/getAvatar';
 import { Button } from '@headlessui/react';
 import { Image } from '@good/ui';
 
+interface Donation {
+  id: string;
+  causeId: string;
+  fromProfileId: string;
+  fromAddress: string;
+  tokenAddress: string;
+  amount: string;
+  txHash: string;
+  createdAt: string;
+}
+
 interface DonorsDisplayProps {
-  allNewDonors: { amount: number; supporter: Profile }[];
-  allTopDonors: { amount: number; supporter: Profile }[];
+  allNewDonors: Donation[];
+  allTopDonors: Donation[];
+  newDonorProfiles: Profile[];
+  topDonorProfiles: Profile[]; 
   top: boolean;
 }
 
-const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors, top }) => {
+const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
+  allNewDonors,
+  allTopDonors,
+  newDonorProfiles,
+  topDonorProfiles, 
+  top,
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'top' | 'new'>(top ? 'top' : 'new'); 
+  const [selectedTab, setSelectedTab] = useState<'top' | 'new'>(top ? 'top' : 'new');
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
 
@@ -33,20 +52,22 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
     }
   }, [showModal, top]);
 
-  const renderSupporters = (donors: { amount: number; supporter: Profile }[]) => {
+  const renderSupporters = (donorProfiles: Profile[], donations: Donation[]) => {
     return (
       <div className="overflow-y-scroll max-h-96 scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500">
-        {donors.map((donor, index) => (
+        {donorProfiles.map((donorProfile, index) => (
           <div className="supporter-details mb-5 flex flex-col items-center" key={index}>
             <div className="flex items-center">
               <Image
-                alt={donor.supporter.id}
+                alt={donorProfile.handle?.localName}
                 className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
-                src={getAvatar(donor.supporter)}
+                src={getAvatar(donorProfile)}
+                height={10}
+                width={10}
               />
               <div className="ml-4">
-                <p>{donor.supporter?.handle?.localName}</p>
-                <p>${donor.amount}</p>
+                <p>{donorProfile.handle?.localName}</p>
+                {donations && donations[index] && <p>${donations[index].amount}</p>}
               </div>
             </div>
           </div>
@@ -75,8 +96,8 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
           </Button>
         </div>
 
-        {selectedTab === 'top' && <>{renderSupporters(allTopDonors)}</>}
-        {selectedTab === 'new' && <>{renderSupporters(allNewDonors)}</>}
+        {selectedTab === 'top' && <>{renderSupporters(topDonorProfiles, allTopDonors)}</>}
+        {selectedTab === 'new' && <>{renderSupporters(newDonorProfiles, allNewDonors)}</>}
       </div>
     </Card>
   );
