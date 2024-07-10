@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { Errors } from '@hey/data';
-import LensEndpoint from '@hey/data/lens-endpoints';
+import { Errors } from '@good/data';
+import LensEndpoint from '@good/data/lens-endpoints';
 import axios from 'axios';
 
 import catchedError from '../catchedError';
-import { HEY_USER_AGENT } from '../constants';
+import { GOOD_USER_AGENT } from '../constants';
 
 /**
  * Middleware to validate Lens account
@@ -39,7 +39,7 @@ const validateLensAccount = async (
       {
         headers: {
           'Content-Type': 'application/json',
-          'User-agent': HEY_USER_AGENT
+          'User-agent': GOOD_USER_AGENT
         }
       }
     );

@@ -13,10 +13,10 @@ export interface DonationData {
 }
 
 const useActOnReferralOpenAction = (
-  params: CreatePublicationProps & {
+  params: {
     publicationId: string;
     referrers: Address[];
-  }
+  } & CreatePublicationProps
 ) => {
   const { actOnUnknownOpenAction, isLoading, txHash, txId } =
     useActOnUnknownOpenAction(params);

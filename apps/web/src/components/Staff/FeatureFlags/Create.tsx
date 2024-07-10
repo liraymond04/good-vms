@@ -4,12 +4,12 @@ import type { Dispatch, FC, SetStateAction } from 'react';
 import { GOOD_API_URL } from '@good/data/constants';
 import { STAFFTOOLS } from '@good/data/tracking';
 import { Button, Form, Input, useZodForm } from '@good/ui';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { object, string } from 'zod';
-import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 
 const createFeatureSchema = object({
   key: string().min(1, { message: 'Key is required' })

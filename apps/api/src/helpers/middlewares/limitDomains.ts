@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { Errors } from '@hey/data';
-import logger from '@hey/helpers/logger';
+import { Errors } from '@good/data';
+import logger from '@good/helpers/logger';
 
 import catchedError from '../catchedError';
 

@@ -1,14 +1,14 @@
-import type { ClubProfile } from '@hey/types/club';
+import type { ClubProfile } from '@good/types/club';
 import type { FC } from 'react';
 
 import ProfileListShimmer from '@components/Shared/Shimmer/ProfileListShimmer';
 import UserProfile from '@components/Shared/UserProfile';
+import { GOOD_API_URL } from '@good/data/constants';
+import { ProfileLinkSource } from '@good/data/tracking';
+import { type Profile, useProfilesQuery } from '@good/lens';
+import { Card, EmptyState, ErrorMessage } from '@good/ui';
 import { getAuthApiHeadersWithAccessToken } from '@helpers/getAuthApiHeaders';
 import { ArrowLeftIcon, UsersIcon } from '@heroicons/react/24/outline';
-import { HEY_API_URL } from '@hey/data/constants';
-import { ProfileLinkSource } from '@hey/data/tracking';
-import { type Profile, useProfilesQuery } from '@hey/lens';
-import { Card, EmptyState, ErrorMessage } from '@hey/ui';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ const Members: FC<MembersProps> = ({ clubId, handle }) => {
   > => {
     try {
       const response = await axios.post(
-        `${HEY_API_URL}/clubs/members`,
+        `${GOOD_API_URL}/clubs/members`,
         { id: clubId },
         { headers: getAuthApiHeadersWithAccessToken() }
       );

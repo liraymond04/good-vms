@@ -1,9 +1,9 @@
 import type { Handler } from 'express';
 
-import { CLUBS_API_URL, CLUBS_APP_TOKEN } from '@hey/data/constants';
-import logger from '@hey/helpers/logger';
+import { CLUBS_API_URL, CLUBS_APP_TOKEN } from '@good/data/constants';
+import logger from '@good/helpers/logger';
 import catchedError from 'src/helpers/catchedError';
-import { HEY_USER_AGENT } from 'src/helpers/constants';
+import { GOOD_USER_AGENT } from 'src/helpers/constants';
 import { invalidBody, noBody } from 'src/helpers/responses';
 import { number, object, string } from 'zod';
 
@@ -34,7 +34,7 @@ export const post: Handler = async (req, res) => {
       headers: {
         'App-Access-Token': CLUBS_APP_TOKEN,
         'Content-Type': 'application/json',
-        'User-Agent': HEY_USER_AGENT,
+        'User-Agent': GOOD_USER_AGENT,
         'X-Access-Token': accessToken
       },
       method: 'POST'

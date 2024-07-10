@@ -42,7 +42,7 @@ export const post = [
       const payload = parseJwt(identityToken);
 
       if (id) {
-        const result = await heyPg.query(
+        const result = await goodPg.query(
           `
           UPDATE "DraftPublication"
           SET "content" = $1, "collectModule" = $2

@@ -1,12 +1,12 @@
-import type { Club } from '@hey/types/club';
+import type { Club } from '@good/types/club';
 import type { FC } from 'react';
 
 import JoinLeaveButton from '@components/Shared/Club/JoinLeaveButton';
 import Markup from '@components/Shared/Markup';
 import Slug from '@components/Shared/Slug';
-import getMentions from '@hey/helpers/getMentions';
-import humanize from '@hey/helpers/humanize';
-import { Image, LightBox } from '@hey/ui';
+import getMentions from '@good/helpers/getMentions';
+import humanize from '@good/helpers/humanize';
+import { Image, LightBox } from '@good/ui';
 import Link from 'next/link';
 import { useState } from 'react';
 

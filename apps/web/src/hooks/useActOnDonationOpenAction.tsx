@@ -11,7 +11,7 @@ export interface DonationData {
 }
 
 const useActOnDonationOpenAction = (
-  params: CreatePublicationProps & { publicationId: string }
+  params: { publicationId: string } & CreatePublicationProps
 ) => {
   const { actOnUnknownOpenAction, isLoading, txHash, txId } =
     useActOnUnknownOpenAction(params);

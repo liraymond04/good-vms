@@ -1,8 +1,8 @@
-import type { Preferences } from '@hey/types/hey';
+import type { Preferences } from '@good/types/good';
 import type { Request, Response } from 'express';
 
-import logger from '@hey/helpers/logger';
-import heyPg from 'src/db/heyPg';
+import logger from '@good/helpers/logger';
+import goodPg from 'src/db/goodPg';
 import catchedError from 'src/helpers/catchedError';
 import validateIsStaff from 'src/helpers/middlewares/validateIsStaff';
 import validateLensAccount from 'src/helpers/middlewares/validateLensAccount';
@@ -19,7 +19,7 @@ export const get = [
     }
 
     try {
-      const [preference, features, email, membershipNft] = await heyPg.multi(
+      const [preference, features, email, membershipNft] = await goodPg.multi(
         `
         SELECT * FROM "Preference" WHERE id = $1;
 

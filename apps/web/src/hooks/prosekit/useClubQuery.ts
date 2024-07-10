@@ -1,7 +1,7 @@
-import type { Club } from '@hey/types/club';
+import type { Club } from '@good/types/club';
 
+import { GOOD_API_URL } from '@good/data/constants';
 import { getAuthApiHeadersWithAccessToken } from '@helpers/getAuthApiHeaders';
-import { HEY_API_URL } from '@hey/data/constants';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
@@ -28,7 +28,7 @@ const useClubQuery = (query: string): ClubProfile[] => {
 
     axios
       .post(
-        `${HEY_API_URL}/clubs/get`,
+        `${GOOD_API_URL}/clubs/get`,
         { limit: 10, profile_id: currentProfile?.id, query },
         { headers: getAuthApiHeadersWithAccessToken() }
       )

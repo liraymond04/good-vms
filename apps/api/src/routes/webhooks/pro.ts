@@ -1,6 +1,6 @@
 import type { Handler } from 'express';
 
-import { Errors } from '@hey/data';
+import { Errors } from '@good/data';
 import catchedError from 'src/helpers/catchedError';
 import { invalidBody, noBody } from 'src/helpers/responses';
 import updateProStatus from 'src/helpers/webhooks/pro/updateProStatus';

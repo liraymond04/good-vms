@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import getIp from '@hey/helpers/getIp';
-import sha256 from '@hey/helpers/sha256';
+import getIp from '@good/helpers/getIp';
+import sha256 from '@good/helpers/sha256';
 import rateLimit from 'express-rate-limit';
 
 import catchedError from '../catchedError';

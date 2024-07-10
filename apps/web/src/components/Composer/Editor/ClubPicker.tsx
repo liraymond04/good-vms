@@ -2,9 +2,9 @@ import type { EditorExtension } from '@helpers/prosekit/extension';
 import type { FC } from 'react';
 import type { ClubProfile } from 'src/hooks/prosekit/useClubQuery';
 
-import { EditorRegex } from '@hey/data/regex';
-import { Image } from '@hey/ui';
-import cn from '@hey/ui/cn';
+import { EditorRegex } from '@good/data/regex';
+import { Image } from '@good/ui';
+import cn from '@good/ui/cn';
 import { useEditor } from 'prosekit/react';
 import {
   AutocompleteItem,

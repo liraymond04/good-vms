@@ -1,11 +1,11 @@
-import type { Handler } from 'express';
+import type { Request, Response } from 'express';
 
 import logger from '@good/helpers/logger';
 import parseJwt from '@good/helpers/parseJwt';
 import goodPg from 'src/db/goodPg';
 import catchedError from 'src/helpers/catchedError';
 import validateLensAccount from 'src/helpers/middlewares/validateLensAccount';
-import { invalidBody, noBody, notAllowed } from 'src/helpers/responses';
+import { invalidBody, noBody } from 'src/helpers/responses';
 import { object, string } from 'zod';
 
 type ExtensionRequest = {
@@ -18,59 +18,57 @@ const validationSchema = object({
   id: string().nullable()
 });
 
-export const post: Handler = async (req, res) => {
-  const { body } = req;
+export const post = [
+  validateLensAccount,
+  async (req: Request, res: Response) => {
+    const { body } = req;
 
-  if (!body) {
-    return noBody(res);
-  }
+    if (!body) {
+      return noBody(res);
+    }
 
-  const validation = validationSchema.safeParse(body);
+    const validation = validationSchema.safeParse(body);
 
-  if (!validation.success) {
-    return invalidBody(res);
-  }
+    if (!validation.success) {
+      return invalidBody(res);
+    }
 
-  const validateLensAccountStatus = await validateLensAccount(req);
-  if (validateLensAccountStatus !== 200) {
-    return notAllowed(res, validateLensAccountStatus);
-  }
+    const { content, id } = body as ExtensionRequest;
 
-  const { content, id } = body as ExtensionRequest;
+    try {
+      const identityToken = req.headers['x-identity-token'] as string;
+      const payload = parseJwt(identityToken);
 
-  try {
-    const identityToken = req.headers['x-identity-token'] as string;
-    const payload = parseJwt(identityToken);
-
-    if (id) {
-      const result = await goodPg.query(
-        `
+      if (id) {
+        const result = await goodPg.query(
+          `
           UPDATE "CauseDraftPublication"
           SET "content" = $1
           WHERE "id" = $2
           RETURNING *;
         `,
-        [content, id]
-      );
+          [content, id]
+        );
 
-      logger.info(`Draft updated for ${payload.id} - ${result[0]?.id}`);
+        logger.info(`Draft updated for ${payload.id} - ${result[0]?.id}`);
 
-      return res.status(200).json({ result: result[0], success: true });
-    } else {
-      const result = await goodPg.query(
-        `
+        return res.status(200).json({ result: result[0], success: true });
+      } else {
+        const result = await goodPg.query(
+          `
           INSERT INTO "CauseDraftPublication" ("profileId", "content", "updatedAt")
           VALUES ($1, $2, now())
           RETURNING *;
         `,
-        [payload.id, content]
-      );
+          [payload.id, content]
+        );
 
-      logger.info(`Draft created for ${payload.id} - ${result[0]?.id}`);
+        logger.info(`Draft created for ${payload.id} - ${result[0]?.id}`);
 
-      return res.status(200).json({ result: result[0], success: true });
+        return res.status(200).json({ result: result[0], success: true });
+      }
+    } catch (error) {
+      return catchedError(res, error);
     }
-  } catch (error) {
-    return catchedError(res, error);
   }
-};
+];
