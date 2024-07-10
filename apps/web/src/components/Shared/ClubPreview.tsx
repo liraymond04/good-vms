@@ -1,13 +1,13 @@
-import type { Club } from '@hey/types/club';
+import type { Club } from '@good/types/club';
 import type { FC, ReactNode } from 'react';
 
+import { GOOD_API_URL } from '@good/data/constants';
+import getMentions from '@good/helpers/getMentions';
+import nFormatter from '@good/helpers/nFormatter';
+import truncateByWords from '@good/helpers/truncateByWords';
+import { Card, Image } from '@good/ui';
 import { getAuthApiHeadersWithAccessToken } from '@helpers/getAuthApiHeaders';
 import isFeatureAvailable from '@helpers/isFeatureAvailable';
-import { HEY_API_URL } from '@hey/data/constants';
-import getMentions from '@hey/helpers/getMentions';
-import nFormatter from '@hey/helpers/nFormatter';
-import truncateByWords from '@hey/helpers/truncateByWords';
-import { Card, Image } from '@hey/ui';
 import * as HoverCard from '@radix-ui/react-hover-card';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -31,7 +31,7 @@ const ClubPreview: FC<ClubPreviewProps> = ({ children, handle }) => {
   const getClub = async (handle: string): Promise<Club | null> => {
     try {
       const response = await axios.post(
-        `${HEY_API_URL}/clubs/get`,
+        `${GOOD_API_URL}/clubs/get`,
         { club_handle: handle, profile_id: currentProfile?.id },
         { headers: getAuthApiHeadersWithAccessToken() }
       );

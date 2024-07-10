@@ -54,8 +54,8 @@ export const post = [
         return res.status(200).json({ enabled, success: true });
       }
 
-    await heyPg.query(
-      `
+      await goodPg.query(
+        `
         DELETE FROM "ProfileFeature"
         WHERE "profileId" = $1 AND "featureId" = $2
       `,

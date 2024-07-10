@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
 import { Errors } from '@good/data';
-import goodPg from 'src/db/goodPg';
 import parseJwt from '@good/helpers/parseJwt';
+import goodPg from 'src/db/goodPg';
 
 import catchedError from '../catchedError';
 import { STAFF_FEATURE_ID } from '../constants';

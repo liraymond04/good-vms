@@ -21,8 +21,8 @@ import { useTipsStore } from 'src/store/non-persisted/useTipsStore';
 import DonateAction from './DonateAction';
 
 interface DonateProps {
-  publication?: MirrorablePublication;
-  showCount?: boolean;
+  publication: MirrorablePublication;
+  showCount: boolean;
 }
 
 const DonateCard: FC<DonateProps> = ({ publication, showCount }) => {

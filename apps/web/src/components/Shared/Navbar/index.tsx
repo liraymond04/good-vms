@@ -15,6 +15,7 @@ import {
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -50,24 +51,24 @@ const NavbarContainer = styled.div`
 }
 
   .hide-on-mobile {
-  display: block; 
+  display: block;
 }
 
 
 @media (max-width: 760px) {
   .hide-on-mobile {
-    display: none; 
+    display: none;
   }
 }
 
 
   .display-on-mobile {
-  display: none; 
+  display: none;
 }
 
 @media (max-width: 760px) {
     .display-on-mobile {
-    display: flex; 
+    display: flex;
     }
   }
 
@@ -232,21 +233,25 @@ const Navbar: FC = () => {
     <header className="sticky top-0 z-10 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
       <SiteStatus />
       {staffMode ? <StaffBar /> : null}
-      <NavbarContainer className="container mx-auto w-full">
-        <div className="relative flex h-full w-full flex-col items-start justify-start">
+      <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
+        <div className="relative flex h-full w-full flex-col items-start justify-center">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
             type="button"
           />
           <Link className="hide-on-mobile" href="/">
-            <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
+            <div className="text-white-900 flex flex-grow items-center justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img alt="Logo" className="h-12 w-12" src="/logo1.svg" />
+                <Image
+                  alt="Logo"
+                  className="h-12 w-12"
+                  height={12}
+                  src="/logo1.svg"
+                  width={12}
+                />
               </div>
-              <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast
-              </span>
+              <span className="nav-text ml-3 mr-3">Goodcast</span>
             </div>
           </Link>
 

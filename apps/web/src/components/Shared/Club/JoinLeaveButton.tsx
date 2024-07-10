@@ -1,4 +1,4 @@
-import type { Club } from '@hey/types/club';
+import type { Club } from '@good/types/club';
 import type { FC } from 'react';
 
 import { useEffect, useState } from 'react';

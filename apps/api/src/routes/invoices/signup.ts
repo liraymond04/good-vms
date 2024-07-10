@@ -1,11 +1,11 @@
 import type { Handler } from 'express';
 
-import LensEndpoint from '@hey/data/lens-endpoints';
-import logger from '@hey/helpers/logger';
+import LensEndpoint from '@good/data/lens-endpoints';
+import logger from '@good/helpers/logger';
 import axios from 'axios';
 import invoiceRates from 'src/data/invoice-rates';
 import catchedError from 'src/helpers/catchedError';
-import { HEY_USER_AGENT } from 'src/helpers/constants';
+import { GOOD_USER_AGENT } from 'src/helpers/constants';
 import createClickhouseClient from 'src/helpers/createClickhouseClient';
 import { noBody } from 'src/helpers/responses';
 
@@ -39,7 +39,7 @@ export const get: Handler = async (req, res) => {
         query: `
           SELECT city, region, country
           FROM events
-          WHERE 
+          WHERE
             actor = '${id}'
             AND city IS NOT NULL
             AND region IS NOT NULL
@@ -69,7 +69,7 @@ export const get: Handler = async (req, res) => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'User-agent': HEY_USER_AGENT
+            'User-agent': GOOD_USER_AGENT
           }
         }
       )
