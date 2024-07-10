@@ -3,6 +3,7 @@ import type { Profile } from '@good/lens';
 import type { FC } from 'react';
 
 import SmallUserProfileShimmer from '@components/Shared/Shimmer/SmallUserProfileShimmer';
+import { ERC20Token } from '@good/abis';
 import getAvatar from '@good/helpers/getAvatar';
 import getProfile from '@good/helpers/getProfile';
 import { useProfileQuery } from '@good/lens';
@@ -13,23 +14,6 @@ import { useReadContract } from 'wagmi';
 interface DonationCardProps {
   donation: Donation;
 }
-
-const ERC20_SYMBOL_ABI = [
-  {
-    constant: true,
-    inputs: [],
-    name: 'symbol',
-    outputs: [
-      {
-        name: '',
-        type: 'string'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function'
-  }
-] as const;
 
 const DonatorCard: FC<DonationCardProps> = ({ donation }) => {
   const {
@@ -45,7 +29,7 @@ const DonatorCard: FC<DonationCardProps> = ({ donation }) => {
   });
 
   const { data: tokenSymbol, error: tokenSymbolError } = useReadContract({
-    abi: ERC20_SYMBOL_ABI,
+    abi: ERC20Token,
     address: donation.tokenAddress as `0x${string}`,
     args: [],
     functionName: 'symbol'

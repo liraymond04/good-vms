@@ -101,6 +101,17 @@ const MoreNavItems: FC = () => {
                                   )
                                 }
                               >
+                                <MoreLink href="/donations" text="Donations" />
+                              </MenuItem>
+                              <MenuItem
+                                as="div"
+                                className={({ focus }: { focus: boolean }) =>
+                                  cn(
+                                    { 'dropdown-active': focus },
+                                    'm-2 rounded-lg'
+                                  )
+                                }
+                              >
                                 <MoreLink
                                   href="https://giveth.io"
                                   text="Giveth"

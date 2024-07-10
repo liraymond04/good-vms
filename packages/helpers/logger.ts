@@ -1,4 +1,3 @@
-import { WinstonTransport as AxiomTransport } from '@axiomhq/winston';
 import dotenv from 'dotenv';
 import winston from 'winston';
 
@@ -8,15 +7,6 @@ class Logger {
   private logger: winston.Logger;
 
   constructor() {
-    const transports: winston.transport[] = [new winston.transports.Console()];
-
-    const axiomToken = process.env.AXIOM_TOKEN;
-    if (axiomToken) {
-      transports.push(
-        new AxiomTransport({ dataset: 'good', token: axiomToken })
-      );
-    }
-
     this.logger = winston.createLogger({
       format: winston.format.combine(
         winston.format.colorize(),
@@ -27,7 +17,7 @@ class Logger {
         })
       ),
       level: 'info',
-      transports: transports
+      transports: [new winston.transports.Console()]
     });
   }
 

@@ -1,4 +1,4 @@
-import type { Handler } from 'express';
+import type { Request, Response } from 'express';
 
 import { APP_NAME, IS_MAINNET } from '@good/data/constants';
 import LensEndpoint from '@good/data/lens-endpoints';
@@ -7,7 +7,7 @@ import axios from 'axios';
 import catchedError from 'src/helpers/catchedError';
 import { GOOD_USER_AGENT } from 'src/helpers/constants';
 import validateIsStaff from 'src/helpers/middlewares/validateIsStaff';
-import { notAllowed } from 'src/helpers/responses';
+import validateLensAccount from 'src/helpers/middlewares/validateLensAccount';
 
 const APP_PUBLICATION_COLLECTS_QUERY = `
 query AppPublicationCollects($request: PublicationsRequest!) {
@@ -316,19 +316,18 @@ async function fetchAppRevenue() {
 }
 
 // TODO: add tests
-export const get: Handler = async (req, res) => {
-  const validateIsStaffStatus = await validateIsStaff(req);
-  if (validateIsStaffStatus !== 200) {
-    return notAllowed(res, validateIsStaffStatus);
+export const get = [
+  validateLensAccount,
+  validateIsStaff,
+  async (_: Request, res: Response) => {
+    try {
+      const result = await fetchAppRevenue();
+
+      logger.info('Lens: Fetched app revenue');
+
+      return res.status(200).json({ result, success: true });
+    } catch (error) {
+      catchedError(res, error);
+    }
   }
-
-  try {
-    const result = await fetchAppRevenue();
-
-    logger.info('Lens: Fetched app revenue');
-
-    return res.status(200).json({ result, success: true });
-  } catch (error) {
-    catchedError(res, error);
-  }
-};
+];

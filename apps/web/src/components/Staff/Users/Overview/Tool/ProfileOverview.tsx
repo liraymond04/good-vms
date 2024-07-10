@@ -5,14 +5,11 @@ import MetaDetails from '@components/Shared/MetaDetails';
 import P2PRecommendation from '@components/Shared/Profile/P2PRecommendation';
 import { APP_NAME, GOOD_API_URL } from '@good/data/constants';
 import formatAddress from '@good/helpers/formatAddress';
-import getFollowModule from '@good/helpers/getFollowModule';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import {
   BanknotesIcon,
   HandRaisedIcon,
   HashtagIcon,
-  IdentificationIcon,
-  LinkIcon,
   PhotoIcon
 } from '@heroicons/react/24/outline';
 import {
@@ -22,7 +19,6 @@ import {
 } from '@heroicons/react/24/solid';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import Link from 'next/link';
 
 interface ProfileOverviewProps {
   profile: Profile;
@@ -113,27 +109,6 @@ const ProfileOverview: FC<ProfileOverviewProps> = ({ profile }) => {
             <XCircleIcon className="size-4 text-red-500" />
           )}
         </MetaDetails>
-        <MetaDetails
-          icon={<IdentificationIcon className="ld-text-gray-500 size-4" />}
-          title="Follow module"
-        >
-          {getFollowModule(profile?.followModule?.__typename).description}
-        </MetaDetails>
-        {profile?.metadata?.rawURI ? (
-          <MetaDetails
-            icon={<LinkIcon className="ld-text-gray-500 size-4" />}
-            title="Metadata"
-            value={profile.metadata.rawURI}
-          >
-            <Link
-              href={profile.metadata.rawURI}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Open
-            </Link>
-          </MetaDetails>
-        ) : null}
         <div className="pt-2">
           <P2PRecommendation profile={profile} />
         </div>

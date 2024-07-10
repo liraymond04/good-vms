@@ -4,7 +4,7 @@ import Loader from '@components/Shared/Loader';
 import { APP_NAME, GOOD_API_URL, IS_MAINNET } from '@good/data/constants';
 import formatDate from '@good/helpers/datetime/formatDate';
 import { Card, CardHeader, ErrorMessage } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import {

@@ -15,6 +15,9 @@ import getCollectModuleMetadata from '@helpers/getCollectModuleMetadata';
 import getPublicationOGImages from '@helpers/getPublicationOGImages';
 import defaultMetadata from 'src/defaultMetadata';
 
+export const dynamic = 'force-static';
+export const revalidate = 2160000;
+
 interface Props {
   params: { id: string };
 }

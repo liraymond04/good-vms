@@ -9,7 +9,7 @@ import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import { HubRestrictedUpgradeable } from './lib/HubRestrictedUpgradeable.sol';
+import { HubRestrictedUpgradeable } from '../lib/HubRestrictedUpgradeable.sol';
 
 import { IPublicationActionModule } from 'lens-modules/contracts/interfaces/IPublicationActionModule.sol';
 import { Types } from 'lens-modules/contracts/libraries/constants/Types.sol';

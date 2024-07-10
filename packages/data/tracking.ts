@@ -145,8 +145,7 @@ export const SETTINGS = {
   },
   PREFERENCES: {
     TOGGLE_HIGH_SIGNAL_NOTIFICATION_FILTER:
-      'Toggle high signal notification filter',
-    TOGGLE_PUSH_NOTIFICATIONS: 'Toggle push notifications'
+      'Toggle high signal notification filter'
   },
   PRO: {
     APP_ICON: 'Update app icon'
@@ -259,6 +258,7 @@ export const ALL_EVENTS = {
 };
 
 export enum ProfileLinkSource {
+  ClubMembers = 'club-members',
   Collects = 'collects',
   Followers = 'followers',
   Following = 'following',
