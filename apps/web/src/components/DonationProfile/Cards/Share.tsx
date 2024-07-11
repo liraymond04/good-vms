@@ -174,19 +174,18 @@ const ShareCard: FC = () => {
 
   return (
     <>
-      <button
-        className="w-full rounded-full px-4 py-2 text-sm text-white"
-        onClick={handleOpen}
-        style={{ background: '#de78ab' }}
-      >
-        <span>Share</span>
-      </button>
-      {showModal && (
-        <Modal onClose={handleClose} show={true} title="Help by sharing">
-          {modalContent}
-        </Modal>
-      )}
-    </>
+    <button 
+    className="w-full rounded-full px-4 py-2 text-sm text-white" 
+    style={{ background: '#da5597' }}
+    onClick={handleOpen}>
+      <span>Share</span>
+    </button>
+    {showModal && (
+      <Modal show={true} onClose={handleClose} title="Help by sharing">
+        {modalContent}
+      </Modal>
+    )}
+  </>
   );
 };
 
