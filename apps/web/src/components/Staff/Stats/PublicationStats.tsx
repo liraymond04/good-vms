@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import Loader from '@components/Shared/Loader';
 import { GOOD_API_URL } from '@good/data/constants';
 import { Card, CardHeader, ErrorMessage, NumberedStat } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

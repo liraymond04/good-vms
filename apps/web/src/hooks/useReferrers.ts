@@ -26,6 +26,7 @@ const useReferrers = (publicationId: string) => {
   })[1];
 
   const [referrers, setReferrers] = useState<Address[]>([]);
+  const [rootPublicationId, setRootPublicationId] = useState<Address>();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +34,8 @@ const useReferrers = (publicationId: string) => {
     setLoading(true);
     let nextPublicationId = publicationId;
     let err = '';
-    let referrers: Address[] = [];
+    let profileIds: Address[] = [];
+    let rootPublicationId: Address = '0x00';
     loop: while (nextPublicationId) {
       // console.log('npid', nextPublicationId);
       const { data, error: referrersQueryError } = await fetchMore({
@@ -46,7 +48,7 @@ const useReferrers = (publicationId: string) => {
         break loop;
       }
 
-      referrers.push(data.publication.by.id);
+      profileIds.push(data.publication.by.id);
 
       switch (data.publication.__typename) {
         case 'Post': {
@@ -59,7 +61,8 @@ const useReferrers = (publicationId: string) => {
           if (!actionModule) {
             err = 'original post does not contain the referral action module';
           } else {
-            referrers = makeReferralChain(referrers);
+            profileIds = makeReferralChain(profileIds);
+            rootPublicationId = data.publication.id;
           }
           break loop;
         }
@@ -80,18 +83,19 @@ const useReferrers = (publicationId: string) => {
     if (!!err) {
       setError(err);
     }
-    if (referrers.length > 0) {
-      setReferrers(referrers);
+    if (profileIds.length > 0) {
+      setReferrers(profileIds);
+      setRootPublicationId(rootPublicationId);
     }
     setLoading(false);
-    return { data: referrers, error };
+    return { data: profileIds, error };
   };
 
   useEffect(() => {
     refetch();
   }, []);
 
-  return { error, loading, referrers, refetch };
+  return { error, loading, referrers, refetch, rootPublicationId };
 };
 
 export default useReferrers;

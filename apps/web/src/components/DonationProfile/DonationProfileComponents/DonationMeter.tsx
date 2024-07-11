@@ -1,6 +1,7 @@
-import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+// import DonateCard from '../Cards/Donate';
 import ShareCard from '../Cards/Share';
 import DonateCard from'../Cards/Donate';
 import DonatorCard from '@components/Donations/DonatorCard';

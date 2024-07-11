@@ -1,25 +1,25 @@
-import type { Request } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
+import { Errors } from '@good/data';
 import parseJwt from '@good/helpers/parseJwt';
 import goodPg from 'src/db/goodPg';
 
+import catchedError from '../catchedError';
 import { STAFF_FEATURE_ID } from '../constants';
-import validateLensAccount from './validateLensAccount';
 
 /**
  * Middleware to validate if the profile is staff
  * @param request Incoming request
  * @returns Response
  */
-const validateIsStaff = async (request: Request) => {
-  const validateLensAccountStatus = await validateLensAccount(request);
-  if (validateLensAccountStatus !== 200) {
-    return validateLensAccountStatus;
-  }
-
-  const identityToken = request.headers['x-identity-token'] as string;
+const validateIsStaff = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const identityToken = req.headers['x-identity-token'] as string;
   if (!identityToken) {
-    return 400;
+    return catchedError(res, new Error(Errors.Unauthorized), 401);
   }
 
   try {
@@ -37,12 +37,12 @@ const validateIsStaff = async (request: Request) => {
     );
 
     if (data[0]?.enabled) {
-      return 200;
+      return next();
     }
 
-    return 401;
+    return catchedError(res, new Error(Errors.Unauthorized), 401);
   } catch {
-    return 500;
+    return catchedError(res, new Error(Errors.SomethingWentWrong));
   }
 };
 

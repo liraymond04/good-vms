@@ -4,6 +4,7 @@ import type { Post } from '@good/lens';
 import type { FC } from 'react';
 
 import Attachments from '@components/Shared/Attachments';
+import Markup from '@components/Shared/Markup';
 import { GOOD_API_URL } from '@good/data/constants';
 import formatDate from '@good/helpers/datetime/formatDate';
 import getAvatar from '@good/helpers/getAvatar';
@@ -12,11 +13,10 @@ import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
 import {
-  ArchiveBoxIcon,
-  ArrowsRightLeftIcon,
-  ChatBubbleLeftEllipsisIcon,
+  ChatBubbleBottomCenterTextIcon,
   CurrencyDollarIcon,
-  HeartIcon
+  HandThumbUpIcon,
+  ShareIcon
 } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -112,7 +112,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
       )}
     >
       <div className="p-4">
-        <div className="mb-4 flex items-center">
+        <div className="mb-4 flex items-start">
           <Image
             alt={profile.displayName}
             className="h-10 w-10 rounded-full"
@@ -120,52 +120,46 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
             src={getAvatar(post.by)}
             width={10}
           />
-          <div className="ml-3">
-            <div className="text-sm font-semibold">{profile.displayName}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-100">
-              {formatDate(post.createdAt)}
+          <div className="ml-3 flex-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-semibold">
+                  {profile.displayName}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-100">
+                  {formatDate(post.createdAt)}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        {/* Post Contents */}
-        {/* <Markup className="mb-4">{postContent}</Markup> */}
-        <div className="mb-4 text-sm">
-          {showMore ? postContent : truncateText(postContent, 100)}
-          {postContent.length > 100 && (
-            <button className="ml-2 text-blue-500" onClick={toggleShowMore}>
-              {showMore ? 'Show less' : 'Show more'}
-            </button>
-          )}
-        </div>
-        {/* Post Attachments/Media */}
-        {hasAttachments && (
-          <div className="mb-4 h-auto w-full rounded-lg">
-            <Attachments asset={postAsset} attachments={postAttachments} />
-          </div>
-        )}
-        <div className="ld-text-gray-500 flex items-center text-sm text-gray-500 dark:text-gray-100">
-          <div
-            className="mr-4 flex items-center"
-            onClick={() => setShowModal(true)}
-          >
-            <CurrencyDollarIcon className="mr-1 size-4" />
-            {donationsCount} Donations
-          </div>
-          <div className="mr-4 flex items-center">
-            <ChatBubbleLeftEllipsisIcon className="mr-1 h-5 w-5" />
-            {post.stats.comments}
-          </div>
-          <div className="mr-4 flex items-center">
-            <ArrowsRightLeftIcon className="mr-1 h-5 w-5" />
-            {post.stats.mirrors}
-          </div>
-          <div className="mr-4 flex items-center">
-            <HeartIcon className="mr-1 h-5 w-5" />
-            {post.stats.reactions}
-          </div>
-          <div className="flex items-center">
-            <ArchiveBoxIcon className="mr-1 h-5 w-5" />
-            {post.stats.bookmarks}
+            {/* Post Contents */}
+            <Markup className="mb-4 mt-2">{postContent}</Markup>
+            {/* Post Attachments/Media */}
+            {hasAttachments && (
+              <div className="mb-4 h-auto w-full rounded-lg">
+                <Attachments asset={postAsset} attachments={postAttachments} />
+              </div>
+            )}
+            <div className="mt-6 flex items-center text-sm text-gray-500 dark:text-gray-100">
+              <div
+                className="mr-4 flex items-center"
+                onClick={() => setShowModal(true)}
+              >
+                <CurrencyDollarIcon className="mr-1 size-4" />
+                {donationsCount} Donations
+              </div>
+              <div className="mr-4 flex items-center">
+                <HandThumbUpIcon className="mr-1 size-4" />
+                {post.stats.reactions} likes
+              </div>
+              <div className="mr-4 flex items-center">
+                <ChatBubbleBottomCenterTextIcon className="mr-1 size-4" />
+                {post.stats.comments} comments
+              </div>
+              <div className="flex items-center">
+                <ShareIcon className="mr-1 size-4" />
+                {0} shares
+              </div>
+            </div>
           </div>
         </div>
       </div>

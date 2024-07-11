@@ -1,11 +1,12 @@
-import { FC, useState, useEffect } from 'react';
-import { Modal, Card } from '@good/ui';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
 import type { Profile } from '@good/lens';
+import type { FC } from 'react';
+
 import getAvatar from '@good/helpers/getAvatar';
+import { Card, Image, Modal } from '@good/ui';
 import { Button } from '@headlessui/react';
-import { Image } from '@good/ui';
+import { useEffect, useState } from 'react';
+import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 interface Donation {
   id: string;
@@ -79,18 +80,22 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
   const modalContent = (
     <Card className="rounded-b-xl rounded-t-none border-none">
       <div className="p-4">
-        <div className="flex justify-center space-x-4 mb-4">
+        <div className="mb-4 flex justify-center space-x-4">
           <Button
-            style={{ backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('top')}
+            style={{
+              backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080'
+            }}
           >
             Top Donors
           </Button>
           <Button
-            style={{ backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('new')}
+            style={{
+              backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080'
+            }}
           >
             New Donors
           </Button>
@@ -112,7 +117,7 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
         Show All
       </Button>
       {showModal && (
-        <Modal show={true} onClose={handleClose} title="Donors">
+        <Modal onClose={handleClose} show={true} title="Donors">
           {modalContent}
         </Modal>
       )}

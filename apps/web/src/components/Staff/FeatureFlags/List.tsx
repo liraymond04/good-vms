@@ -10,7 +10,7 @@ import getAllFeatureFlags from '@good/helpers/api/getAllFeatureFlags';
 import formatDate from '@good/helpers/datetime/formatDate';
 import { Badge, Button, Card, EmptyState, ErrorMessage, Modal } from '@good/ui';
 import cn from '@good/ui/cn';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';

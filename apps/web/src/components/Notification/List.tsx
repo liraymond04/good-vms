@@ -1,28 +1,24 @@
-import type {
-  ActedNotification as ActedNotificationType,
-  CommentNotification as CommentNotificationType,
-  FollowNotification as FollowNotificationType,
-  MentionNotification as MentionNotificationType,
-  MirrorNotification as MirrorNotificationType,
-  NotificationRequest,
-  QuoteNotification as QuoteNotificationType,
-  ReactionNotification as ReactionNotificationType
-} from '@good/lens';
 import type { FC } from 'react';
 
 import {
+  type ActedNotification as ActedNotificationType,
+  type CommentNotification as CommentNotificationType,
   CustomFiltersType,
+  type FollowNotification as FollowNotificationType,
+  type MentionNotification as MentionNotificationType,
+  type MirrorNotification as MirrorNotificationType,
+  type NotificationRequest,
   NotificationType,
+  type QuoteNotification as QuoteNotificationType,
+  type ReactionNotification as ReactionNotificationType,
   useNotificationsQuery
 } from '@good/lens';
 import { Card, EmptyState, ErrorMessage } from '@good/ui';
 import cn from '@good/ui/cn';
 import { BellIcon } from '@heroicons/react/24/outline';
-import { useEffect } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { NotificationTabType } from 'src/enums';
 import { usePreferencesStore } from 'src/store/non-persisted/usePreferencesStore';
-import { useNotificationStore } from 'src/store/persisted/useNotificationStore';
 
 import NotificationShimmer from './Shimmer';
 import ActedNotification from './Type/ActedNotification';
@@ -39,7 +35,6 @@ interface ListProps {
 
 const List: FC<ListProps> = ({ feedType }) => {
   const { highSignalNotificationFilter } = usePreferencesStore();
-  const { latestNotificationId } = useNotificationStore();
 
   const getNotificationType = () => {
     switch (feedType) {
@@ -58,7 +53,6 @@ const List: FC<ListProps> = ({ feedType }) => {
     }
   };
 
-  // Variables
   const request: NotificationRequest = {
     where: {
       customFilters: [CustomFiltersType.Gardeners],
@@ -67,7 +61,7 @@ const List: FC<ListProps> = ({ feedType }) => {
     }
   };
 
-  const { data, error, fetchMore, loading, refetch } = useNotificationsQuery({
+  const { data, error, fetchMore, loading } = useNotificationsQuery({
     variables: { request }
   });
 
@@ -75,17 +69,12 @@ const List: FC<ListProps> = ({ feedType }) => {
   const pageInfo = data?.notifications?.pageInfo;
   const hasMore = !!pageInfo?.next;
 
-  useEffect(() => {
-    refetch();
-  }, [latestNotificationId, refetch]);
-
   const onEndReached = async () => {
-    if (!hasMore) {
-      return;
+    if (hasMore) {
+      await fetchMore({
+        variables: { request: { ...request, cursor: pageInfo.next } }
+      });
     }
-    await fetchMore({
-      variables: { request: { ...request, cursor: pageInfo.next } }
-    });
   };
 
   if (loading) {

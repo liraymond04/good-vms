@@ -6,7 +6,7 @@ import { GOOD_API_URL } from '@good/data/constants';
 import { STAFFTOOLS } from '@good/data/tracking';
 import getAllTokens from '@good/helpers/api/getAllTokens';
 import { Button, Card, EmptyState, ErrorMessage, Modal } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';

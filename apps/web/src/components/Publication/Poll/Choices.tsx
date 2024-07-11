@@ -10,7 +10,7 @@ import humanize from '@good/helpers/humanize';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import { Card, Spinner } from '@good/ui';
 import cn from '@good/ui/cn';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import {
   Bars3BottomLeftIcon,

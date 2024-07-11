@@ -2,7 +2,6 @@ import { type Profile } from '@good/lens';
 
 import getAvatar from '@good/helpers/getAvatar';
 import { Image } from '@good/ui';
-import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 
 import DonorsDisplayCard from '../Cards/DonorDisplayCard';

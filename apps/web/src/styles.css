@@ -183,6 +183,13 @@ table {
 .plyr--full-ui input[type='range'] {
   @apply !text-brand-500;
 }
+  & a,
+  span[data-hashtag],
+  span[data-cashtag],
+  span[data-mention='profile'],
+  span[data-mention='club'] {
+    @apply text-brand-500;
+  }
 
 .plyr__control {
   @apply hover:!bg-brand-500;

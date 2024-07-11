@@ -5,11 +5,9 @@ import cron from 'node-cron';
 import cleanClickhouse from './cleanClickhouse';
 import cleanDraftPublications from './cleanDraftPublications';
 import cleanEmailTokens from './cleanEmailTokens';
+import cleanEmptyScores from './cleanEmptyScores';
 import cleanPreferences from './cleanPreferences';
-import deleteLensPublications from './deleteLensPublications';
 import heartbeat from './heartbeat';
-import replicateGardeners from './replicateGardeners';
-import replicateLensPublications from './replicateLensPublications';
 
 dotenv.config({ override: true });
 
@@ -18,21 +16,6 @@ const main = () => {
 
   cron.schedule('*/1 * * * *', async () => {
     await heartbeat();
-    return;
-  });
-
-  cron.schedule('*/5 * * * *', async () => {
-    await replicateGardeners();
-    return;
-  });
-
-  cron.schedule('*/1  * * * *', async () => {
-    await deleteLensPublications();
-    return;
-  });
-
-  cron.schedule('*/2 * * * *', async () => {
-    await replicateLensPublications();
     return;
   });
 
@@ -53,6 +36,11 @@ const main = () => {
 
   cron.schedule('*/5 * * * *', async () => {
     await cleanPreferences();
+    return;
+  });
+
+  cron.schedule('*/5 * * * *', async () => {
+    await cleanEmptyScores();
     return;
   });
 };

@@ -5,10 +5,8 @@ import type {
 import type { FC } from 'react';
 
 import { VerifiedOpenActionModules } from '@good/data/verified-openaction-modules';
-import isFeatureAvailable from '@helpers/isFeatureAvailable';
 
 import DecentOpenAction from './UnknownModule/Decent';
-import RentableBillboardOpenAction from './UnknownModule/RentableBillboard';
 import SwapOpenAction from './UnknownModule/Swap';
 
 interface OpenActionOnBodyProps {
@@ -16,12 +14,13 @@ interface OpenActionOnBodyProps {
 }
 
 const OpenActionOnBody: FC<OpenActionOnBodyProps> = ({ publication }) => {
-  const module = publication.openActionModules.find(
-    (module) =>
-      module.contract.address === VerifiedOpenActionModules.Swap ||
-      module.contract.address === VerifiedOpenActionModules.RentableBillboard ||
-      module.contract.address === VerifiedOpenActionModules.DecentNFT
-  );
+  const module = publication.openActionModules
+    .filter((module) => module.__typename === 'UnknownOpenActionModuleSettings')
+    .find(
+      (module) =>
+        module.contract.address === VerifiedOpenActionModules.Swap ||
+        module.contract.address === VerifiedOpenActionModules.DecentNFT
+    );
 
   if (!module) {
     return null;
@@ -35,14 +34,6 @@ const OpenActionOnBody: FC<OpenActionOnBodyProps> = ({ publication }) => {
           publication={publication}
         />
       )}
-      {isFeatureAvailable('rent-ads') &&
-        module.contract.address ===
-          VerifiedOpenActionModules.RentableBillboard && (
-          <RentableBillboardOpenAction
-            module={module as UnknownOpenActionModuleSettings}
-            publication={publication}
-          />
-        )}
       {module.contract.address === VerifiedOpenActionModules.DecentNFT && (
         <DecentOpenAction publication={publication} />
       )}

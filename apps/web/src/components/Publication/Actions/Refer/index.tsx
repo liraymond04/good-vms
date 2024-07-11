@@ -18,9 +18,14 @@ import Action from './Action';
 interface ReferProps {
   publication: MirrorablePublication;
   referrers: Address[];
+  rootPublicationId: Address;
 }
 
-const Refer: FC<ReferProps> = ({ publication, referrers }) => {
+const Refer: FC<ReferProps> = ({
+  publication,
+  referrers,
+  rootPublicationId
+}) => {
   const confettiDom = useRef<HTMLDivElement>(null);
 
   const triggerConfetti = () => {
@@ -68,6 +73,7 @@ const Refer: FC<ReferProps> = ({ publication, referrers }) => {
                   closePopover={close}
                   publication={publication}
                   referrers={referrers}
+                  rootPublicationId={rootPublicationId}
                   triggerConfetti={triggerConfetti}
                 />
               )}
