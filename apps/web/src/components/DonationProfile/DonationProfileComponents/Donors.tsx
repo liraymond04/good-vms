@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import DonorsDisplayCard from '../Cards/DonorDisplayCard';
 import { useEffect } from 'react';
 import { useApolloClient, gql } from '@apollo/client';
+import { Button } from '@headlessui/react';
 
 interface Donation {
   id: string;
@@ -211,10 +212,10 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             {newDonors.length > 0 ? (
               renderSupporters(newDonorsProfile, newDonors, showAllNewDonors)
             ) : (
-              <Button className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
+              <button className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
               style={{ background: '#da5597' }}>
               Be our first donor!             
-              </Button>
+              </button>
             )}
             <div className="mt-5 w-full text-center">
               {newDonors.length > 0 && (
