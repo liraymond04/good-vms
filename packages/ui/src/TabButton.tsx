@@ -36,7 +36,7 @@ const TabButton: FC<TabButtonProps> = ({
         aria-label={name}
         className={cn(
           'flex items-center justify-center space-x-2 text-sm sm:px-3 sm:py-1.5',
-          'h-full w-full rounded-full hover:bg-gray-800',
+          'h-full w-full rounded-full hover:bg-gray-300 dark:hover:bg-gray-800',
           {
             'font-bold text-black dark:text-white': active,
             'text-gray-500': !active
