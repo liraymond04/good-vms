@@ -5,7 +5,7 @@ import { Errors } from '@good/data';
 import { MAX_UINT256, SEND_TOKENS } from '@good/data/constants';
 import { Button, Card, Tooltip } from '@good/ui';
 import errorToast from '@helpers/errorToast';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, XCircleIcon, ArchiveBoxArrowDownIcon } from '@heroicons/react/24/outline';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import useHandleWrongNetwork from 'src/hooks/useHandleWrongNetwork';
@@ -42,22 +42,32 @@ const Requests = () => {
     //   date: "YYYY-MM-DD",
     // },
     {
-      amount: 10,
-      currency: 'GOOD',
+      organizationName: '0x01',
+      donorId: '0x02',
+      amount: 1,
+      currencyRequested: 'MoneyDonation',
+      hours: 0,
+      volunteerName: 'SEND GOOD (USD)',
+      publicationId: '0x03',
       date: '2022-01-01',
-      hours: 5,
-      publicationUrl: '0x01',
-      volunteerName: 'SEND GOOD TO SELF',
-      volunteerProfile: '0x0'
+    },
+    {
+      amount: 1,
+      currencyRequested: 'TimeDonation',
+      date: '2022-01-02',
+      hours: 10,
+      publicationId: '0x03',
+      volunteerName: 'SEND GOOD (VHR)',
+      // volunteerProfile: '0x02ee'
     },
     {
       amount: 10,
-      currency: 'VHR',
+      currencyRequested: 'VHR',
       date: '2022-01-02',
-      hours: 5,
-      publicationUrl: '0x01',
-      volunteerName: 'SEND VHR TO SELF',
-      volunteerProfile: '0x0'
+      hours: 10,
+      publicationId: '0x03',
+      volunteerName: 'SEND VHR',
+      // volunteerProfile: '0x02ee'
     }
   ];
 
@@ -135,7 +145,6 @@ const Requests = () => {
         args: [SEND_TOKENS, MAX_UINT256],
         functionName: 'approve'
       });
-      console.log('Allowance enabled for GOOD');
     } catch (error) {
       onError(error);
     }
@@ -152,34 +161,58 @@ const Requests = () => {
     }
     try {
       let currencyAddress = `` as Address;
-      if (request.currency === 'VHR') {
+      if (request.currencyRequested === 'VHR') {
         currencyAddress = allowedTokens.find((token) => token.symbol === 'VHR')
           ?.contractAddress as Address;
-      } else if (request.currency === 'GOOD') {
+      } else if (request.currencyRequested === 'TimeDonation' || request.currencyRequested === 'MoneyDonation') {
         currencyAddress = allowedTokens.find((token) => token.symbol === 'GOOD')
           ?.contractAddress as Address;
       }
 
-      // get final rate
-      const usdRate =
+      // Rate variables
+      let GOODRate = 0;
+      let finalGOODRate = 0;
+      let totalGOOD = 0;
+      let VHRRate = 0;
+      let finalVHRRate = 0;
+
+      let usdRate =
         fiatRates.find((rate) => rate.address === currencyAddress.toLowerCase())
           ?.fiat || 0;
-      const cryptoRate = !usdRate
-        ? request.amount
-        : Number((request.amount / usdRate).toFixed(2));
-      const finalRate = cryptoRate * 10 ** 18;
+
+      // Use GOOD rate if request is Time or Money donation
+      if (request.currencyRequested !== 'VHR') {
+        GOODRate = !usdRate ? request.amount : Number((request.amount / usdRate).toFixed(2));
+        finalGOODRate = GOODRate * 10 ** 18;
+        if (request.currencyRequested === 'MoneyDonation') {
+          totalGOOD = (finalGOODRate * 0.003) / 0.0001;
+        } else if (request.currencyRequested === 'TimeDonation') {
+          totalGOOD = (finalGOODRate * 30 * 0.003) / 0.0001;
+        }
+      } else { // VHR request
+        // 1 VHR == 1 hour
+        // VHRRate = !usdRate ? request.amount : Number((request.hours / usdRate).toFixed(2));
+        finalVHRRate = request.amount * 10 ** 18;
+      }
+
+      console.log(currentProfile?.ownedBy.address)
+      console.log(totalGOOD);
+      console.log("vhr rate", finalVHRRate)
+      console.log(currentProfile?.id);
+      console.log(request.publicationId);
+      console.log(request.currencyRequested)
 
       setIsLoading(true);
-      const hash = await writeContractAsync({
+      const hash = writeContractAsync({
         abi: SendTokens,
         address: SEND_TOKENS,
         args: [
-          currencyAddress,
           currentProfile?.ownedBy.address,
-          finalRate,
+          totalGOOD,
+          finalVHRRate, // 1 VHR == 1 hour
           currentProfile?.id,
           currentProfile?.id,
-          request.publicationUrl
+          request.publicationId
         ],
         functionName: 'sendTokens'
       });
@@ -213,44 +246,49 @@ const Requests = () => {
       </div>
       <Button onClick={enableSending}>Enable Sending GOOD and VHR</Button>
 
-      {requests.map((request, index) => (
-        <div
-          className="flex w-full items-center justify-between space-x-2 rounded-xl border bg-gray-100 px-4 py-2 dark:border-gray-700 dark:bg-gray-900"
-          id="goodRequest"
-          key={index}
+  {requests.map((request, index) => (
+  <div
+    className="grid grid-cols-[180px,auto,auto,auto,auto] gap-2 w-full items-center rounded-xl border bg-gray-100 px-4 py-2 dark:border-gray-700 dark:bg-gray-900"
+    id="goodRequest"
+    key={index}
+  >
+    <span className="">{request.volunteerName}</span>
+    <span className="">
+      {request.currencyRequested === 'MoneyDonation' ? '$' : null}
+      {request.amount} {request.currencyRequested === 'VHR' || request.currencyRequested === 'TimeDonation' ? 'VHR' : null}
+    </span>
+    <span className="">{request.hours}h</span>
+    <span className="">{request.date}</span>
+    <span className="py-2 justify-self-end">
+      <Tooltip className="" content="Deny" placement="top">
+        <button
+          className="rounded-full outline-offset-8"
+          style={{ verticalAlign: 'middle' }}
         >
-          <span className="">{request.volunteerName}</span>
-          <span className="">
-            {request.amount}{' '}
-            {request.currency === 'VHR'
-              ? 'VHR'
-              : request.currency === 'GOOD'
-                ? 'GOOD'
-                : null}
-          </span>
-          <span className="">{request.hours}h</span>
-          <span className="">{request.date}</span>
-          <span className="py-2">
-            <Tooltip className="" content="Deny" placement="top">
-              <button
-                className="rounded-full outline-offset-8"
-                style={{ verticalAlign: 'middle' }}
-              >
-                <XCircleIcon className="size-8" />
-              </button>
-            </Tooltip>
-            <Tooltip className="ml-5" content="Accept" placement="top">
-              <button
-                className="rounded-full outline-offset-8"
-                onClick={() => handleSendTokens(request)}
-                style={{ verticalAlign: 'middle' }}
-              >
-                <CheckCircleIcon className="size-8" />
-              </button>
-            </Tooltip>
-          </span>
-        </div>
-      ))}
+          <XCircleIcon className="size-8" />
+        </button>
+      </Tooltip>
+      <Tooltip className="" content="Accept" placement="top">
+        <button
+          className="rounded-full outline-offset-8"
+          onClick={() => handleSendTokens(request)}
+          style={{ verticalAlign: 'middle' }}
+        >
+          <CheckCircleIcon className="size-8" />
+        </button>
+      </Tooltip>
+      <Tooltip className="" content="Set to in-review" placement="top">
+        <button
+          className="rounded-full outline-offset-8"
+          style={{ verticalAlign: 'middle' }}
+          // onClick={() => handleSetInReview(request)}
+        >
+          <ArchiveBoxArrowDownIcon className="size-8" />
+        </button>
+      </Tooltip>
+    </span>
+  </div>
+))}
     </Card>
   );
 };

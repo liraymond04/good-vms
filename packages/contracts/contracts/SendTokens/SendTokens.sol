@@ -6,6 +6,7 @@ import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 import '@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol';
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import '@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol';
+// import '@openzeppelin/contracts/utils/structs/EnumerableMap.sol';
 
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
@@ -23,22 +24,45 @@ contract SendTokens is
   using SafeERC20 for IERC20;
 
   ILensHub public lensHub;
+  IERC20 public GOOD;
+  IERC20 public VHR;
+
+  function setGOOD(address _good) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    GOOD = IERC20(_good);
+  }
+
+  function setVHR(address _vhr) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    VHR = IERC20(_vhr);
+  }
 
   bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+  bytes32 public constant ORGANIZATION_ROLE = keccak256("ORGANIZATION_ROLE");
 
+
+  // store statuses
+  enum RequestStatus { Submitted, UnderReview, Approved, Rejected }
+  // store a mapping of profile id to publication id to bool
+  mapping(uint256 => mapping(uint256 => RequestStatus)) public requestStatus;
 
   event TokensSent(
     uint256 indexed fromProfileId,
     uint256 indexed toProfileId,
     uint256 indexed publicationId,
-    address token,
     address from,
     address to,
-    uint256 amount
+    uint256 GOODAmount,
+    uint256 VHRAmount
+  );
+
+  event StatusChanged(
+    uint256 indexed profileId,
+    uint256 indexed publicationId,
+    RequestStatus requestStatus
   );
 
   error InvalidLensProfile(uint256 profileId);
   error InsufficientAllowance();
+  error RequestNotApproved();
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
@@ -49,7 +73,9 @@ contract SendTokens is
   function initialize(
     address defaultAdmin,
     address pauser,
-    address lensHubAddress
+    address lensHubAddress,
+    address GOODAddress,
+    address VHRAddress
   ) public initializer {
     __Pausable_init();
     __AccessControl_init();
@@ -59,6 +85,10 @@ contract SendTokens is
     _grantRole(PAUSER_ROLE, pauser);
 
     lensHub = ILensHub(lensHubAddress);
+    // set GOOD and VHR addresses
+    GOOD = IERC20(GOODAddress);
+    VHR = IERC20(VHRAddress);
+
   }
 
   function pause() external onlyRole(PAUSER_ROLE) {
@@ -75,46 +105,65 @@ contract SendTokens is
     lensHub = ILensHub(lensHubAddress);
   }
 
-  function checkAllowance(
-    address tokenAddress,
+  // Set the status of a request
+  function setRequestStatus(
+    uint256 profileId,
+    uint256 publicationId,
+    RequestStatus statusToSet
+  ) external onlyRole(ORGANIZATION_ROLE) {
+    requestStatus[profileId][publicationId] = statusToSet;
+
+    emit StatusChanged(
+        profileId, 
+        publicationId, 
+        requestStatus[profileId][publicationId]
+      );
+  }
+
+  function checkGOODAllowance(
     address owner
   ) public view returns (uint256) {
-    IERC20 token = IERC20(tokenAddress);
-    return token.allowance(owner, address(this));
+    return GOOD.allowance(owner, address(this));
+  }
+
+  function checkVHRAllowance(
+    address owner
+  ) public view returns (uint256) {
+    return VHR.allowance(owner, address(this));
   }
 
   function sendTokens(
-    address tokenAddress,
     address recipient,
-    uint256 amount,
+    uint256 GOODAmount,
+    uint256 VHRAmount,
     uint256 fromProfileId,
     uint256 toProfileId,
-    uint256 publicationId
+    uint256 publicationId,
+    RequestStatus currentRequestStatus
   ) external whenNotPaused nonReentrant {
-    if (checkAllowance(tokenAddress, msg.sender) < amount) {
+    // Status check
+    require(currentRequestStatus == RequestStatus.Approved);
+
+    if (checkGOODAllowance(msg.sender) < GOODAmount || checkVHRAllowance(msg.sender) < VHRAmount) {
       revert InsufficientAllowance();
     }
-
-    if (lensHub.ownerOf(fromProfileId) != msg.sender) {
-      revert InvalidLensProfile(fromProfileId);
+    
+    // Send if amount values are >0
+    if (GOODAmount > 0) {
+      GOOD.safeTransferFrom(msg.sender, recipient, GOODAmount);
     }
-
-    if (lensHub.ownerOf(toProfileId) != recipient) {
-      revert InvalidLensProfile(toProfileId);
+    if (VHRAmount > 0) {
+      VHR.safeTransferFrom(msg.sender, recipient, VHRAmount);
     }
-    IERC20 token = IERC20(tokenAddress);
-
-    // Send tokens
-    token.safeTransferFrom(msg.sender, recipient, amount);
 
     emit TokensSent(
       fromProfileId,
       toProfileId,
       publicationId,
-      tokenAddress,
       msg.sender,
       recipient,
-      amount
+      GOODAmount,
+      VHRAmount
     );
   }
 }
