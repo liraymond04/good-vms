@@ -173,6 +173,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
         <DonationModal
           donations={donations}
           onClose={() => setShowModal(false)}
+          post={post}
         />
       )}
     </div>

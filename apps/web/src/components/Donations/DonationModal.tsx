@@ -1,16 +1,23 @@
 import type { Donation } from '@components/Donations/DonationPost';
+import type { Post } from '@good/lens';
 import type { FC } from 'react';
 
 import DonatorCard from '@components/Donations/DonatorCard';
 import { EmptyState } from '@good/ui';
 import { GiftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 interface DonationModalProps {
   donations: Donation[];
   onClose: () => void;
+  post: Post;
 }
 
-const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
+const DonationModal: FC<DonationModalProps> = ({
+  donations,
+  onClose,
+  post
+}) => {
   // Calculate the total amount donated
   const totalAmountDonated = donations.reduce(
     (total, donation) => total + Number(donation.amount),
@@ -57,11 +64,12 @@ const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
                 </span>
               </p>
             </div>
-            <div>
-              <button className="w-full rounded-full bg-pink-500 px-6 py-2 text-white hover:bg-pink-600">
-                Donation Page
-              </button>
-            </div>
+            <Link
+              className="w-full rounded-full bg-pink-500 px-6 py-2 text-center text-white hover:bg-pink-600"
+              href={`/donations/${post.id}`}
+            >
+              Donation Page
+            </Link>
           </div>
         </div>
       </div>
