@@ -1,23 +1,21 @@
-import { type Profile } from '@good/lens';
-
+import { gql, useApolloClient } from '@apollo/client';
 import getAvatar from '@good/helpers/getAvatar';
+import { type Profile } from '@good/lens';
 import { Image } from '@good/ui';
-import React, { useState } from 'react';
+import { Button } from '@headlessui/react';
+import React, { useEffect, useState } from 'react';
 
 import DonorsDisplayCard from '../Cards/DonorDisplayCard';
-import { useEffect } from 'react';
-import { useApolloClient, gql } from '@apollo/client';
-import { Button } from '@headlessui/react';
 
 interface Donation {
-  id: string;
-  causeId: string;
-  fromProfileId: string;
-  fromAddress: string;
-  tokenAddress: string;
   amount: string;
-  txHash: string;
+  causeId: string;
   createdAt: string;
+  fromAddress: string;
+  fromProfileId: string;
+  id: string;
+  tokenAddress: string;
+  txHash: string;
 }
 
 interface DonorsProps {
@@ -25,63 +23,55 @@ interface DonorsProps {
   topDonors: Donation[];
 }
 
-
 const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
   const [showAllTopDonors, setShowAllTopDonors] = useState(false);
   const [showAllNewDonors, setShowAllNewDonors] = useState(false);
   const [newDonorsProfile, setNewDonorsProfile] = useState<Profile[]>([]);
   const [topDonorsProfile, setTopDonorsProfile] = useState<Profile[]>([]);
-  const client = useApolloClient(); 
-
+  const client = useApolloClient();
 
   useEffect(() => {
-
-   const fetchNewDonorsProfiles = async () => {
-
-  const profiles = [];
-  for (const donor of newDonors) {
-    const profileId = donor.fromProfileId;
-    try {
-      const { data } = await client.query({
-        query: gql`
-          query Profile($request: ProfileRequest!) {
-              profile(request: $request) {
-                id
-                handle {
-                  localName
-                }
-                metadata {
-                  picture {
-                    ... on ImageSet {
-                      raw {
-                        uri
-                      }
-                      optimized {
-                        uri
+    const fetchNewDonorsProfiles = async () => {
+      const profiles = [];
+      for (const donor of newDonors) {
+        const profileId = donor.fromProfileId;
+        try {
+          const { data } = await client.query({
+            query: gql`
+              query Profile($request: ProfileRequest!) {
+                profile(request: $request) {
+                  id
+                  handle {
+                    localName
+                  }
+                  metadata {
+                    picture {
+                      ... on ImageSet {
+                        raw {
+                          uri
+                        }
+                        optimized {
+                          uri
+                        }
                       }
                     }
                   }
                 }
               }
-            }
-        `,
-        variables: {
-          "request": 
-              {
-                "forProfileId":"0x0209"
+            `,
+            variables: {
+              request: {
+                forProfileId: '0x0209'
               }
-            },
-      });
+            }
+          });
 
-      profiles.push(data.profile);
-    } catch (error) {
-    }
-  }
+          profiles.push(data.profile);
+        } catch (error) {}
+      }
 
-  setNewDonorsProfile(profiles);
-};
-
-
+      setNewDonorsProfile(profiles);
+    };
 
     const fetchTopDonorsProfiles = async () => {
       const profiles: Profile[] = [];
@@ -91,36 +81,34 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
           const { data } = await client.query({
             query: gql`
               query Profile($request: ProfileRequest!) {
-                  profile(request: $request) {
-                    id
-                    handle {
-                      localName
-                    }
-                    metadata {
-                      picture {
-                        ... on ImageSet {
-                          raw {
-                            uri
-                          }
-                          optimized {
-                            uri
-                          }
+                profile(request: $request) {
+                  id
+                  handle {
+                    localName
+                  }
+                  metadata {
+                    picture {
+                      ... on ImageSet {
+                        raw {
+                          uri
+                        }
+                        optimized {
+                          uri
                         }
                       }
                     }
                   }
                 }
+              }
             `,
             variables: {
-              "request": 
-                  {
-                    "forProfileId":"0x0209"
-                  }
-                },
+              request: {
+                forProfileId: '0x0209'
+              }
+            }
           });
           profiles.push(data.profile);
-          } catch (error) {
-        }
+        } catch (error) {}
       }
       setTopDonorsProfile(profiles);
     };
@@ -137,17 +125,15 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
     setShowAllNewDonors(true);
   };
 
-
-
   const renderSupporters = (
     donorProfiles: Profile[],
     donations: Donation[],
     showAll: boolean
   ) => {
     const displayedDonors = showAll ? donorProfiles : donorProfiles.slice(0, 5);
-  
+
     return displayedDonors.map((donorProfile, index) => {
-      const donation = donations[index]; 
+      const donation = donations[index];
       return (
         <div
           className="supporter-details mb-5 flex flex-col items-center"
@@ -163,15 +149,14 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             />
             <div className="ml-4">
               <p>{donorProfile?.handle?.localName}</p>
-              <p>${donation.amount}</p> 
+              <p>${donation.amount}</p>
             </div>
           </div>
         </div>
       );
     });
   };
-  
-  
+
   return (
     <div className="-top-10 items-center justify-center rounded">
       <div className="flex justify-center">
@@ -183,21 +168,21 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             {topDonors.length > 0 ? (
               renderSupporters(topDonorsProfile, topDonors, showAllTopDonors)
             ) : (
-             
-              <Button className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
-              style={{ background: '#da5597' }}>
-              Be our first donor!             
+              <Button
+                className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
+                style={{ background: '#da5597' }}
+              >
+                Be our first donor!
               </Button>
-             
-             )}
+            )}
             <div className="mt-5 w-full text-center">
               {topDonors.length > 0 && (
                 <DonorsDisplayCard
                   allNewDonors={newDonors}
-                  newDonorProfiles={newDonorsProfile}
                   allTopDonors={topDonors}
-                  topDonorProfiles={topDonorsProfile}
+                  newDonorProfiles={newDonorsProfile}
                   top={true}
+                  topDonorProfiles={topDonorsProfile}
                 />
               )}
             </div>
@@ -212,19 +197,21 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
             {newDonors.length > 0 ? (
               renderSupporters(newDonorsProfile, newDonors, showAllNewDonors)
             ) : (
-              <button className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
-              style={{ background: '#da5597' }}>
-              Be our first donor!             
+              <button
+                className="w-3/4 rounded-full px-4 py-2 text-sm text-white hover:bg-gray-300/20"
+                style={{ background: '#da5597' }}
+              >
+                Be our first donor!
               </button>
             )}
             <div className="mt-5 w-full text-center">
               {newDonors.length > 0 && (
                 <DonorsDisplayCard
                   allNewDonors={newDonors}
-                  newDonorProfiles={newDonorsProfile}
                   allTopDonors={topDonors}
-                  topDonorProfiles={topDonorsProfile}
+                  newDonorProfiles={newDonorsProfile}
                   top={false}
+                  topDonorProfiles={topDonorsProfile}
                 />
               )}
             </div>

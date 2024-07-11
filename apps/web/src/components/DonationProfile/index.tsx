@@ -1,40 +1,43 @@
+import type { Post } from '@good/lens';
 import type { NextPage } from 'next';
-import { useState, useEffect } from 'react';
+
+import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
+import { Leafwatch } from '@helpers/leafwatch';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import useGetSingleCause from 'src/hooks/useGetSingleCause';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import { GridLayout, GridItemEight, GridItemFour } from '@good/ui';
+
 import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
-import { Leafwatch } from '@helpers/leafwatch';
-import { Post, Profile } from '@good/lens';
-import useGetSingleCause from 'src/hooks/useGetSingleCause';
-import DonatorCard from '@components/Donations/DonatorCard';
-import { any } from 'zod';
-
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const currentProfile = useProfileStore();
   const { data: posts, error, loading } = useGetSingleCause();
-  const [donationPost, setDonationPost] = useState<Post | null>(null);
-  const [allDonors, setAllDonors] = useState<any>(null); 
-  const [topDonors, setTopDonors] = useState<any>(null); 
+  const [donationPost, setDonationPost] = useState<null | Post>(null);
+  const [allDonors, setAllDonors] = useState<any>(null);
+  const [topDonors, setTopDonors] = useState<any>(null);
   const [newDonors, setNewDonors] = useState<any>(null);
   const [totalDonated, setTotalDonated] = useState<number>(0);
 
   useEffect(() => {
     const fetchDonationDetails = async () => {
       try {
-        if (!id || !posts) return;
+        if (!id || !posts) {
+          return;
+        }
 
-        const params = new URLSearchParams()
-        const parts = id?.toString().split('-')!
-        params.append('profileId',parts[0].substring(3))
-        params.append('publicationId', parts[1].substring(2))
-        const response = await fetch( `http://api-testnet.bcharity.net/donations/all-donations-on-post?${params}`)
+        const params = new URLSearchParams();
+        const parts = id?.toString().split('-')!;
+        params.append('profileId', parts[0].substring(3));
+        params.append('publicationId', parts[1].substring(2));
+        const response = await fetch(
+          `http://api-testnet.bcharity.net/donations/all-donations-on-post?${params}`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch donation details');
         }
@@ -42,19 +45,26 @@ const DonationDetails: NextPage = () => {
         setAllDonors(donors.donations);
 
         let totalAmountDonated = 0;
+        // eslint-disable-next-line unicorn/no-array-for-each
         donors.donations.forEach((donation: any) => {
           totalAmountDonated += parseFloat(donation.amount);
         });
         setTotalDonated(totalAmountDonated);
 
-        const topSortedDonors = donors.donations.slice().sort((a: any, b: any) => {
-          return parseFloat(b.amount) - parseFloat(a.amount);
-        });
+        const topSortedDonors = donors.donations
+          .slice()
+          .sort((a: any, b: any) => {
+            return parseFloat(b.amount) - parseFloat(a.amount);
+          });
         setTopDonors(topSortedDonors);
 
-        const recentSortedDonors = donors.donations.slice().sort((a: any, b: any) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
+        const recentSortedDonors = donors.donations
+          .slice()
+          .sort((a: any, b: any) => {
+            return (
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+          });
         setNewDonors(recentSortedDonors);
 
         const matchingPost = posts.find((post: any) => post.id === id);
@@ -65,14 +75,11 @@ const DonationDetails: NextPage = () => {
             return parseFloat(b.amount) - parseFloat(a.amount);
           });
           setTopDonors(topSortedDonors);
-          
 
           Leafwatch.track('PAGEVIEW', { page: `donations/${id}` });
         } else {
-          
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     fetchDonationDetails();
@@ -83,11 +90,11 @@ const DonationDetails: NextPage = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (!donationPost) {
-    return <div>Donation not found</div>; 
+    return <div>Donation not found</div>;
   }
 
   const DonationPostDetails = {
@@ -96,30 +103,26 @@ const DonationDetails: NextPage = () => {
         current: 200,
         goal: 1000
       }
-    ],
+    ]
   };
 
-
   return (
-    <>
-      <GridLayout>
-        <GridItemEight className="space-y-5">
-          <DonationThumbnail post={donationPost} />
-          
-          <DonationInfo post={donationPost} />
+    <GridLayout>
+      <GridItemEight className="space-y-5">
+        <DonationThumbnail post={donationPost} />
 
-          <Donors newDonors={newDonors} topDonors={topDonors} />
-          
-        </GridItemEight>
+        <DonationInfo post={donationPost} />
 
-        <GridItemFour>
-          <DonationMeter
-            goal={DonationPostDetails.DonatedAmount[0].goal}
-            total={totalDonated}
-          />
-        </GridItemFour>
-      </GridLayout>
-    </>
+        <Donors newDonors={newDonors} topDonors={topDonors} />
+      </GridItemEight>
+
+      <GridItemFour>
+        <DonationMeter
+          goal={DonationPostDetails.DonatedAmount[0].goal}
+          total={totalDonated}
+        />
+      </GridItemFour>
+    </GridLayout>
   );
 };
 

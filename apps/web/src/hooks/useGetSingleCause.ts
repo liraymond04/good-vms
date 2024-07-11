@@ -1,6 +1,5 @@
 import type { AnyPublication, Post } from '@good/lens';
 
-import { GOOD_API_URL } from '@good/data/constants';
 import { LimitType, usePublicationsLazyQuery } from '@good/lens';
 import toEvenLengthHexString from '@helpers/toEvenLengthHexString';
 import axios from 'axios';
@@ -15,8 +14,10 @@ interface CauseMetadata {
   publicationId: string;
 }
 
-async function fetchAllCauses(): Promise<CauseMetadata[]> {  
-  const { data } = await axios.get(`http://api-testnet.bcharity.net/donations/all-causes`);
+async function fetchAllCauses(): Promise<CauseMetadata[]> {
+  const { data } = await axios.get(
+    `http://api-testnet.bcharity.net/donations/all-causes`
+  );
 
   return data.causes;
 }
