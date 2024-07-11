@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 // import DonateCard from '../Cards/Donate';
 import ShareCard from '../Cards/Share';
+import DonateCard from'../Cards/Donate';
+import DonatorCard from '@components/Donations/DonatorCard';
 
 interface DonationMeterProps {
   goal: number;
@@ -112,16 +114,6 @@ const TickMark = styled.div<StyledDivProps>`
 `;
 
 const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
-  const [showShare, setShowShare] = useState(false);
-  const [showDonate, setShowDonate] = useState(false);
-
-  const handleShowShare = () => {
-    setShowShare(true);
-  };
-
-  const handleShowDonate = () => {
-    setShowDonate(true);
-  };
 
   const fillPercentage = (total / goal) * 100;
   const height = `${fillPercentage}%`;
@@ -135,11 +127,12 @@ const DonationMeter: React.FC<DonationMeterProps> = ({ goal, total }) => {
           <div>
             <Total>${total}</Total>
           </div>
-          <div className="text-gray-400">
+          <div className="text-black dark:text-white">
             <Goal>raised of ${goal} goal</Goal>
           </div>
-          {/* <DonateCard /> */}
-          <ShareCard />
+          <DonateCard/>
+
+          <ShareCard/>
         </div>
       </div>
 
