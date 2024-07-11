@@ -90,7 +90,7 @@ const Attachments: FC<ThumbnailProps> = ({ asset, attachments }) => {
     <img
       alt={imageKit(uri, ATTACHMENT)}
       className="cursor-pointer rounded-lg border bg-gray-100  dark:border-gray-700 dark:bg-gray-800"
-      height={10}
+      height={100000}
       loading="lazy"
       onClick={() => {
         setExpandedImage(uri);

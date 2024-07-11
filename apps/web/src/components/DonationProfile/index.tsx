@@ -10,6 +10,9 @@ import Donors from './DonationProfileComponents/Donors';
 import { Leafwatch } from '@helpers/leafwatch';
 import { Post, Profile } from '@good/lens';
 import useGetSingleCause from 'src/hooks/useGetSingleCause';
+import DonatorCard from '@components/Donations/DonatorCard';
+import { any } from 'zod';
+
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
@@ -20,6 +23,7 @@ const DonationDetails: NextPage = () => {
   const [allDonors, setAllDonors] = useState<any>(null); 
   const [topDonors, setTopDonors] = useState<any>(null); 
   const [newDonors, setNewDonors] = useState<any>(null);
+  const [totalDonated, setTotalDonated] = useState<number>(0);
 
   useEffect(() => {
     const fetchDonationDetails = async () => {
@@ -37,6 +41,12 @@ const DonationDetails: NextPage = () => {
         const donors = await response.json();
         setAllDonors(donors.donations);
 
+        let totalAmountDonated = 0;
+        donors.donations.forEach((donation: any) => {
+          totalAmountDonated += parseFloat(donation.amount);
+        });
+        setTotalDonated(totalAmountDonated);
+
         const topSortedDonors = donors.donations.slice().sort((a: any, b: any) => {
           return parseFloat(b.amount) - parseFloat(a.amount);
         });
@@ -46,8 +56,6 @@ const DonationDetails: NextPage = () => {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
         setNewDonors(recentSortedDonors);
-        
-        
 
         const matchingPost = posts.find((post: any) => post.id === id);
         if (matchingPost) {
@@ -61,10 +69,9 @@ const DonationDetails: NextPage = () => {
 
           Leafwatch.track('PAGEVIEW', { page: `donations/${id}` });
         } else {
-          console.error(`Post with id ${id} not found.`);
+          
         }
       } catch (error) {
-        console.error('Error fetching donation details:', error);
       }
     };
 
@@ -102,12 +109,13 @@ const DonationDetails: NextPage = () => {
           <DonationInfo post={donationPost} />
 
           <Donors newDonors={newDonors} topDonors={topDonors} />
+          
         </GridItemEight>
 
         <GridItemFour>
           <DonationMeter
             goal={DonationPostDetails.DonatedAmount[0].goal}
-            total={DonationPostDetails.DonatedAmount[0].current}
+            total={totalDonated}
           />
         </GridItemFour>
       </GridLayout>

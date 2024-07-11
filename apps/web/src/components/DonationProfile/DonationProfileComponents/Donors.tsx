@@ -1,4 +1,4 @@
-import { useProfileLazyQuery, type Profile } from '@good/lens';
+import { type Profile } from '@good/lens';
 
 import getAvatar from '@good/helpers/getAvatar';
 import { Image } from '@good/ui';
@@ -6,9 +6,6 @@ import { Button } from '@headlessui/react';
 import React, { useState } from 'react';
 
 import DonorsDisplayCard from '../Cards/DonorDisplayCard';
-import getProfile from '@good/helpers/getProfile';
-import getProfileAttribute from '@good/helpers/getProfileAttribute';
-import getProfileDetails from '@good/helpers/api/getProfileFlags';
 import { useEffect } from 'react';
 import { useApolloClient, gql } from '@apollo/client';
 
@@ -78,7 +75,6 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
 
       profiles.push(data.profile);
     } catch (error) {
-      console.error(`Error fetching profile for ID ${profileId}:`, error);
     }
   }
 
@@ -124,13 +120,11 @@ const Donors: React.FC<DonorsProps> = ({ newDonors, topDonors }) => {
           });
           profiles.push(data.profile);
           } catch (error) {
-          console.error(`Error fetching profile for ID ${profileId}:`, error);
         }
       }
       setTopDonorsProfile(profiles);
     };
 
-    // Call the functions to fetch profiles
     fetchNewDonorsProfiles();
     fetchTopDonorsProfiles();
   }, [newDonors, topDonors]);

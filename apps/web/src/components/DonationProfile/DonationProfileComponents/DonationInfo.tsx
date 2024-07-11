@@ -1,18 +1,14 @@
-import type { Image as LensImage, Profile } from '@good/lens';
+import type { Image as LensImage } from '@good/lens';
 import getAvatar from '@good/helpers/getAvatar';
-import getLennyURL from '@good/helpers/getLennyURL';
 import { Image } from '@good/ui';
 import React from 'react';
 import styled from 'styled-components';
 import { Post } from '@good/lens';
-import { PublicationMetadata } from '@lens-protocol/metadata';
-import getPublicationData from '@good/helpers/getPublicationData';
 import formatDate from '@good/helpers/datetime/formatDate';
 import getProfile from '@good/helpers/getProfile';
-import getPro from '@good/helpers/api/getPro';
 
 interface DonationInfoProps {
-  post?: Post;
+  post: Post;
   updateImages?: (string | LensImage)[];
 }
 
@@ -25,7 +21,7 @@ const DonationInfo: React.FC<DonationInfoProps> = ({
   updateImages = []
 }) => {
 
-  const profile = getProfile(post.by);
+  const profile = getProfile(post?.by);
 
 
   const Avatar = () => (
@@ -41,11 +37,7 @@ const DonationInfo: React.FC<DonationInfoProps> = ({
   const donationMetadata = post?.metadata;
 
   const postContent = donationMetadata?.content ?? '';
-  const postAttachments = donationMetadata?.attachments ?? [];
-  const postAsset = donationMetadata?.asset;
   const date = formatDate(post?.createdAt);
-
-  const hasAttachments = postAttachments.length > 0 || !!postAsset;
 
   const hasUpdates = updateImages.length > 0;
 
