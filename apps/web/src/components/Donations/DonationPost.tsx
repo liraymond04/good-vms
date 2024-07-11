@@ -11,6 +11,7 @@ import getAvatar from '@good/helpers/getAvatar';
 import getProfile from '@good/helpers/getProfile';
 import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
+import Link from 'next/link';
 import cn from '@good/ui/cn';
 import {
   ChatBubbleBottomCenterTextIcon,
@@ -104,6 +105,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
   const hasAttachments = postAttachments.length > 0 || !!postAsset;
 
   return (
+    <Link href={`/donations/${post.id}`}>
     <div
       className={cn(
         isFirstInFeed && 'rounded-t-lg border-t',
@@ -132,7 +134,7 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
               </div>
             </div>
             {/* Post Contents */}
-            <Markup className="mb-4 mt-2">{postContent}</Markup>
+            <Markup className="mb-4 mt-2 text-black dark:text-white">{postContent}</Markup>
             {/* Post Attachments/Media */}
             {hasAttachments && (
               <div className="mb-4 h-auto w-full rounded-lg">
@@ -170,13 +172,10 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
         </div>
       )}
       {showModal && (
-        <DonationModal
-          donations={donations}
-          onClose={() => setShowModal(false)}
-          post={post}
-        />
+        <div></div>
       )}
     </div>
+    </Link>
   );
 };
 
