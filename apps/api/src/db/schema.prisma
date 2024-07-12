@@ -148,6 +148,7 @@ model Cause {
   profileId      String
   profileAddress String
   donations      CauseDonation[]
+  createdAt     DateTime @default(now())
 }
 
 model CauseDonation {
