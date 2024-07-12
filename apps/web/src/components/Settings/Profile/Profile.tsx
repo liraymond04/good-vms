@@ -437,7 +437,7 @@ const ProfileSettingsForm: FC = () => {
               <div>
                 <Image
                   alt="Cover picture crop preview"
-                  className="h-[175px] w-[675px] rounded-lg object-cover"
+                  className="h-[175px] w-full rounded-lg object-cover"
                   onError={({ currentTarget }) => {
                     currentTarget.src =
                       sanitizeDStorageUrl(coverPictureIpfsUrl);
