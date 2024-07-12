@@ -7,7 +7,11 @@ import prisma from '../../helpers/prisma';
 
 export const get: Handler = async (req, res) => {
   try {
-    const data = await prisma.cause.findMany();
+    const data = await prisma.cause.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
     logger.info(`Lens: Fetched all causes`);
 
