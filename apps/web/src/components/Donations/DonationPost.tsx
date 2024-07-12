@@ -11,7 +11,6 @@ import getAvatar from '@good/helpers/getAvatar';
 import getProfile from '@good/helpers/getProfile';
 import getPublicationData from '@good/helpers/getPublicationData';
 import { Image } from '@good/ui';
-import Link from 'next/link';
 import cn from '@good/ui/cn';
 import {
   ChatBubbleBottomCenterTextIcon,
@@ -21,9 +20,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import Link from 'next/link';
 import { useState } from 'react';
-
-import DonationModal from './DonationModal';
 
 export interface Donation {
   amount: string;
@@ -106,75 +104,78 @@ const DonationPost: FC<DonationPostProps> = ({ index, length, post }) => {
 
   return (
     <Link href={`/donations/${post.id}`}>
-    <div
-      className={cn(
-        isFirstInFeed && 'rounded-t-lg border-t',
-        isLastInFeed && 'rounded-b-lg border-b',
-        'border-l border-r border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-black'
-      )}
-    >
-      <div className="p-4">
-        <div className="mb-4 flex items-start">
-          <Image
-            alt={profile.displayName}
-            className="h-10 w-10 rounded-full"
-            height={10}
-            src={getAvatar(post.by)}
-            width={10}
-          />
-          <div className="ml-3 flex-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-semibold">
-                  {profile.displayName}
+      <div
+        className={cn(
+          isFirstInFeed && 'rounded-t-lg border-t',
+          isLastInFeed && 'rounded-b-lg border-b',
+          'border-l border-r border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-black'
+        )}
+      >
+        <div className="p-4">
+          <div className="mb-4 flex items-start">
+            <Image
+              alt={profile.displayName}
+              className="h-10 w-10 rounded-full"
+              height={10}
+              src={getAvatar(post.by)}
+              width={10}
+            />
+            <div className="ml-3 flex-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold">
+                    {profile.displayName}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-100">
+                    {formatDate(post.createdAt)}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-100">
-                  {formatDate(post.createdAt)}
+              </div>
+              {/* Post Contents */}
+              <Markup className="mb-4 mt-2 text-black dark:text-white">
+                {postContent}
+              </Markup>
+              {/* Post Attachments/Media */}
+              {hasAttachments && (
+                <div className="mb-4 h-auto w-full rounded-lg">
+                  <Attachments
+                    asset={postAsset}
+                    attachments={postAttachments}
+                  />
                 </div>
-              </div>
-            </div>
-            {/* Post Contents */}
-            <Markup className="mb-4 mt-2 text-black dark:text-white">{postContent}</Markup>
-            {/* Post Attachments/Media */}
-            {hasAttachments && (
-              <div className="mb-4 h-auto w-full rounded-lg">
-                <Attachments asset={postAsset} attachments={postAttachments} />
-              </div>
-            )}
-            <div className="mt-6 flex items-center text-sm text-gray-500 dark:text-gray-100">
-              <div
-                className="mr-4 flex items-center"
-                onClick={() => setShowModal(true)}
-              >
-                <CurrencyDollarIcon className="mr-1 size-4" />
-                {donationsCount} Donations
-              </div>
-              <div className="mr-4 flex items-center">
-                <HandThumbUpIcon className="mr-1 size-4" />
-                {post.stats.reactions} likes
-              </div>
-              <div className="mr-4 flex items-center">
-                <ChatBubbleBottomCenterTextIcon className="mr-1 size-4" />
-                {post.stats.comments} comments
-              </div>
-              <div className="flex items-center">
-                <ShareIcon className="mr-1 size-4" />
-                {0} shares
+              )}
+              <div className="mt-6 flex items-center text-sm text-gray-500 dark:text-gray-100">
+                <div
+                  className="mr-4 flex items-center"
+                  onClick={() => setShowModal(true)}
+                >
+                  <CurrencyDollarIcon className="mr-1 size-4" />
+                  {donationsCount} Donations
+                </div>
+                <div className="mr-4 flex items-center">
+                  <HandThumbUpIcon className="mr-1 size-4" />
+                  {post.stats.reactions} likes
+                </div>
+                <div className="mr-4 flex items-center">
+                  <ChatBubbleBottomCenterTextIcon className="mr-1 size-4" />
+                  {post.stats.comments} comments
+                </div>
+                <div className="flex items-center">
+                  <ShareIcon className="mr-1 size-4" />
+                  {0} shares
+                </div>
               </div>
             </div>
           </div>
         </div>
+        {/* Separator between posts */}
+        {!isLastInFeed && (
+          <div className="bg-white py-6 dark:bg-black">
+            <hr className="mx-2 border-gray-300 dark:border-gray-700" />
+          </div>
+        )}
+        {showModal && <div />}
       </div>
-      {/* Separator between posts */}
-      {!isLastInFeed && (
-        <div className="bg-white py-6 dark:bg-black">
-          <hr className="mx-2 border-gray-300 dark:border-gray-700" />
-        </div>
-      )}
-      {showModal && (
-        <div></div>
-      )}
-    </div>
     </Link>
   );
 };

@@ -9,33 +9,35 @@ import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 interface Donation {
-  id: string;
-  causeId: string;
-  fromProfileId: string;
-  fromAddress: string;
-  tokenAddress: string;
   amount: string;
-  txHash: string;
+  causeId: string;
   createdAt: string;
+  fromAddress: string;
+  fromProfileId: string;
+  id: string;
+  tokenAddress: string;
+  txHash: string;
 }
 
 interface DonorsDisplayProps {
   allNewDonors: Donation[];
   allTopDonors: Donation[];
   newDonorProfiles: Profile[];
-  topDonorProfiles: Profile[]; 
   top: boolean;
+  topDonorProfiles: Profile[];
 }
 
 const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
   allNewDonors,
   allTopDonors,
   newDonorProfiles,
-  topDonorProfiles, 
   top,
+  topDonorProfiles
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'top' | 'new'>(top ? 'top' : 'new');
+  const [selectedTab, setSelectedTab] = useState<'new' | 'top'>(
+    top ? 'top' : 'new'
+  );
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
 
@@ -53,22 +55,30 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
     }
   }, [showModal, top]);
 
-  const renderSupporters = (donorProfiles: Profile[], donations: Donation[]) => {
+  const renderSupporters = (
+    donorProfiles: Profile[],
+    donations: Donation[]
+  ) => {
     return (
-      <div className="overflow-y-scroll max-h-96 scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500">
+      <div className="scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500 max-h-96 overflow-y-scroll">
         {donorProfiles.map((donorProfile, index) => (
-          <div className="supporter-details mb-5 flex flex-col items-center" key={index}>
+          <div
+            className="supporter-details mb-5 flex flex-col items-center"
+            key={index}
+          >
             <div className="flex items-center">
               <Image
                 alt={donorProfile.handle?.localName}
                 className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
-                src={getAvatar(donorProfile)}
                 height={10}
+                src={getAvatar(donorProfile)}
                 width={10}
               />
               <div className="ml-4">
                 <p>{donorProfile.handle?.localName}</p>
-                {donations && donations[index] && <p>${donations[index].amount}</p>}
+                {donations && donations[index] && (
+                  <p>${donations[index].amount}</p>
+                )}
               </div>
             </div>
           </div>
@@ -101,8 +111,12 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
           </Button>
         </div>
 
-        {selectedTab === 'top' && <>{renderSupporters(topDonorProfiles, allTopDonors)}</>}
-        {selectedTab === 'new' && <>{renderSupporters(newDonorProfiles, allNewDonors)}</>}
+        {selectedTab === 'top' && (
+          <>{renderSupporters(topDonorProfiles, allTopDonors)}</>
+        )}
+        {selectedTab === 'new' && (
+          <>{renderSupporters(newDonorProfiles, allNewDonors)}</>
+        )}
       </div>
     </Card>
   );

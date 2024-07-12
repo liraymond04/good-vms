@@ -1,11 +1,10 @@
 import type { FC } from 'react';
+
 import { useState } from 'react';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
-
-interface DonateProps {
-}
+interface DonateProps {}
 
 const DonateCard: FC<DonateProps> = () => {
   const [showModal, setShowModal] = useState(false);
@@ -14,17 +13,18 @@ const DonateCard: FC<DonateProps> = () => {
 
   const handleOpen = () => {
     setShowModal(true);
-  }
+  };
 
   const handleClose = () => {
     setShowModal(false);
-  }
+  };
 
   return (
-    <button 
-    className="w-full rounded-full px-4 mb-3 mt-3 py-2 text-sm text-white" 
-    style={{ background: '#da5597' }}
-    onClick={handleOpen}>
+    <button
+      className="mb-3 mt-3 w-full rounded-full px-4 py-2 text-sm text-white"
+      onClick={handleOpen}
+      style={{ background: '#da5597' }}
+    >
       <span>Donate</span>
     </button>
   );
