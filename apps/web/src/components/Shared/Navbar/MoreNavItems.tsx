@@ -32,18 +32,22 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <a
-              className="nav-text text-xl text-black dark:text-white"
-              href="/donations"
-              target="_blank"
-            >
+            <span className="nav-text hidden text-xl text-black md:block dark:text-white">
               More
-            </a>
+            </span>
           </MenuButton>
           <MenuTransition>
             <MenuItems
-              className="absolute bottom-0 left-0 mb-2 max-h-[25vh] overflow-y-auto rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
-              static
+              className={cn(
+                'absolute z-50 mt-2 w-40 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
+                'md:fixed md:left-40 md:top-48'
+              )}
+              style={{
+                left:
+                  window.innerWidth >= 768 && window.innerWidth <= 1024
+                    ? '20px'
+                    : 'initial'
+              }}
             >
               {currentProfile ? (
                 <>
@@ -91,13 +95,15 @@ const MoreNavItems: FC = () => {
                             </span>
                           </MenuButton>
                           <MenuTransition>
-                            <MenuItems>
+                            <MenuItems className="absolute left-full top-0 z-50 ml-2 w-32 origin-top-left rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700">
+                              {' '}
+                              {/* Adjusted width to 32 and padding */}
                               <MenuItem
                                 as="div"
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -108,7 +114,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -122,7 +128,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -136,7 +142,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
