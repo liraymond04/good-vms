@@ -15,6 +15,7 @@ const getEnvConfig = (): {
   lensHandles: `0x${string}`;
   lensHub: `0x${string}`;
   permissionlessCreator?: `0x${string}`;
+  sendTokens: `0x${string}`;
   tokenHandleRegistry: `0x${string}`;
 } => {
   switch (LENS_NETWORK) {
@@ -31,6 +32,7 @@ const getEnvConfig = (): {
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
         permissionlessCreator: TestnetContracts.PermissionlessCreator,
+        sendTokens: TestnetContracts.SendTokens,
         tokenHandleRegistry: TestnetContracts.TokenHandleRegistry
       };
     case 'staging':
@@ -46,6 +48,7 @@ const getEnvConfig = (): {
         lensHandles: TestnetContracts.LensHandles,
         lensHub: TestnetContracts.LensHub,
         permissionlessCreator: TestnetContracts.PermissionlessCreator,
+        sendTokens: TestnetContracts.SendTokens,
         tokenHandleRegistry: TestnetContracts.TokenHandleRegistry
       };
     default:
@@ -61,6 +64,7 @@ const getEnvConfig = (): {
         lensHandles: MainnetContracts.LensHandles,
         lensHub: MainnetContracts.LensHub,
         permissionlessCreator: MainnetContracts.PermissionlessCreator,
+        sendTokens: MainnetContracts.SendTokens,
         tokenHandleRegistry: MainnetContracts.TokenHandleRegistry
       };
   }

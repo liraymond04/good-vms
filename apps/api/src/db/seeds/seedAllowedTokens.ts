@@ -25,6 +25,13 @@ const seedAllowedTokens = async (): Promise<number> => {
         symbol: 'GOOD'
       },
       {
+        contractAddress: '0x7E6A70e1e1B0cC0Af51424Bb70d98445A1af5CCA',
+        createdAt: new Date('2023-11-18 10:50:31.888'),
+        decimals: 18,
+        name: 'VolunteerHour',
+        symbol: 'VHR'
+      },
+      {
         contractAddress: '0x3d2bD0e15829AA5C362a4144FdF4A1112fa29B5c',
         createdAt: new Date('2024-02-12 13:45:28.937'),
         decimals: 18,

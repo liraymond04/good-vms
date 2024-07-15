@@ -36,7 +36,8 @@ interface FeedProps {
     | ProfileFeedType.Collects
     | ProfileFeedType.Feed
     | ProfileFeedType.Media
-    | ProfileFeedType.Replies;
+    | ProfileFeedType.Replies
+    | ProfileFeedType.Requests;
 }
 
 const Feed: FC<FeedProps> = ({
@@ -168,7 +169,9 @@ const Feed: FC<FeedProps> = ({
             ? "hasn't replied yet!"
             : type === ProfileFeedType.Collects
               ? "hasn't collected anything yet!"
-              : '';
+              : type === ProfileFeedType.Requests
+                ? "doesn't have any requests yet!"
+                : '';
 
     return (
       <EmptyState
