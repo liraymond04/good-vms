@@ -1,15 +1,13 @@
 import type { FC } from 'react';
-
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
   BookmarkIcon,
   CurrencyDollarIcon,
   EllipsisHorizontalCircleIcon,
-  UserIcon
+  UserIcon,
 } from '@heroicons/react/24/outline';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-
 import MenuTransition from '../MenuTransition';
 import MoreLink from './NavItems/MoreLink';
 import Support from './NavItems/Support';
@@ -27,23 +25,24 @@ const MoreNavItems: FC = () => {
               {
                 'bg-gray-200 text-black dark:bg-gray-800 dark:text-white': open,
                 'text-white-700 dark:text-white-300 hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white':
-                  !open
+                  !open,
               }
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <a
-              className="nav-text text-xl text-black dark:text-white"
-              href="/donations"
-              target="_blank"
-            >
+            <span className="nav-text text-xl text-black dark:text-white hidden md:block">
               More
-            </a>
+            </span>
           </MenuButton>
           <MenuTransition>
             <MenuItems
-              className="absolute bottom-0 left-0 mb-2 max-h-[25vh] overflow-y-auto rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
-              static
+              className={cn(
+                'absolute z-50 mt-2 w-40 origin-top-left rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
+                'md:fixed md:top-48 md:left-40'
+              )}
+              style={{
+                left: window.innerWidth >= 768 && window.innerWidth <= 1024 ? '20px' : 'initial',
+              }}
             >
               {currentProfile ? (
                 <>
@@ -81,7 +80,7 @@ const MoreNavItems: FC = () => {
                               {
                                 'text-gray-700 dark:text-gray-200': open,
                                 'text-gray-700 hover:bg-gray-200 hover:text-black dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white':
-                                  !open
+                                  !open,
                               }
                             )}
                           >
@@ -91,13 +90,13 @@ const MoreNavItems: FC = () => {
                             </span>
                           </MenuButton>
                           <MenuTransition>
-                            <MenuItems>
+                            <MenuItems className="absolute z-50 left-full top-0 ml-2 w-32 origin-top-left rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700 p-1"> {/* Adjusted width to 32 and padding */}
                               <MenuItem
                                 as="div"
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -108,7 +107,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -122,7 +121,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >
@@ -136,7 +135,7 @@ const MoreNavItems: FC = () => {
                                 className={({ focus }: { focus: boolean }) =>
                                   cn(
                                     { 'dropdown-active': focus },
-                                    'm-2 rounded-lg'
+                                    'm-1 rounded-lg'
                                   )
                                 }
                               >

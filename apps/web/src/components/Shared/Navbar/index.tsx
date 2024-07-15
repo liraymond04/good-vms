@@ -40,41 +40,35 @@ const NavbarContainer = styled.div`
   margin: 0;
   .nav-text,
   .auth-buttons {
-  display: block;
-}
+    display: block;
+  }
 
-@media (max-width: 1024px) {
+  @media (max-width: 1024px) {
     .nav-text,
     .auth-buttons {
-    display: none;
-  }
-}
-
-  .hide-on-mobile {
-  display: block;
-}
-
-
-@media (max-width: 760px) {
-  .hide-on-mobile {
-    display: none;
-  }
-}
-
-
-  .display-on-mobile {
-  display: none;
-}
-
-@media (max-width: 760px) {
-    .display-on-mobile {
-    display: flex;
+      display: none;
     }
   }
 
-}
+  .hide-on-mobile {
+    display: block;
+  }
 
+  @media (max-width: 760px) {
+    .hide-on-mobile {
+      display: none;
+    }
+  }
 
+  .display-on-mobile {
+    display: none;
+  }
+
+  @media (max-width: 760px) {
+    .display-on-mobile {
+      display: flex;
+    }
+  }
 `;
 
 const BottomButtonsContainer = styled.div`
