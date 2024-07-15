@@ -45,10 +45,9 @@ const DonationDetails: NextPage = () => {
         setAllDonors(donors.donations);
 
         let totalAmountDonated = 0;
-        // eslint-disable-next-line unicorn/no-array-for-each
-        donors.donations.forEach((donation: any) => {
+        for (const donation of donors.donations) {
           totalAmountDonated += parseFloat(donation.amount);
-        });
+        }
         setTotalDonated(totalAmountDonated);
 
         const topSortedDonors = donors.donations
