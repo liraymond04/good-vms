@@ -26,7 +26,7 @@ const RequestEditor: FC = () => {
         <div className="flex items-center space-x-2 text-sm">
           {/* <ClockIcon className="size-4" /> */}
           <GiveGiftIcon />
-          <b>Volunteer's GOOD Request</b>
+          <b>Request GOOD</b>
         </div>
         <div className="flex items-center space-x-3">
           <Tooltip content="Delete" placement="top">

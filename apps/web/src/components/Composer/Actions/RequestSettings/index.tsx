@@ -12,9 +12,9 @@ const RequestSettings: FC = () => {
     usePublicationRequestStore();
 
   return (
-    <Tooltip content="Claim GOOD" placement="top">
+    <Tooltip content="Request GOOD" placement="top">
       <motion.button
-        aria-label="Claim GOOD"
+        aria-label="Request GOOD"
         className="rounded-full outline-offset-8"
         onClick={() => {
           resetRequestConfig();
