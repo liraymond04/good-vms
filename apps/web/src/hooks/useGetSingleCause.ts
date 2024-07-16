@@ -1,5 +1,6 @@
 import type { AnyPublication, Post } from '@good/lens';
 
+import { GOOD_API_URL } from '@good/data/constants';
 import { LimitType, usePublicationsLazyQuery } from '@good/lens';
 import toEvenLengthHexString from '@helpers/toEvenLengthHexString';
 import axios from 'axios';
@@ -15,9 +16,7 @@ interface CauseMetadata {
 }
 
 async function fetchAllCauses(): Promise<CauseMetadata[]> {
-  const { data } = await axios.get(
-    `http://api-testnet.bcharity.net/donations/all-causes`
-  );
+  const { data } = await axios.get(`${GOOD_API_URL}/donations/all-causes`);
 
   return data.causes;
 }
