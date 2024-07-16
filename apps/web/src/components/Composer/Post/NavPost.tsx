@@ -45,8 +45,8 @@ const NavPost: FC = () => {
       onClick={openModal}
       type="button"
     >
-      <span className="hidden text-xl lg:block">Post</span>
-      <PencilSquareIcon className="block size-8 lg:hidden" />
+      <span className="block text-xl max-[1024px]:hidden">Post</span>
+      <PencilSquareIcon className="hidden size-8 max-[1024px]:block" />
     </button>
   );
 };
