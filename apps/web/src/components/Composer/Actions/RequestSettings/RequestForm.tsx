@@ -1,14 +1,21 @@
+import type { ProfileFragment } from '@lens-protocol/client';
 import type { FC } from 'react';
+import type { Address } from 'viem';
 
+import { REQUEST_GOOD } from '@good/data/constants';
 import { Button } from '@good/ui';
+import { MetadataAttributeType } from '@lens-protocol/metadata';
 import React, { useRef, useState } from 'react';
+import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
+import { usePublicationAttributesStore } from 'src/store/non-persisted/publication/usePublicationAttributesStore';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
+import { encodeAbiParameters } from 'viem';
 
-import type { PropsHandle } from './getProfile';
+import type { PropsHandle } from '../../../../helpers/getLensProfile';
 import type { FieldMetadata } from './InputField';
 
-import getProfile from './getProfile';
+import getLensProfile from '../../../../helpers/getLensProfile';
 import { InputField } from './InputField';
-import { useDeprecatedAnimatedState } from 'framer-motion';
 
 interface FormFields {
   description: string;
@@ -41,24 +48,32 @@ const regexValidation = {
   URL: RegExp(/^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/.*)?$/i)
 };
 
-const checkLensID = async (lensID: string): Promise<boolean> => {
+const getProfileFragment = async (
+  lensID: string
+): Promise<null | ProfileFragment> => {
   const root = 'lens';
   const formattedLensID = `${root}/${lensID}`;
   try {
-    const profile = await getProfile({
+    const profile = await getLensProfile({
       handle: formattedLensID
     } as PropsHandle);
-    return profile ? true : false;
+    return profile;
   } catch (error) {
     console.error('Error fetching profile:', error);
-    return false;
+    return null;
   }
 };
 
-const DebugFormState: FC<{ errors: any; formData: any }> = ({
-  errors,
-  formData
-}) => (
+function isNumeric(value: string) {
+  return !isNaN(Number(value)) && !isNaN(parseFloat(value));
+}
+
+const DebugFormState: FC<{
+  attributes: any;
+  errors: any;
+  formData: any;
+  isDonor: boolean;
+}> = ({ attributes, errors, formData, isDonor }) => (
   <div className="mt-4 rounded-md border bg-gray-50 p-4">
     <h3 className="text-sm font-medium text-gray-700">Form Data</h3>
     <pre className="overflow-x-auto text-xs text-gray-600">
@@ -67,6 +82,17 @@ const DebugFormState: FC<{ errors: any; formData: any }> = ({
     <h3 className="mt-2 text-sm font-medium text-gray-700">Errors</h3>
     <pre className="overflow-x-auto text-xs text-gray-600">
       {JSON.stringify(errors, null, 2)}
+    </pre>
+    <p
+      className={`mt-1 text-xs font-bold ${isDonor ? 'text-green-600' : 'text-red-600'}`}
+    >
+      {isDonor
+        ? 'Donor Profile ID is filled'
+        : 'Donor Profile ID is not filled'}
+    </p>
+    <h3 className="mt-2 text-sm font-medium text-gray-700">Attributes Store</h3>
+    <pre className="overflow-x-auto text-xs text-gray-600">
+      {JSON.stringify(attributes, null, 2)}
     </pre>
   </div>
 );
@@ -92,6 +118,79 @@ const RequestForm: FC = () => {
   // Store field metadata
   const fieldMetadataRef = useRef<FieldMetadata[]>([]);
 
+  const { setOpenAction, setShowModal } = useOpenActionStore();
+  const { addAttribute, attributes, reset } = usePublicationAttributesStore();
+
+  const [isDonor, setIsDonor] = useState<boolean>(false);
+
+  const { currentProfile } = useProfileStore();
+
+  const submit = async () => {
+    reset();
+
+    // Add attributes from formData to the store
+    Object.entries(formData).map(([key, value]) => {
+      console.log(key + ': ' + value);
+      addAttribute({
+        key,
+        type: isNumeric(value)
+          ? MetadataAttributeType.NUMBER
+          : MetadataAttributeType.STRING,
+        value: isNumeric(value) ? Number(value) : value
+      });
+    });
+
+    const organizationAddress = (
+      await getProfileFragment(formData.organizationName)
+    )?.ownedBy.address; // Should not be null at this stage due to earlier checks in handleSubmit
+
+    // Constants for GOOD conversion
+    const GOODPriceUSD = 0.0001;
+    const annualVHRValueUSD = 30;
+    const percentage = 0.003;
+
+    // Calculate amount of GOOD for donation and volunteer hours
+    const donationAmountUSD = parseFloat(formData.donationAmount) || 0;
+    const volunteerHours = parseFloat(formData.volunteerHours) || 0;
+
+    const amountGOODFromDonation =
+      (donationAmountUSD * percentage) / GOODPriceUSD;
+    const amountGOODFromVHR =
+      (volunteerHours * annualVHRValueUSD * percentage) / GOODPriceUSD;
+
+    const amountGOOD = BigInt(
+      Math.round(amountGOODFromDonation + amountGOODFromVHR)
+    );
+    const amountVHR = BigInt(volunteerHours);
+
+    // console.group();
+    // console.log('org addr' + organizationAddress);
+    // console.log('cur addr' + currentProfile?.ownedBy.address);
+    // console.groupEnd();
+
+    setOpenAction({
+      address: REQUEST_GOOD,
+      data: encodeAbiParameters(
+        [
+          { name: 'organizationAddress', type: 'address' },
+          { name: 'postedByOrganization', type: 'bool' },
+          { name: 'recipientAddress', type: 'address' },
+          { name: 'GOODAmount', type: 'uint256' },
+          { name: 'VHRAmount', type: 'uint256' }
+        ],
+        [
+          organizationAddress as Address,
+          isDonor,
+          currentProfile?.ownedBy.address,
+          amountGOOD,
+          amountVHR
+        ]
+      )
+    });
+
+    setShowModal(false);
+  };
+
   // Register field metadata
   const registerField = (metadata: FieldMetadata) => {
     fieldMetadataRef.current = [
@@ -101,14 +200,21 @@ const RequestForm: FC = () => {
       metadata
     ];
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    setSuccessful(false);
+
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
     });
+
+    if (name === 'donorProfileID') {
+      setIsDonor(value.trim() !== '');
+    }
   };
 
   // Check form requirements and input
@@ -152,7 +258,11 @@ const RequestForm: FC = () => {
       }
 
       // Validate Lens ID fields
-      if (field.isLensID && value && !(await checkLensID(value))) {
+      if (
+        field.isLensID &&
+        value &&
+        (await getProfileFragment(value)) == null
+      ) {
         newErrors[field.name as keyof FormFields] =
           inputErrorMessages.lensIdNotFound;
         continue;
@@ -175,20 +285,13 @@ const RequestForm: FC = () => {
       setSuccessful(false);
       setErrors(newErrors);
     } else {
+      submit();
       setSuccessful(true);
-      console.info('submission successful!');
       setErrors({});
     }
 
     setIsLoading(false);
     return;
-  };
-
-  // Clear form if reject
-  const handleReject = () => {
-    setFormData(emptyForm);
-    setErrors({});
-    fieldMetadataRef.current = [];
   };
 
   return (
@@ -286,11 +389,8 @@ const RequestForm: FC = () => {
         />
       </div>
       <div className="mt-4 flex justify-end space-x-4">
-        <Button className="ml-auto" onClick={handleReject} variant="danger">
-          Reject
-        </Button>
         <Button disabled={isLoading} onClick={handleSubmit}>
-          Approve
+          Submit
         </Button>
       </div>
       {successful && (
@@ -298,7 +398,12 @@ const RequestForm: FC = () => {
           Information successfully embedded!
         </p>
       )}
-      <DebugFormState errors={errors} formData={formData} />
+      <DebugFormState
+        attributes={attributes}
+        errors={errors}
+        formData={formData}
+        isDonor={isDonor}
+      />
     </div>
   );
 };

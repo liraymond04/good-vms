@@ -10,6 +10,7 @@ import type {
 } from '@good/lens';
 import type { IGif } from '@good/types/giphy';
 import type { NewAttachment } from '@good/types/misc';
+import type { MarketplaceMetadataAttribute } from '@lens-protocol/metadata';
 import type { FC } from 'react';
 
 import NewAttachments from '@components/Composer/NewAttachments';
@@ -30,7 +31,10 @@ import cn from '@good/ui/cn';
 import errorToast from '@helpers/errorToast';
 import { Leafwatch } from '@helpers/leafwatch';
 import uploadToArweave from '@helpers/uploadToArweave';
-import { MetadataAttributeType } from '@lens-protocol/metadata';
+import {
+  MarketplaceMetadataAttributeDisplayType,
+  MetadataAttributeType
+} from '@lens-protocol/metadata';
 import { useUnmountEffect } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -154,7 +158,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     usePublicationPollStore();
 
   // Request store
-  const { requestConfig, setShowRequestEditor, showRequestEditor } =
+  const { setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   // License store
@@ -173,7 +177,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     useReferenceModuleStore();
 
   // Attributes store
-  const { reset: resetAttributes } = usePublicationAttributesStore();
+  const { attributes: formAttributes, reset: resetAttributes } =
+    usePublicationAttributesStore();
 
   // States
   const [isLoading, setIsLoading] = useState(false);
@@ -327,6 +332,18 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     return isComment ? 'Comment' : isQuote ? 'Quote' : 'Post';
   };
 
+  const mapFormFieldsToAttributes = (): MarketplaceMetadataAttribute[] => {
+    if (!formAttributes) {
+      return [];
+    }
+
+    return formAttributes.map(({ key, value }) => ({
+      display_type: MarketplaceMetadataAttributeDisplayType.STRING,
+      trait_type: key,
+      value
+    }));
+  };
+
   const createPublication = async () => {
     if (!currentProfile) {
       return toast.error(Errors.SignWallet);
@@ -371,6 +388,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         : `${getTitlePrefix()} by ${getProfile(currentProfile).slugWithPrefix}`;
       const hasAttributes = Boolean(pollId);
 
+      const formDataAttributes = mapFormFieldsToAttributes();
+
       const baseMetadata = {
         content: processedPublicationContent,
         title,
@@ -384,7 +403,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
                     value: pollId
                   }
                 ]
-              : [])
+              : []),
+            ...formDataAttributes
           ]
         }),
         marketplace: {
