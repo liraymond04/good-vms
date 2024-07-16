@@ -6,7 +6,8 @@ import { router } from 'express-file-routing';
 import ViteExpress from 'vite-express';
 
 // Load environment variables
-dotenv.config({ override: true });
+const path = require('path')
+dotenv.config({ override: true, path: path.resolve(__dirname, '../.env.local') });
 
 const app = express();
 
