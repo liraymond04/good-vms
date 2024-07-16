@@ -5,15 +5,14 @@ import type { Address } from 'viem';
 import MenuTransition from '@components/Shared/MenuTransition';
 import { STATIC_IMAGES_URL } from '@good/data/constants';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
-import { TipIcon } from '@good/icons';
 import { Tooltip } from '@good/ui';
-import {DollarIcon} from '../../../../../../../packages/icons/src/DollarIcon'
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { motion } from 'framer-motion';
 import party from 'party-js';
 import { useRef } from 'react';
 
+import { DollarIcon } from '../../../../../../../packages/icons/src/DollarIcon';
 import Action from './Action';
 
 interface ReferProps {
