@@ -14,7 +14,7 @@ interface ILensHub {
   function ownerOf(uint256 tokenId) external view returns (address owner);
 }
 
-contract SendTokens is
+contract SendGoodVHRToken is
   Initializable,
   PausableUpgradeable,
   AccessControlUpgradeable,
@@ -30,17 +30,25 @@ contract SendTokens is
   bytes32 public constant ORGANIZATION_ROLE = keccak256("ORGANIZATION_ROLE");
 
   // store statuses
-  enum RequestStatus { Submitted, UnderReview, Approved, Rejected }
+  enum RequestStatus { Received, UnderReview, Approved, Rejected }
   // store a mapping of profile id to publication id to bool
   mapping(uint256 => mapping(uint256 => RequestStatus)) public requestStatus;
 
-  event TokensSent(
+  event GoodTokenSent(
     uint256 indexed organizationProfileId,
     uint256 indexed toProfileId,
     uint256 indexed publicationId,
     address from,
     address to,
-    uint256 GOODAmount,
+    uint256 GOODAmount
+  );
+
+  event VHRTokenSent(
+    uint256 indexed organizationProfileId,
+    uint256 indexed toProfileId,
+    uint256 indexed publicationId,
+    address from,
+    address to,
     uint256 VHRAmount
   );
 
@@ -51,7 +59,6 @@ contract SendTokens is
   );
 
   error InvalidLensProfile(uint256 profileId);
-  error InsufficientAllowance();
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
@@ -117,22 +124,9 @@ contract SendTokens is
       );
   }
 
-  function checkGOODAllowance(
-    address owner
-  ) public view returns (uint256) {
-    return GOOD.allowance(owner, address(this));
-  }
-
-  function checkVHRAllowance(
-    address owner
-  ) public view returns (uint256) {
-    return VHR.allowance(owner, address(this));
-  }
-
-  function sendTokens(
+  function sendGoodTokens(
     address recipient,
     uint256 GOODAmount,
-    uint256 VHRAmount,
     uint256 organizationProfileId,
     uint256 toProfileId,
     uint256 publicationId
@@ -140,13 +134,10 @@ contract SendTokens is
     // Status check
     require(requestStatus[toProfileId][publicationId] == RequestStatus.Approved);
 
-    if (checkGOODAllowance(msg.sender) < GOODAmount || checkVHRAllowance(msg.sender) < VHRAmount) {
-      revert InsufficientAllowance();
-    }
-
     if (lensHub.ownerOf(organizationProfileId) != msg.sender) {
       revert InvalidLensProfile(organizationProfileId);
     }
+    
     if (lensHub.ownerOf(toProfileId) != recipient) {
       revert InvalidLensProfile(toProfileId);
     }
@@ -155,17 +146,46 @@ contract SendTokens is
     if (GOODAmount > 0) {
       GOOD.safeTransferFrom(msg.sender, recipient, GOODAmount);
     }
-    if (VHRAmount > 0) {
-      VHR.safeTransferFrom(msg.sender, recipient, VHRAmount);
-    }
 
-    emit TokensSent(
+    emit GoodTokenSent(
       organizationProfileId,
       toProfileId,
       publicationId,
       msg.sender,
       recipient,
-      GOODAmount,
+      GOODAmount
+    );
+  }
+
+  function sendVHRToken(
+    address recipient,
+    uint256 VHRAmount,
+    uint256 organizationProfileId,
+    uint256 toProfileId,
+    uint256 publicationId
+  ) external whenNotPaused nonReentrant onlyRole(ORGANIZATION_ROLE){
+    // Status check
+    require(requestStatus[toProfileId][publicationId] == RequestStatus.Approved);
+
+    if (lensHub.ownerOf(organizationProfileId) != msg.sender) {
+      revert InvalidLensProfile(organizationProfileId);
+    }
+
+    if (lensHub.ownerOf(toProfileId) != recipient) {
+      revert InvalidLensProfile(toProfileId);
+    }
+    
+    // Send if amount values are >0
+    if (VHRAmount > 0) {
+      VHR.safeTransferFrom(msg.sender, recipient, VHRAmount);
+    }
+
+    emit VHRTokenSent(
+      organizationProfileId,
+      toProfileId,
+      publicationId,
+      msg.sender,
+      recipient,
       VHRAmount
     );
   }

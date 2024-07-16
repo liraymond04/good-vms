@@ -19,6 +19,10 @@ import {
   useWriteContract
 } from 'wagmi';
 
+// import encodeAbiParameters
+import { encodeAbiParameters } from 'viem';
+import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
+
 const Requests = () => {
   const { currentProfile } = useProfileStore();
   const { allowedTokens } = useAllowedTokensStore();
@@ -92,15 +96,6 @@ const Requests = () => {
     errorToast(error);
   };
 
-  // const allowance = parseFloat((data as unknown)?.toString() || '0');
-
-  // const balance = balanceData
-  //   ? parseFloat(
-  //       formatUnits(balanceData.value, selectedCurrency?.decimals || 18)
-  //     ).toFixed(3)
-  //   : 0;
-  // const canSend = Number(balance) >= cryptoRate;
-
   const enableSending = async () => {
     if (isSuspended) {
       return toast.error(Errors.Suspended);
@@ -151,6 +146,47 @@ const Requests = () => {
     setIsLoading(false);
   };
 
+  const handleInitializePublication = async (request: any) => {
+    if (isLoading) {
+      return;
+    }
+    setIsLoading(true);
+    if (isSuspended) {
+      return toast.error(Errors.Suspended);
+    }
+    try {
+      // encode some data
+      const encodedData = encodeAbiParameters(
+        [
+          { name: 'x', type: 'string' },
+          { name: 'y', type: 'uint' },
+          { name: 'z', type: 'bool' }
+        ],
+        ['wagmi', 420n, true]
+      )
+
+
+      const { openAction } = useOpenActionStore();
+      const hash = writeContractAsync({
+        abi: SendTokens,
+        address: SEND_TOKENS,
+        args: [
+          currentProfile?.ownedBy.address,
+          0x03,
+          currentProfile?.ownedBy.address,
+          encodedData
+        ],
+        functionName: 'initializePublicationAction'
+      });
+      // openAction(hash);
+      return;
+    } catch (error) {
+      onError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const handleSendTokens = async (request: any) => {
     if (isLoading) {
       return;
@@ -189,9 +225,7 @@ const Requests = () => {
         } else if (request.currencyRequested === 'TimeDonation') {
           totalGOOD = (finalGOODRate * 30 * 0.003) / 0.0001;
         }
-      } else { // VHR request
-        // 1 VHR == 1 hour
-        // VHRRate = !usdRate ? request.amount : Number((request.hours / usdRate).toFixed(2));
+      } else { 
         finalVHRRate = request.amount * 10 ** 18;
       }
 
@@ -209,12 +243,13 @@ const Requests = () => {
         args: [
           currentProfile?.ownedBy.address,
           totalGOOD,
-          finalVHRRate, // 1 VHR == 1 hour
+          // finalVHRRate, // 1 VHR == 1 hour
           currentProfile?.id,
           currentProfile?.id,
-          request.publicationId
+          request.publicationId,
+          currentProfile?.ownedBy.address
         ],
-        functionName: 'sendTokens'
+        functionName: 'sendGood'
       });
       return;
     } catch (error) {
@@ -245,6 +280,7 @@ const Requests = () => {
         </span>
       </div>
       <Button onClick={enableSending}>Enable Sending GOOD and VHR</Button>
+      <Button onClick={handleInitializePublication}>Initialize Publication</Button>
 
   {requests.map((request, index) => (
   <div

@@ -69,6 +69,10 @@ export type Poll = {
   options: PollOption[];
 };
 
+export type Request = {
+  
+}
+
 export type Preferences = {
   appIcon: number;
   email: null | string;

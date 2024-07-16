@@ -53,12 +53,6 @@ enum FeatureType {
   MODE
 }
 
-enum RequestType {
-  TIMEDONATION
-  MONEYDONATION
-  VHR
-}
-
 enum RequestStatus {
   SUBMITTED
   INREVIEW
@@ -116,7 +110,7 @@ model PollResponse {
   @@index([optionId])
 }
 
-model Requests {
+model Request {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   organizationId String
   DonorId       String
@@ -126,15 +120,7 @@ model Requests {
   VolunteerHours Int
   VolunteerEvidence    String
   Description   String
-  profileId String
-  type      RequestType
-  status    RequestStatus
   createdAt DateTime @default(now())
-
-  // Indexes
-  @@index([profileId])
-  @@index([type])
-  @@index([status])
 }
 
 

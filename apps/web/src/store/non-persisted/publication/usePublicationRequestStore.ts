@@ -1,26 +1,45 @@
-// Created based on usePublicationPollStore.ts, adjust as required
+import type { PublicationTip } from '@good/types/good';
+
+import getPublicationsTips from '@good/helpers/api/getPublicationsTips';
+import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
 import { createTrackedSelector } from 'react-tracked';
 import { create } from 'zustand';
 
 interface State {
-  requestConfig: {
-    length: number;
-    options: string[];
-  };
-  resetRequestConfig: () => void;
-  setRequestConfig: (pollConfig: { length: number; options: string[] }) => void;
-  setShowRequestEditor: (showPollEditor: boolean) => void;
-  showRequestEditor: boolean;
+  addTip: (id: string) => void;
+  fetchAndStoreTips: (ids: string[]) => void;
+  publicationTips: PublicationTip[];
 }
 
-const store = create<State>((set) => ({
-  requestConfig: { length: 7, options: ['', ''] },
-  resetRequestConfig: () =>
-    set(() => ({ requestConfig: { length: 1, options: ['', ''] } })),
-  setRequestConfig: (requestConfig) => set(() => ({ requestConfig })),
-  setShowRequestEditor: (showRequestEditor) =>
-    set(() => ({ showRequestEditor })),
-  showRequestEditor: false
+const store = create<State>((set, get) => ({
+  addTip: (id) => {
+    const existingTip = get().publicationTips.find((tip) => tip.id === id);
+    if (existingTip) {
+      set((state) => ({
+        publicationTips: state.publicationTips.map((tip) =>
+          tip.id === id ? { ...tip, count: tip.count + 1, tipped: true } : tip
+        )
+      }));
+    } else {
+      set((state) => ({
+        publicationTips: [
+          ...state.publicationTips,
+          { count: 1, id, tipped: true }
+        ]
+      }));
+    }
+  },
+  fetchAndStoreTips: async (ids) => {
+    if (!ids.length) {
+      return;
+    }
+
+    const tipsResponse = await getPublicationsTips(ids, getAuthApiHeaders());
+    set((state) => ({
+      publicationTips: [...state.publicationTips, ...tipsResponse]
+    }));
+  },
+  publicationTips: []
 }));
 
-export const usePublicationRequestStore = createTrackedSelector(store);
+export const useTipsStore = createTrackedSelector(store);
