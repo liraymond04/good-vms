@@ -1,111 +1,39 @@
 export const GoodReferral = [
-  {
-    inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor'
-  },
-  {
-    inputs: [],
-    name: 'AccessControlBadConfirmation',
-    type: 'error'
-  },
+  { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+  { inputs: [], name: 'AccessControlBadConfirmation', type: 'error' },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      },
-      {
-        internalType: 'bytes32',
-        name: 'neededRole',
-        type: 'bytes32'
-      }
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'bytes32', name: 'neededRole', type: 'bytes32' }
     ],
     name: 'AccessControlUnauthorizedAccount',
     type: 'error'
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'target',
-        type: 'address'
-      }
-    ],
+    inputs: [{ internalType: 'address', name: 'target', type: 'address' }],
     name: 'AddressEmptyCode',
     type: 'error'
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      }
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'AddressInsufficientBalance',
     type: 'error'
   },
+  { inputs: [], name: 'AmountCannotBeZero', type: 'error' },
+  { inputs: [], name: 'EnforcedPause', type: 'error' },
+  { inputs: [], name: 'ExpectedPause', type: 'error' },
+  { inputs: [], name: 'FailedInnerCall', type: 'error' },
+  { inputs: [], name: 'InvalidInitialization', type: 'error' },
+  { inputs: [], name: 'InvalidTokenAddress', type: 'error' },
+  { inputs: [], name: 'NotHub', type: 'error' },
+  { inputs: [], name: 'NotInitializing', type: 'error' },
   {
-    inputs: [],
-    name: 'AmountCannotBeZero',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'EnforcedPause',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'ExpectedPause',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'FailedInnerCall',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'InvalidInitialization',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'InvalidTokenAddress',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'NotHub',
-    type: 'error'
-  },
-  {
-    inputs: [],
-    name: 'NotInitializing',
-    type: 'error'
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'token',
-        type: 'address'
-      }
-    ],
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
     name: 'SafeERC20FailedOperation',
     type: 'error'
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'donee',
-        type: 'address'
-      }
-    ],
+    inputs: [{ internalType: 'address', name: 'donee', type: 'address' }],
     name: 'UnverifiedDonee',
     type: 'error'
   },
@@ -138,12 +66,7 @@ export const GoodReferral = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
+      { indexed: true, internalType: 'bytes32', name: 'role', type: 'bytes32' },
       {
         indexed: true,
         internalType: 'bytes32',
@@ -163,12 +86,7 @@ export const GoodReferral = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
+      { indexed: true, internalType: 'bytes32', name: 'role', type: 'bytes32' },
       {
         indexed: true,
         internalType: 'address',
@@ -188,12 +106,7 @@ export const GoodReferral = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
+      { indexed: true, internalType: 'bytes32', name: 'role', type: 'bytes32' },
       {
         indexed: true,
         internalType: 'address',
@@ -226,73 +139,45 @@ export const GoodReferral = [
   {
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32'
-      }
-    ],
+    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
     name: 'PAUSER_ROLE',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32'
-      }
-    ],
+    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
     name: 'getModuleMetadataURI',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string'
-      }
-    ],
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      }
+      { internalType: 'uint256', name: 'profileId', type: 'uint256' },
+      { internalType: 'uint256', name: 'publicationId', type: 'uint256' }
     ],
+    name: 'getReferralModuleData',
+    outputs: [{ internalType: 'bytes', name: '', type: 'bytes' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'bytes32', name: 'role', type: 'bytes32' }],
     name: 'getRoleAdmin',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32'
-      }
-    ],
+    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      }
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' }
     ],
     name: 'grantRole',
     outputs: [],
@@ -301,45 +186,19 @@ export const GoodReferral = [
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      }
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' }
     ],
     name: 'hasRole',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool'
-      }
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'defaultAdmin',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
-        name: 'pauser',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
-        name: 'lensHubAddress',
-        type: 'address'
-      }
+      { internalType: 'address', name: 'defaultAdmin', type: 'address' },
+      { internalType: 'address', name: 'pauser', type: 'address' },
+      { internalType: 'address', name: 'lensHubAddress', type: 'address' }
     ],
     name: 'initialize',
     outputs: [],
@@ -348,48 +207,20 @@ export const GoodReferral = [
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'profileId',
-        type: 'uint256'
-      },
-      {
-        internalType: 'uint256',
-        name: 'pubId',
-        type: 'uint256'
-      },
-      {
-        internalType: 'address',
-        name: 'transactionExecutor',
-        type: 'address'
-      },
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes'
-      }
+      { internalType: 'uint256', name: 'profileId', type: 'uint256' },
+      { internalType: 'uint256', name: 'pubId', type: 'uint256' },
+      { internalType: 'address', name: 'transactionExecutor', type: 'address' },
+      { internalType: 'bytes', name: 'data', type: 'bytes' }
     ],
     name: 'initializePublicationAction',
-    outputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes'
-      }
-    ],
-    stateMutability: 'view',
+    outputs: [{ internalType: 'bytes', name: '', type: 'bytes' }],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
     inputs: [],
     name: 'lensHub',
-    outputs: [
-      {
-        internalType: 'contract ILensHub',
-        name: '',
-        type: 'address'
-      }
-    ],
+    outputs: [{ internalType: 'contract ILensHub', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -403,13 +234,7 @@ export const GoodReferral = [
   {
     inputs: [],
     name: 'paused',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool'
-      }
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -427,11 +252,7 @@ export const GoodReferral = [
             name: 'publicationActedId',
             type: 'uint256'
           },
-          {
-            internalType: 'uint256',
-            name: 'actorProfileId',
-            type: 'uint256'
-          },
+          { internalType: 'uint256', name: 'actorProfileId', type: 'uint256' },
           {
             internalType: 'address',
             name: 'actorProfileOwner',
@@ -457,11 +278,7 @@ export const GoodReferral = [
             name: 'referrerPubTypes',
             type: 'uint8[]'
           },
-          {
-            internalType: 'bytes',
-            name: 'actionModuleData',
-            type: 'bytes'
-          }
+          { internalType: 'bytes', name: 'actionModuleData', type: 'bytes' }
         ],
         internalType: 'struct Types.ProcessActionParams',
         name: 'params',
@@ -469,28 +286,14 @@ export const GoodReferral = [
       }
     ],
     name: 'processPublicationAction',
-    outputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes'
-      }
-    ],
+    outputs: [{ internalType: 'bytes', name: '', type: 'bytes' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
-      {
-        internalType: 'address',
-        name: 'callerConfirmation',
-        type: 'address'
-      }
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'callerConfirmation', type: 'address' }
     ],
     name: 'renounceRole',
     outputs: [],
@@ -499,16 +302,8 @@ export const GoodReferral = [
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32'
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      }
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' }
     ],
     name: 'revokeRole',
     outputs: [],
@@ -516,34 +311,16 @@ export const GoodReferral = [
     type: 'function'
   },
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_metadataURI',
-        type: 'string'
-      }
-    ],
+    inputs: [{ internalType: 'string', name: '_metadataURI', type: 'string' }],
     name: 'setModuleMetadataURI',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
   },
   {
-    inputs: [
-      {
-        internalType: 'bytes4',
-        name: 'interfaceID',
-        type: 'bytes4'
-      }
-    ],
+    inputs: [{ internalType: 'bytes4', name: 'interfaceID', type: 'bytes4' }],
     name: 'supportsInterface',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool'
-      }
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'pure',
     type: 'function'
   },

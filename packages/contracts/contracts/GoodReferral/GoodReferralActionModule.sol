@@ -25,6 +25,11 @@ contract GoodReferralActionModule is
   HubRestrictedUpgradeable,
   LensModule
 {
+  struct ReferralData {
+    address tokenAddress;
+    uint256 amount;
+  }
+
   using SafeERC20 for IERC20;
 
   ILensHub public lensHub;
@@ -36,6 +41,8 @@ contract GoodReferralActionModule is
   error InvalidTokenAddress();
   error AmountCannotBeZero();
   error UnverifiedDonee(address donee);
+
+  mapping(uint256 => mapping(uint256 => ReferralData)) private map;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
@@ -83,12 +90,34 @@ contract GoodReferralActionModule is
     return moduleMetadataURI;
   }
 
+  function getReferralModuleData(
+    uint256 profileId,
+    uint256 publicationId
+  ) public view returns (bytes memory) {
+    return
+      abi.encode(
+        map[profileId][publicationId].tokenAddress,
+        map[profileId][publicationId].amount
+      );
+  }
+
+  function setReferralModuleData(
+    uint256 profileId,
+    uint256 publicationId,
+    address tokenAddress,
+    uint256 amount
+  ) private {
+    map[profileId][publicationId] = ReferralData(tokenAddress, amount);
+  }
+
   function initializePublicationAction(
     uint256 profileId,
     uint256 pubId,
     address transactionExecutor,
-    bytes calldata /* data */
-  ) external view override whenNotPaused onlyHub returns (bytes memory) {
+    bytes calldata data
+  ) external override whenNotPaused onlyHub returns (bytes memory) {
+    (address token, uint256 amount) = abi.decode(data, (address, uint256));
+    setReferralModuleData(profileId, pubId, token, amount);
     return abi.encode(profileId, pubId, transactionExecutor);
   }
 
@@ -117,8 +146,12 @@ contract GoodReferralActionModule is
       if (referrerAmount == 0) {
         break;
       }
-      remaining -= referrerAmount; 
-      token.safeTransferFrom(buyer, lensHub.ownerOf(params.referrerProfileIds[i]), referrerAmount);
+      remaining -= referrerAmount;
+      token.safeTransferFrom(
+        buyer,
+        lensHub.ownerOf(params.referrerProfileIds[i]),
+        referrerAmount
+      );
     }
 
     token.safeTransferFrom(buyer, seller, remaining);
