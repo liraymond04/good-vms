@@ -21,7 +21,7 @@ const lensClient = () => {
 };
 
 /**
- * Properties of {@link getProfile} for passing in a profile handle
+ * Properties of {@link getLensProfile} for passing in a profile handle
  */
 export interface PropsHandle {
   /**
@@ -31,7 +31,7 @@ export interface PropsHandle {
 }
 
 /**
- * Properties of {@link getProfile} for passing in a profile ID
+ * Properties of {@link getLensProfile} for passing in a profile ID
  */
 export interface PropsId {
   /**
@@ -49,7 +49,7 @@ export interface PropsId {
  * { id: string } with id being an ethereum address
  * @returns A promise containing the {@link https://lens-protocol.github.io/lens-sdk/types/_lens_protocol_client.ProfileFragment.html | ProfileFragment}, or null if it was not found
  */
-const getProfile = async (props: PropsHandle | PropsId) => {
+const getLensProfile = async (props: PropsHandle | PropsId) => {
   if ('handle' in props) {
     const profileByHandle = await lensClient().profile.fetch({
       forHandle: props.handle
@@ -63,4 +63,4 @@ const getProfile = async (props: PropsHandle | PropsId) => {
   }
 };
 
-export default getProfile;
+export default getLensProfile;
