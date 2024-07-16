@@ -7,6 +7,7 @@ import { STATIC_IMAGES_URL } from '@good/data/constants';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import { TipIcon } from '@good/icons';
 import { Tooltip } from '@good/ui';
+import {DollarIcon} from '../../../../../../../packages/icons/src/DollarIcon'
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { motion } from 'framer-motion';
@@ -59,7 +60,7 @@ const Refer: FC<ReferProps> = ({
         >
           <div ref={confettiDom} />
           <Tooltip content="Referral action" placement="top" withDelay>
-            <TipIcon className={cn(iconClassName)} />
+            <DollarIcon className={cn(iconClassName)} />
           </Tooltip>
         </MenuButton>
         <MenuTransition>
