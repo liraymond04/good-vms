@@ -94,7 +94,13 @@ const DonationDetails: NextPage = () => {
   }
 
   if (!donationPost) {
-    return <div>Donation not found</div>;
+    return (
+      <GridLayout>
+        <GridItemEight>
+          <div>Donation not found</div>
+        </GridItemEight>
+      </GridLayout>
+    );
   }
 
   const DonationPostDetails = {
