@@ -15,6 +15,7 @@ import {
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ import MobileLogoButton from './MobileLogoButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
+import SiteStatus from './SiteStatus';
 import StaffBar from './StaffBar';
 
 const NavbarContainer = styled.div`
@@ -49,24 +51,24 @@ const NavbarContainer = styled.div`
 }
 
   .hide-on-mobile {
-  display: block; 
+  display: block;
 }
 
 
 @media (max-width: 760px) {
   .hide-on-mobile {
-    display: none; 
+    display: none;
   }
 }
 
 
   .display-on-mobile {
-  display: none; 
+  display: none;
 }
 
 @media (max-width: 760px) {
     .display-on-mobile {
-    display: flex; 
+    display: flex;
     }
   }
 
@@ -138,10 +140,11 @@ const Navbar: FC = () => {
     current: boolean;
     icon: ReactNode;
     name: string;
+    target: any;
     url: string;
   }
 
-  const NavItem: FC<NavItemProps> = ({ current, icon, name, url }) => {
+  const NavItem: FC<NavItemProps> = ({ current, icon, name, target, url }) => {
     return (
       <Link
         className={cn(
@@ -153,6 +156,7 @@ const Navbar: FC = () => {
           }
         )}
         href={url}
+        target={target ? '_blank' : '_self'}
       >
         {icon}
         <div className="nav-text text-black dark:text-white">
@@ -178,6 +182,7 @@ const Navbar: FC = () => {
             )
           }
           name="Home"
+          target={false}
           url="/"
         />
         <NavItem
@@ -190,6 +195,7 @@ const Navbar: FC = () => {
             )
           }
           name="Explore"
+          target={false}
           url="/explore"
         />
         <NavItem
@@ -202,6 +208,7 @@ const Navbar: FC = () => {
             )
           }
           name="Notifications"
+          target={false}
           url="/notifications"
         />
         <NavItem
@@ -214,6 +221,7 @@ const Navbar: FC = () => {
             )
           }
           name="Messages"
+          target={false}
           url="/messages"
         />
         <MoreNavItems />
@@ -222,46 +230,46 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
+      <SiteStatus />
       {staffMode ? <StaffBar /> : null}
-      <NavbarContainer className="container mx-auto w-full">
-        <div className="relative flex h-full w-full flex-col items-start justify-start">
+      <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
+        <div className="relative flex h-full w-full flex-col items-start justify-center">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
             type="button"
           />
           <Link className="hide-on-mobile" href="/">
-            <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
+            <div className="text-white-900 flex flex-grow items-center justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img
+                <Image
                   alt="Logo"
                   className="h-12 w-12"
-                  src="apps/web/public/logo1.svg"
+                  height={12}
+                  src="/logo1.svg"
+                  width={12}
                 />
               </div>
-              <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast
-              </span>
+              <span className="nav-text ml-3 mr-3">Goodcast</span>
             </div>
           </Link>
-         
+
           <div className="display-on-mobile">
-          <MenuItems/>
             <MobileLogoButton />
           </div>
+          <div className="absolute" style={{ left: '-9999px', top: '-9999px' }}>
+            <MenuItems />
+          </div>
 
-          <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
+          <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-4 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
-              <div className=" mt-5 w-full">
+              <div className="mt-5 w-full">
                 <NavPost />
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
-                <div
-                  className=""
-                   
-                >
+                <div className="">
                   <Link
                     className={cn(
                       'max-h-[100vh] md:hidden',
@@ -280,20 +288,16 @@ const Navbar: FC = () => {
                   <div
                     className="mt-4 flex items-start justify-between"
                     id="profile"
-                  >  
-                  </div>
-                  
+                  />
                 </div>
-                
               </div>
-              
             </div>
           </div>
         </div>
-        <div className="hide-on-mobile flex items-center ml-6 gap-2">
-                      {currentProfile ? <MenuItems /> : null}
-                      <ModIcon />
-                    </div>
+        <div className="hide-on-mobile ml-6 flex items-center gap-2">
+          {currentProfile ? <MenuItems /> : null}
+          <ModIcon />
+        </div>
       </NavbarContainer>
       {showSearch ? (
         <div className="m-3 md:hidden">

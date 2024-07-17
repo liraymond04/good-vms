@@ -77,7 +77,7 @@ const Verification: FC = () => {
             className="!mt-4"
             disabled={!hasAllRequirements}
             onClick={() => {
-              // TODO: Migrate to Hey API
+              // TODO: Migrate to Good API
               Leafwatch.track(SETTINGS.ACCOUNT.REQUEST_VERIFICATION);
               toast.success('Verification request sent to staff!');
             }}

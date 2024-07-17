@@ -64,7 +64,6 @@ const Search: FC<SearchProps> = ({ placeholder = 'Search…' }) => {
 
   useEffect(() => {
     if (pathname !== '/search' && showDropdown && debouncedSearchText) {
-      // Variables
       const request: ProfileSearchRequest = {
         limit: LimitType.Ten,
         query: debouncedSearchText,
@@ -81,7 +80,7 @@ const Search: FC<SearchProps> = ({ placeholder = 'Search…' }) => {
   }, [debouncedSearchText]);
 
   return (
-    <div className="w-full">
+    <div className="mb-4 w-full">
       <form onSubmit={handleKeyDown}>
         <Input
           className="px-3 py-2 text-sm"

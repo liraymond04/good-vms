@@ -7,7 +7,7 @@ import {
 } from '@good/data/constants';
 import { SETTINGS } from '@good/data/tracking';
 import { Card, CardHeader, Tooltip } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { CheckCircleIcon as CheckCircleIconOutline } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';

@@ -4,7 +4,7 @@ import type { FC } from 'react';
 import Wrapper from '@components/Shared/Embed/Wrapper';
 import { GOOD_API_URL } from '@good/data/constants';
 import { Spinner } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

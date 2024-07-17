@@ -67,7 +67,7 @@ const fetchPublications = async (id: any, addr: any) => {
     }
 
     if (data.data.whoActedOnPublication.pageInfo.next) {
-      let next = data.data.whoActedOnPublication.pageInfo.next;
+      let { next } = data.data.whoActedOnPublication.pageInfo;
 
       const endTime = Date.now() + 5000;
       while (next && Date.now() < endTime) {

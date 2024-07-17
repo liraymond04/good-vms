@@ -3,7 +3,7 @@ import type { FC, ReactNode } from 'react';
 import Video from '@components/Shared/Video';
 import { GOOD_API_URL } from '@good/data/constants';
 import { Card, Spinner, Tooltip } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import {
   ClipboardDocumentIcon,
   SignalIcon,

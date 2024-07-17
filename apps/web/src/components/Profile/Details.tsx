@@ -41,7 +41,6 @@ import Badges from './Badges';
 import Pro from './Badges/Pro';
 import Followerings from './Followerings';
 import InternalTools from './InternalTools';
-import InvitedBy from './InvitedBy';
 import ProfileMenu from './Menu';
 import MutualFollowers from './MutualFollowers';
 import ScamWarning from './ScamWarning';
@@ -77,10 +76,10 @@ const Details: FC<DetailsProps> = ({ isSuspended = false, profile }) => {
 
   return (
     <div className="mb-4 space-y-5 px-5 sm:px-0">
-      <div className="relative -mt-24 size-32 sm:-mt-32 sm:size-52">
+      <div className="relative -mt-24 size-32 rounded-full sm:-mt-32 sm:size-52">
         <Image
           alt={profile.id}
-          className="size-32 cursor-pointer rounded-xl bg-gray-200 ring-8 ring-gray-50 sm:size-52 dark:bg-gray-700 dark:ring-black"
+          className="size-32 cursor-pointer rounded-full bg-gray-200 ring-8 ring-gray-50 sm:size-52 dark:bg-gray-700 dark:ring-black"
           height={128}
           onClick={() => setExpandedImage(getAvatar(profile, EXPANDED_AVATAR))}
           onError={({ currentTarget }) => {
@@ -181,21 +180,6 @@ const Details: FC<DetailsProps> = ({ isSuspended = false, profile }) => {
               {getProfileAttribute('location', profile?.metadata?.attributes)}
             </MetaDetails>
           ) : null}
-          {profile?.onchainIdentity?.ens?.name ? (
-            <MetaDetails
-              icon={
-                <img
-                  alt="ENS Logo"
-                  className="size-4"
-                  height={16}
-                  src={`${STATIC_IMAGES_URL}/brands/ens.svg`}
-                  width={16}
-                />
-              }
-            >
-              {profile?.onchainIdentity?.ens?.name}
-            </MetaDetails>
-          ) : null}
           {getProfileAttribute('website', profile?.metadata?.attributes) ? (
             <MetaDetails
               icon={
@@ -265,13 +249,7 @@ const Details: FC<DetailsProps> = ({ isSuspended = false, profile }) => {
           </MetaDetails>
         </div>
       </div>
-      {profile.invitedBy ? (
-        <>
-          <div className="divider w-full" />
-          <InvitedBy profile={profile.invitedBy} />
-        </>
-      ) : null}
-      <Badges id={profile.id} onchainIdentity={profile.onchainIdentity} />
+      <Badges id={profile.id} />
       <InternalTools profile={profile} />
     </div>
   );

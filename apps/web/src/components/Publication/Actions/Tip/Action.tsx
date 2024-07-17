@@ -18,7 +18,7 @@ import formatAddress from '@good/helpers/formatAddress';
 import { Button, HelpTooltip, Input, Select, Spinner } from '@good/ui';
 import cn from '@good/ui/cn';
 import errorToast from '@helpers/errorToast';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import axios from 'axios';
 import { useRef, useState } from 'react';
@@ -87,42 +87,26 @@ const Action: FC<ActionProps> = ({
     query: { refetchInterval: 2000 }
   });
 
-  const { data: txHash, writeContractAsync } = useWriteContract();
+  const { data: txHash, writeContractAsync } = useWriteContract({
+    mutation: {
+      onError: (error: Error) => {
+        console.error('Error: ', error);
+      },
+      onSuccess: (hash: string) => {
+        console.log('Transaction hash:', hash);
+      }
+    }
+  });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransactionReceipt({
     hash: txHash,
     query: { enabled: Boolean(txHash) }
   });
 
-  if (!currentProfile) {
-    return (
-      <div className="m-5">
-        <Button
-          className={submitButtonClassName}
-          onClick={() => {
-            if (!currentProfile) {
-              closePopover();
-              setShowAuthModal(true);
-              return;
-            }
-          }}
-        >
-          Log in to tip
-        </Button>
-      </div>
-    );
-  }
-
-  if (!address) {
-    return (
-      <div className="m-5 space-y-3 text-sm font-bold">
-        <div>Connect to correct wallet to tip!</div>
-        <div className="ld-text-gray-500">
-          Switch to: {formatAddress(currentProfile?.ownedBy.address)}
-        </div>
-      </div>
-    );
-  }
+  const onError = (error: any) => {
+    setIsLoading(false);
+    errorToast(error);
+  };
 
   const allowance = parseFloat(data?.toString() || '0');
   const usdRate =
@@ -173,13 +157,14 @@ const Action: FC<ActionProps> = ({
         args: [GOOD_TIPPING, MAX_UINT256],
         functionName: 'approve'
       });
+      console.log('Tipping enabled');
       Leafwatch.track(PUBLICATION.TIP.ENABLE, {
         address,
         currency: selectedCurrency?.symbol
       });
       return;
     } catch (error) {
-      errorToast(error);
+      onError(error);
     } finally {
       setIsLoading(false);
     }
@@ -220,19 +205,20 @@ const Action: FC<ActionProps> = ({
         { headers: getAuthApiHeaders() }
       );
 
-      Leafwatch.track(PUBLICATION.TIP.TIP, {
-        address,
-        amount,
-        currency: selectedCurrency?.symbol
-      });
+      // Leafwatch.track(PUBLICATION.TIP.TIP, {
+      //   address,
+      //   amount,
+      //   currency: selectedCurrency?.symbol
+      // });
       addTip(publication.id);
       closePopover();
       triggerConfetti();
       return;
     } catch (error) {
-      errorToast(error);
+      onError(error);
     } finally {
       setIsLoading(false);
+      // console.log("DEBUG: finally block")
     }
   };
 
@@ -243,6 +229,36 @@ const Action: FC<ActionProps> = ({
     !hasAllowance ||
     isWaitingForTransaction ||
     isGettingAllowance;
+
+  if (!currentProfile) {
+    return (
+      <div className="m-5">
+        <Button
+          className={submitButtonClassName}
+          onClick={() => {
+            if (!currentProfile) {
+              closePopover();
+              setShowAuthModal(true);
+              return;
+            }
+          }}
+        >
+          Log in to tip
+        </Button>
+      </div>
+    );
+  }
+
+  if (!address) {
+    return (
+      <div className="m-5 space-y-3 text-sm font-bold">
+        <div>Connect to correct wallet to tip!</div>
+        <div className="ld-text-gray-500">
+          Switch to: {formatAddress(currentProfile?.ownedBy.address)}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="m-5 space-y-3">
@@ -337,7 +353,7 @@ const Action: FC<ActionProps> = ({
         <div>
           <Input
             className="no-spinner"
-            max={1000 || 0}
+            max={1000}
             onChange={onOtherAmount}
             placeholder="300"
             ref={inputRef}

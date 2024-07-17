@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 
 import MetaTags from '@components/Common/MetaTags';
 import NewPost from '@components/Composer/Post/New';
+import Cover from '@components/Shared/Cover';
 import {
   APP_NAME,
   HANDLE_PREFIX,
@@ -24,7 +25,6 @@ import Custom500 from 'src/pages/500';
 import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
-import Cover from './Cover';
 import Details from './Details';
 import Feed from './Feed';
 import FeedType from './FeedType';
@@ -174,7 +174,7 @@ const ViewProfile: NextPage = () => {
             />
           ) : (
             <>
-              <FeedType feedType={feedType} />
+              <FeedType feedType={feedType as ProfileFeedType} />
               {currentProfile?.id === profile?.id ? <NewPost /> : null}
               {feedType === ProfileFeedType.Feed ||
               feedType === ProfileFeedType.Replies ||

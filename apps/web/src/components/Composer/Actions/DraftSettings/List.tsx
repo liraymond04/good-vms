@@ -5,8 +5,9 @@ import { useEditorContext } from '@components/Composer/Editor';
 import Loader from '@components/Shared/Loader';
 import { GOOD_API_URL } from '@good/data/constants';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
-import { Button, EmptyState, ErrorMessage } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { EmptyState, ErrorMessage } from '@good/ui';
+import { Button } from '@headlessui/react';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { ArchiveBoxArrowDownIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -121,9 +122,6 @@ const List: FC<ListProps> = ({ setShowModal }) => {
               stopEventPropagation(event);
               onDeleteDraft(draft);
             }}
-            outline
-            size="sm"
-            variant="danger"
           >
             Delete
           </Button>

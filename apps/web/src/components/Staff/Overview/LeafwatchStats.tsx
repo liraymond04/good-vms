@@ -8,7 +8,7 @@ import {
   useExploreProfilesQuery
 } from '@good/lens';
 import { CardHeader, ErrorMessage, NumberedStat } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';

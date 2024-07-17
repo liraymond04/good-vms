@@ -1,4 +1,4 @@
-import type { Handler } from 'express';
+import type { Request, Response } from 'express';
 
 import { GoodLensSignup } from '@good/abis';
 import {
@@ -13,7 +13,6 @@ import catchedError from 'src/helpers/catchedError';
 import { GOOD_USER_AGENT } from 'src/helpers/constants';
 import getRpc from 'src/helpers/getRpc';
 import validateIsStaff from 'src/helpers/middlewares/validateIsStaff';
-import { notAllowed } from 'src/helpers/responses';
 import { createPublicClient } from 'viem';
 import { polygon, polygonAmoy } from 'viem/chains';
 
@@ -67,41 +66,39 @@ async function fetchCollectCountOnPublication(
 }
 
 // TODO: add tests
-export const get: Handler = async (req, res) => {
-  const validateIsStaffStatus = await validateIsStaff(req);
-  if (validateIsStaffStatus !== 200) {
-    return notAllowed(res, validateIsStaffStatus);
+export const get = [
+  validateIsStaff,
+  async (req: Request, res: Response) => {
+    try {
+      const viemClient = createPublicClient({
+        chain: IS_MAINNET ? polygon : polygonAmoy,
+        transport: getRpc({ mainnet: IS_MAINNET })
+      });
+
+      const signupCount = await viemClient.readContract({
+        abi: GoodLensSignup,
+        address: GOOD_LENS_SIGNUP,
+        args: [],
+        functionName: 'totalProfilesCreated'
+      });
+
+      const mintCount = await fetchCollectCountOnPublication(
+        GOOD_MEMBERSHIP_NFT_PUBLICATION_ID
+      );
+
+      const formattedResult = [
+        {
+          date: new Date().toISOString(),
+          mint_count: mintCount,
+          signups_count: Number(signupCount)
+        }
+      ];
+
+      logger.info('Lens: Fetched signup and membership NFT stats');
+
+      return res.status(200).json({ result: formattedResult, success: true });
+    } catch (error) {
+      catchedError(res, error);
+    }
   }
-
-  try {
-    const viemClient = createPublicClient({
-      chain: IS_MAINNET ? polygon : polygonAmoy,
-      transport: getRpc({ mainnet: IS_MAINNET })
-    });
-
-    const signupCount = await viemClient.readContract({
-      abi: GoodLensSignup,
-      address: GOOD_LENS_SIGNUP,
-      args: [],
-      functionName: 'totalProfilesCreated'
-    });
-
-    const mintCount = await fetchCollectCountOnPublication(
-      GOOD_MEMBERSHIP_NFT_PUBLICATION_ID
-    );
-
-    const formattedResult = [
-      {
-        date: new Date().toISOString(),
-        mint_count: mintCount,
-        signups_count: Number(signupCount)
-      }
-    ];
-
-    logger.info('Lens: Fetched signup and membership NFT stats');
-
-    return res.status(200).json({ result: formattedResult, success: true });
-  } catch (error) {
-    catchedError(res, error);
-  }
-};
+];

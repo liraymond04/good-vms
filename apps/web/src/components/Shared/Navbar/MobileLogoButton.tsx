@@ -14,17 +14,17 @@ import {
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
+import LoginButton from '../LoginButton';
 import MenuTransition from '../MenuTransition';
 import MoreNavItems from './MoreNavItems';
+import SignedUser from './SignedUser';
 import SignupButton from './SignupButton';
-import LoginButton from '../LoginButton';
-import ModIcon from './ModIcon';
-import NavPost from '@components/Composer/Post/NavPost';
 
 interface NavItemProps {
   current: boolean;
@@ -64,7 +64,7 @@ const MobileLogoButton: React.FC = () => {
         <>
           <MenuButton
             className={cn(
-              'text-white-900 inline-flex flex-grow items-start justify-start font-bold',
+              'text-white-900 ml-2 flex flex-grow items-start justify-start font-bold',
               {
                 'bg-gray-200 text-black dark:bg-gray-800 dark:text-white': open,
                 'text-white-700 dark:text-white-300 hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white':
@@ -72,19 +72,18 @@ const MobileLogoButton: React.FC = () => {
               }
             )}
           >
-            <div className="pl-6 text-3xl font-black">
-              <img
-                alt="Logo"
-                className="h-12 w-12"
-                src="apps/web/public/logo1.svg"
-              />
-            </div>
-            <span className="nav-text ml-3 mr-3 flex flex-grow">Goodcast</span>
+            <Image
+              alt="Logo"
+              className="h-12 w-12"
+              height={12}
+              src="/logo1.svg"
+              width={12}
+            />
+            <span className="nav-text ml-3 mr-3">Goodcast</span>
           </MenuButton>
           <MenuTransition>
             <MenuItems
               className="absolute mb-2 min-w-max rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
-              //className=" absolute mb-2 rounded-xl border bg-white shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-900"
               static
             >
               {currentProfile ? (
@@ -148,51 +147,54 @@ const MobileLogoButton: React.FC = () => {
                   </MenuItem>
                   <div className="divider" />
                   <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <NavItem
-                  current={pathname === '/messages'}
-                  icon={
-                    pathname === '/messages' ? (
-                      <EnvelopeIconSolid className="size-8" />
-                    ) : (
-                      <EnvelopeIconOutline className="size-8" />
-                    )
-                  }
-                  name="Messages"
-                  url="/messages"
-                />
-              </MenuItem>
-              <MenuItem
-                as="div"
-                className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
-                }
-              >
-                <MoreNavItems />
-              </MenuItem>
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <NavItem
+                      current={pathname === '/messages'}
+                      icon={
+                        pathname === '/messages' ? (
+                          <EnvelopeIconSolid className="size-8" />
+                        ) : (
+                          <EnvelopeIconOutline className="size-8" />
+                        )
+                      }
+                      name="Messages"
+                      url="/messages"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <MoreNavItems />
+                  </MenuItem>
                 </>
               ) : null}
-        
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <LoginButton /> : null}
               </MenuItem>
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>
-                  cn({ 'dropdown-active': focus }, ' m-2 rounded-lg')
+                  cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
-              >            
+              >
                 {!currentProfile ? <SignupButton /> : null}
-              </MenuItem>             
+              </MenuItem>
+              <div className="ml-2">
+                {currentProfile ? <SignedUser /> : null}
+              </div>
             </MenuItems>
           </MenuTransition>
         </>

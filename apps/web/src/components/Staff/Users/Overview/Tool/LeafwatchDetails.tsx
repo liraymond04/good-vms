@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import MetaDetails from '@components/Shared/MetaDetails';
 import { GOOD_API_URL } from '@good/data/constants';
 import humanize from '@good/helpers/humanize';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import {
   ComputerDesktopIcon,
   CursorArrowRaysIcon,

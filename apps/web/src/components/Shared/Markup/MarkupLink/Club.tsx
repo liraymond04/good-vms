@@ -1,11 +1,12 @@
 import type { MarkupLinkProps } from '@good/types/misc';
 import type { FC } from 'react';
 
+import ClubPreview from '@components/Shared/ClubPreview';
 import { CLUB_HANDLE_PREFIX } from '@good/data/constants';
 import { PUBLICATION } from '@good/data/tracking';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import { Leafwatch } from '@helpers/leafwatch';
-import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 const Club: FC<MarkupLinkProps> = ({ title }) => {
   if (!title) {
@@ -16,16 +17,16 @@ const Club: FC<MarkupLinkProps> = ({ title }) => {
   const clubHandle = `/${club}`;
 
   return (
-    <a
+    <Link
       className="cursor-pointer outline-none focus:underline"
+      href={`/c/${club}`}
       onClick={(event) => {
-        toast.success('Clubs coming soon to Hey!');
         stopEventPropagation(event);
         Leafwatch.track(PUBLICATION.CLICK_CLUB, { club: clubHandle });
       }}
     >
-      {clubHandle}
-    </a>
+      <ClubPreview handle={club}>{clubHandle}</ClubPreview>
+    </Link>
   );
 };
 
