@@ -13,8 +13,11 @@ import { polygon, polygonAmoy } from 'viem/chains';
 import ViteExpress from 'vite-express';
 
 // Load environment variables
-const path = require('path')
-dotenv.config({ override: true, path: path.resolve(__dirname, '../.env.local') });
+const path = require('path');
+dotenv.config({
+  override: true,
+  path: path.resolve(__dirname, '../.env.local')
+});
 import limitDomains from './helpers/middlewares/limitDomains';
 import listenCauses from './listeners/cause-listener';
 import listenDonations from './listeners/donation-listener';
