@@ -93,7 +93,11 @@ module.exports = {
         destination: `${process.env.NEXT_PUBLIC_OG_URL}/posts/:match*`,
         has: [{ key: 'user-agent', type: 'header', value: allowedBots }],
         source: '/posts/:match*'
-      }
+      },
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`, // Proxy to Backend
+      },
     ];
   },
   transpilePackages: ['data']
