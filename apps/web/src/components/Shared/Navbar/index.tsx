@@ -19,7 +19,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { usePreferencesStore } from 'src/store/non-persisted/usePreferencesStore';
 import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import styled from 'styled-components';
@@ -40,89 +39,40 @@ const NavbarContainer = styled.div`
   margin: 0;
   .nav-text,
   .auth-buttons {
-  display: block;
-}
+    display: block;
+  }
 
-@media (max-width: 1024px) {
+  @media (max-width: 1024px) {
     .nav-text,
     .auth-buttons {
-    display: none;
-  }
-}
-
-  .hide-on-mobile {
-  display: block;
-}
-
-
-@media (max-width: 760px) {
-  .hide-on-mobile {
-    display: none;
-  }
-}
-
-
-  .display-on-mobile {
-  display: none;
-}
-
-@media (max-width: 760px) {
-    .display-on-mobile {
-    display: flex;
+      display: none;
     }
   }
 
-}
-
-
-`;
-
-const BottomButtonsContainer = styled.div`
-  margin-top: 1rem;
-  width: 100%;
-`;
-
-const PostButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background-color: #da5597;
-  color: white;
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
+  .hide-on-mobile {
+    display: block;
+  }
 
   @media (max-width: 760px) {
+    .hide-on-mobile {
+      display: none;
+    }
+  }
+
+  .display-on-mobile {
     display: none;
   }
-`;
-
-const MobilePostButton = styled.button`
-  display: none;
 
   @media (max-width: 760px) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #da5597;
-    color: white;
-    width: 56px;
-    height: 56px;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    z-index: 10;
-    font-size: 2rem;
+    .display-on-mobile {
+      display: flex;
+    }
   }
 `;
 
 const Navbar: FC = () => {
   const { currentProfile } = useProfileStore();
   const { staffMode } = useFeatureFlagsStore();
-  const { appIcon } = usePreferencesStore();
   const [showSearch, setShowSearch] = useState(false);
   const [isShortScreen, setIsShortScreen] = useState(false);
 
@@ -230,7 +180,7 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white dark:border-gray-700 dark:bg-black">
+    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white md:w-fit dark:border-gray-700 dark:bg-black">
       <SiteStatus />
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
@@ -262,7 +212,7 @@ const Navbar: FC = () => {
             <MenuItems />
           </div>
 
-          <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-4 pt-5 sm:ml-6 md:block">
+          <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-6 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
               <div className="mt-5 w-full">

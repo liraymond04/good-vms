@@ -1,6 +1,7 @@
 import type { Post } from '@good/lens';
 import type { NextPage } from 'next';
 
+import { GOOD_API_URL } from '@good/data/constants';
 import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
 import { Leafwatch } from '@helpers/leafwatch';
 import { useRouter } from 'next/router';
@@ -36,7 +37,7 @@ const DonationDetails: NextPage = () => {
         params.append('profileId', parts[0].substring(3));
         params.append('publicationId', parts[1].substring(2));
         const response = await fetch(
-          `http://api-testnet.bcharity.net/donations/all-donations-on-post?${params}`
+          `${GOOD_API_URL}/donations/all-donations-on-post?${params}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch donation details');
@@ -93,7 +94,13 @@ const DonationDetails: NextPage = () => {
   }
 
   if (!donationPost) {
-    return <div>Donation not found</div>;
+    return (
+      <GridLayout>
+        <GridItemEight>
+          <div>Donation not found</div>
+        </GridItemEight>
+      </GridLayout>
+    );
   }
 
   const DonationPostDetails = {

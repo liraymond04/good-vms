@@ -5,10 +5,10 @@ import type { Address } from 'viem';
 import MenuTransition from '@components/Shared/MenuTransition';
 import { STATIC_IMAGES_URL } from '@good/data/constants';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
-import { TipIcon } from '@good/icons';
 import { Tooltip } from '@good/ui';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import party from 'party-js';
 import { useRef } from 'react';
@@ -59,7 +59,7 @@ const Refer: FC<ReferProps> = ({
         >
           <div ref={confettiDom} />
           <Tooltip content="Referral action" placement="top" withDelay>
-            <TipIcon className={cn(iconClassName)} />
+            <CurrencyDollarIcon className={cn(iconClassName)} />
           </Tooltip>
         </MenuButton>
         <MenuTransition>
