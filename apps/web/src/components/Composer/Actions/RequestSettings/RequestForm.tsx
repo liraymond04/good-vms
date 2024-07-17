@@ -3,8 +3,8 @@ import type { FC } from 'react';
 import type { Address } from 'viem';
 
 import { REQUEST_GOOD } from '@good/data/constants';
+import { MarketplaceMetadataAttributeDisplayType } from '@good/lens';
 import { Button } from '@good/ui';
-import { MetadataAttributeType } from '@lens-protocol/metadata';
 import React, { useRef, useState } from 'react';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
 import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
@@ -129,8 +129,8 @@ const RequestForm: FC = () => {
     Object.entries(formData).map(([key, value]) => {
       console.log(key + ': ' + value);
       addAttribute({
-        key,
-        type: MetadataAttributeType.STRING,
+        displayType: MarketplaceMetadataAttributeDisplayType.String,
+        traitType: key,
         value: value
       });
     });

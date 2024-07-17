@@ -1,6 +1,4 @@
 import type {
-  MarketplaceMetadataAttributeDisplayType,
-  Maybe,
   MirrorablePublication,
   MomokaCommentRequest,
   MomokaPostRequest,
@@ -340,15 +338,15 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         return [];
       }
 
-      const formDataAttributes = formAttributes.map(({ key, type, value }) => ({
-        __typename: 'PublicationMarketplaceMetadataAttribute',
-        displayType:
-          type as unknown as Maybe<MarketplaceMetadataAttributeDisplayType>,
-        traitType: key,
-        value: value
-      }));
+      const formDataAttributes = formAttributes.map(
+        ({ displayType, traitType, value }) => ({
+          displayType,
+          traitType,
+          value
+        })
+      );
 
-      return formDataAttributes as PublicationMarketplaceMetadataAttribute[];
+      return formDataAttributes;
     };
 
   const createPublication = async () => {

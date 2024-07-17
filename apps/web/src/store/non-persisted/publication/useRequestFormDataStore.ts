@@ -1,15 +1,18 @@
-import type { MetadataAttribute } from '@lens-protocol/metadata';
+import type { PublicationMarketplaceMetadataAttribute } from '@good/lens';
+// import type { MetadataAttribute } from '@lens-protocol/metadata';
 
 import { createTrackedSelector } from 'react-tracked';
 import { create } from 'zustand';
 
 interface State {
-  addAttribute: (attribute: MetadataAttribute) => void;
-  attributes: MetadataAttribute[] | undefined;
-  getAttribute: (key: string) => MetadataAttribute | undefined;
-  removeAttribute: (key: string) => void;
+  addAttribute: (attribute: PublicationMarketplaceMetadataAttribute) => void;
+  attributes: PublicationMarketplaceMetadataAttribute[] | undefined;
+  getAttribute: (
+    traitType: string
+  ) => PublicationMarketplaceMetadataAttribute | undefined;
+  removeAttribute: (traitType: string) => void;
   reset: () => void;
-  updateAttribute: (key: string, value: string) => void;
+  updateAttribute: (traitType: string, value: string) => void;
 }
 
 const store = create<State>((set, get) => ({
@@ -20,17 +23,19 @@ const store = create<State>((set, get) => ({
         : [attribute]
     })),
   attributes: undefined,
-  getAttribute: (key) =>
-    get().attributes?.find((attribute) => attribute.key === key),
-  removeAttribute: (key) =>
+  getAttribute: (traitType) =>
+    get().attributes?.find((attribute) => attribute.traitType === traitType),
+  removeAttribute: (traitType) =>
     set((state) => ({
-      attributes: state.attributes?.filter((attribute) => attribute.key !== key)
+      attributes: state.attributes?.filter(
+        (attribute) => attribute.traitType !== traitType
+      )
     })),
   reset: () => set({ attributes: undefined }),
-  updateAttribute: (key, value: any) =>
+  updateAttribute: (traitType, value: any) =>
     set((state) => ({
       attributes: state.attributes?.map((attribute) =>
-        attribute.key === key ? { ...attribute, value } : attribute
+        attribute.traitType === traitType ? { ...attribute, value } : attribute
       )
     }))
 }));
