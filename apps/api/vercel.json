@@ -12,7 +12,7 @@
   ],
   "rewrites": [
     {
-    "src": "/(.*)",
+    "source": "/(.*)",
     "destination": "/"
     }
   ]
