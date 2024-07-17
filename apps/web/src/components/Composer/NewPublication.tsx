@@ -1,4 +1,6 @@
 import type {
+  MarketplaceMetadataAttributeDisplayType,
+  Maybe,
   MirrorablePublication,
   MomokaCommentRequest,
   MomokaPostRequest,
@@ -6,11 +8,12 @@ import type {
   OnchainCommentRequest,
   OnchainPostRequest,
   OnchainQuoteRequest,
+  PublicationMarketplaceMetadataAttribute,
   Quote
 } from '@good/lens';
 import type { IGif } from '@good/types/giphy';
 import type { NewAttachment } from '@good/types/misc';
-import type { MarketplaceMetadataAttribute } from '@lens-protocol/metadata';
+// import type { MarketplaceMetadataAttribute } from '@lens-protocol/metadata';
 import type { FC } from 'react';
 
 import NewAttachments from '@components/Composer/NewAttachments';
@@ -31,10 +34,7 @@ import cn from '@good/ui/cn';
 import errorToast from '@helpers/errorToast';
 import { Leafwatch } from '@helpers/leafwatch';
 import uploadToArweave from '@helpers/uploadToArweave';
-import {
-  MarketplaceMetadataAttributeDisplayType,
-  MetadataAttributeType
-} from '@lens-protocol/metadata';
+import { MetadataAttributeType } from '@lens-protocol/metadata';
 import { useUnmountEffect } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -59,6 +59,7 @@ import {
   DEFAULT_VIDEO_THUMBNAIL,
   usePublicationVideoStore
 } from 'src/store/non-persisted/publication/usePublicationVideoStore';
+import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useNonceStore } from 'src/store/non-persisted/useNonceStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
@@ -177,8 +178,9 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     useReferenceModuleStore();
 
   // Attributes store
-  const { attributes: formAttributes, reset: resetAttributes } =
-    usePublicationAttributesStore();
+  const { reset: resetAttributes } = usePublicationAttributesStore();
+
+  const { attributes: formAttributes } = useRequestFormDataStore();
 
   // States
   const [isLoading, setIsLoading] = useState(false);
@@ -332,17 +334,22 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     return isComment ? 'Comment' : isQuote ? 'Quote' : 'Post';
   };
 
-  const mapFormFieldsToAttributes = (): MarketplaceMetadataAttribute[] => {
-    if (!formAttributes) {
-      return [];
-    }
+  const mapFormFieldsToAttributes =
+    (): PublicationMarketplaceMetadataAttribute[] => {
+      if (!formAttributes) {
+        return [];
+      }
 
-    return formAttributes.map(({ key, value }) => ({
-      display_type: MarketplaceMetadataAttributeDisplayType.STRING,
-      trait_type: key,
-      value
-    }));
-  };
+      const formDataAttributes = formAttributes.map(({ key, type, value }) => ({
+        __typename: 'PublicationMarketplaceMetadataAttribute',
+        displayType:
+          type as unknown as Maybe<MarketplaceMetadataAttributeDisplayType>,
+        traitType: key,
+        value: value
+      }));
+
+      return formDataAttributes as PublicationMarketplaceMetadataAttribute[];
+    };
 
   const createPublication = async () => {
     if (!currentProfile) {
@@ -390,6 +397,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
 
       const formDataAttributes = mapFormFieldsToAttributes();
 
+      console.log(hasAttributes);
+
       const baseMetadata = {
         content: processedPublicationContent,
         title,
@@ -403,12 +412,12 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
                     value: pollId
                   }
                 ]
-              : []),
-            ...formDataAttributes
+              : [])
           ]
         }),
         marketplace: {
           animation_url: getAnimationUrl(),
+          attributes: formDataAttributes,
           description: processedPublicationContent,
           external_url: `https://bcharity.net${getProfile(currentProfile).link}`,
           name: title

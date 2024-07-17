@@ -7,7 +7,7 @@ import { Button } from '@good/ui';
 import { MetadataAttributeType } from '@lens-protocol/metadata';
 import React, { useRef, useState } from 'react';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
-import { usePublicationAttributesStore } from 'src/store/non-persisted/publication/usePublicationAttributesStore';
+import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { encodeAbiParameters } from 'viem';
 
@@ -64,10 +64,6 @@ const getProfileFragment = async (
   }
 };
 
-function isNumeric(value: string) {
-  return !isNaN(Number(value)) && !isNaN(parseFloat(value));
-}
-
 const DebugFormState: FC<{
   attributes: any;
   errors: any;
@@ -119,7 +115,7 @@ const RequestForm: FC = () => {
   const fieldMetadataRef = useRef<FieldMetadata[]>([]);
 
   const { setOpenAction, setShowModal } = useOpenActionStore();
-  const { addAttribute, attributes, reset } = usePublicationAttributesStore();
+  const { addAttribute, attributes, reset } = useRequestFormDataStore();
 
   const [isDonor, setIsDonor] = useState<boolean>(false);
 
@@ -128,21 +124,22 @@ const RequestForm: FC = () => {
   const submit = async () => {
     reset();
 
+    console.group();
     // Add attributes from formData to the store
     Object.entries(formData).map(([key, value]) => {
       console.log(key + ': ' + value);
       addAttribute({
         key,
-        type: isNumeric(value)
-          ? MetadataAttributeType.NUMBER
-          : MetadataAttributeType.STRING,
-        value: isNumeric(value) ? Number(value) : value
+        type: MetadataAttributeType.STRING,
+        value: value
       });
     });
+    console.groupEnd();
 
+    // Should not be null at this stage due to earlier checks in handleSubmit
     const organizationAddress = (
       await getProfileFragment(formData.organizationName)
-    )?.ownedBy.address; // Should not be null at this stage due to earlier checks in handleSubmit
+    )?.ownedBy.address;
 
     // Constants for GOOD conversion
     const GOODPriceUSD = 0.0001;
@@ -162,11 +159,6 @@ const RequestForm: FC = () => {
       Math.round(amountGOODFromDonation + amountGOODFromVHR)
     );
     const amountVHR = BigInt(volunteerHours);
-
-    // console.group();
-    // console.log('org addr' + organizationAddress);
-    // console.log('cur addr' + currentProfile?.ownedBy.address);
-    // console.groupEnd();
 
     setOpenAction({
       address: REQUEST_GOOD,
