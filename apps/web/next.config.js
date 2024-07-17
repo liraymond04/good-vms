@@ -96,7 +96,7 @@ module.exports = {
       },
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*` // Proxy to Backend
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*` // Proxy to Backend
       }
     ];
   },
