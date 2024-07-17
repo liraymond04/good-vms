@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
@@ -14,7 +13,7 @@ import MenuTransition from '../MenuTransition';
 import MoreLink from './NavItems/MoreLink';
 import Support from './NavItems/Support';
 
-const MoreNavItems: FC = () => {
+const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
   const { currentProfile } = useProfileStore();
 
   return (
@@ -32,21 +31,17 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <span className="nav-text hidden text-xl text-black md:block dark:text-white">
-              More
-            </span>
+            <span className="hidden lg:block text-lg">More</span> {/* Hide text on tablets */}
           </MenuButton>
           <MenuTransition>
             <MenuItems
               className={cn(
-                'absolute z-50 mt-2 w-40 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
+                'absolute z-50 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
                 'md:fixed md:left-40 md:top-48'
               )}
               style={{
-                left:
-                  window.innerWidth >= 768 && window.innerWidth <= 1024
-                    ? '20px'
-                    : 'initial'
+                right: '100%',
+                marginRight: '10px' // Adjusted for better alignment
               }}
             >
               {currentProfile ? (
@@ -61,6 +56,8 @@ const MoreNavItems: FC = () => {
                       href="/bookmarks"
                       icon={<BookmarkIcon className="size-4" />}
                       text="Bookmarks"
+                      hideTextOnMobile
+                      onClick={onClick}
                     />
                   </MenuItem>
                   <MenuItem
@@ -73,6 +70,8 @@ const MoreNavItems: FC = () => {
                       href="https://www.volunteerconnector.org/"
                       icon={<UserIcon className="size-4" />}
                       text="Volunteer"
+                      hideTextOnMobile
+                      onClick={onClick}
                     />
                   </MenuItem>
                   <MenuItem>
@@ -90,14 +89,12 @@ const MoreNavItems: FC = () => {
                             )}
                           >
                             <CurrencyDollarIcon className="ml-[-4px] size-4" />
-                            <span className="text-m text-gray-700 dark:text-gray-200">
+                            <span className="block md:hidden lg:block text-m text-gray-700 dark:text-gray-200">
                               Donate
                             </span>
                           </MenuButton>
                           <MenuTransition>
-                            <MenuItems className="absolute left-full top-0 z-50 ml-2 w-32 origin-top-left rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700">
-                              {' '}
-                              {/* Adjusted width to 32 and padding */}
+                            <MenuItems className="absolute md:left-full md:ml-2 bottom-full md:origin-bottom-left md:right-auto right-full mr-2 origin-bottom-right z-50 w-32 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700">
                               <MenuItem
                                 as="div"
                                 className={({ focus }: { focus: boolean }) =>
@@ -106,8 +103,9 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
-                                <MoreLink href="/donations" text="Donations" />
+                                <MoreLink href="/donations" text="Donations" hideTextOnMobile />
                               </MenuItem>
                               <MenuItem
                                 as="div"
@@ -117,10 +115,12 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
                                   href="https://giveth.io"
                                   text="Giveth"
+                                  hideTextOnMobile
                                 />
                               </MenuItem>
                               <MenuItem
@@ -131,10 +131,12 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
                                   href="https://thegivingblock.com"
                                   text="GivingBlock"
+                                  hideTextOnMobile
                                 />
                               </MenuItem>
                               <MenuItem
@@ -145,10 +147,12 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
                                   href="https://gitcoin.co"
                                   text="Gitcoin"
+                                  hideTextOnMobile
                                 />
                               </MenuItem>
                             </MenuItems>
@@ -165,8 +169,9 @@ const MoreNavItems: FC = () => {
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
+                onClick={onClick}
               >
-                <Support />
+                <Support hideTextOnMobile />
               </MenuItem>
             </MenuItems>
           </MenuTransition>
