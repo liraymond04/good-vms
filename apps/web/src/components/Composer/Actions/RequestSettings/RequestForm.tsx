@@ -124,17 +124,14 @@ const RequestForm: FC = () => {
   const submit = async () => {
     reset();
 
-    console.group();
     // Add attributes from formData to the store
     Object.entries(formData).map(([key, value]) => {
-      console.log(key + ': ' + value);
       addAttribute({
         displayType: MarketplaceMetadataAttributeDisplayType.String,
         traitType: key,
         value: value
       });
     });
-    console.groupEnd();
 
     // Should not be null at this stage due to earlier checks in handleSubmit
     const organizationAddress = (
@@ -323,7 +320,7 @@ const RequestForm: FC = () => {
           type="text"
           value={formData.donationAmount}
         />
-        {/* LINK ASSOCIATED WITH ACCOUNT MAKING POST */}
+        {/* LINK ASSOCIATED WITH ACCOUNT MAKING POST, check is not required for now */}
         <InputField
           errorMessage={errors.transactionURL}
           isURL

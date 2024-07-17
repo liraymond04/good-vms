@@ -334,19 +334,13 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
 
   const mapFormFieldsToAttributes =
     (): PublicationMarketplaceMetadataAttribute[] => {
-      if (!formAttributes) {
-        return [];
-      }
-
-      const formDataAttributes = formAttributes.map(
-        ({ displayType, traitType, value }) => ({
-          displayType,
-          traitType,
-          value
-        })
-      );
-
-      return formDataAttributes;
+      return !formAttributes
+        ? []
+        : formAttributes.map(({ displayType, traitType, value }) => ({
+            displayType,
+            traitType,
+            value
+          }));
     };
 
   const createPublication = async () => {
@@ -394,8 +388,6 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
       const hasAttributes = Boolean(pollId);
 
       const formDataAttributes = mapFormFieldsToAttributes();
-
-      console.log(hasAttributes);
 
       const baseMetadata = {
         content: processedPublicationContent,
