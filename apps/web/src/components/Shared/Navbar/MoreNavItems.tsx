@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
@@ -31,7 +32,8 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <span className="hidden lg:block text-lg">More</span> {/* Hide text on tablets */}
+            <span className="hidden text-lg lg:block">More</span>{' '}
+            {/* Hide text on tablets */}
           </MenuButton>
           <MenuTransition>
             <MenuItems
@@ -40,8 +42,8 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                 'md:fixed md:left-40 md:top-48'
               )}
               style={{
-                right: '100%',
-                marginRight: '10px' // Adjusted for better alignment
+                marginRight: '10px', // Adjusted for better alignment
+                right: '100%'
               }}
             >
               {currentProfile ? (
@@ -53,11 +55,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                     }
                   >
                     <MoreLink
+                      hideTextOnMobile
                       href="/bookmarks"
                       icon={<BookmarkIcon className="size-4" />}
-                      text="Bookmarks"
-                      hideTextOnMobile
                       onClick={onClick}
+                      text="Bookmarks"
                     />
                   </MenuItem>
                   <MenuItem
@@ -67,11 +69,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                     }
                   >
                     <MoreLink
+                      hideTextOnMobile
                       href="https://www.volunteerconnector.org/"
                       icon={<UserIcon className="size-4" />}
-                      text="Volunteer"
-                      hideTextOnMobile
                       onClick={onClick}
+                      text="Volunteer"
                     />
                   </MenuItem>
                   <MenuItem>
@@ -89,12 +91,12 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                             )}
                           >
                             <CurrencyDollarIcon className="ml-[-4px] size-4" />
-                            <span className="block md:hidden lg:block text-m text-gray-700 dark:text-gray-200">
+                            <span className="text-m block text-gray-700 md:hidden lg:block dark:text-gray-200">
                               Donate
                             </span>
                           </MenuButton>
                           <MenuTransition>
-                            <MenuItems className="absolute md:left-full md:ml-2 bottom-full md:origin-bottom-left md:right-auto right-full mr-2 origin-bottom-right z-50 w-32 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700">
+                            <MenuItems className="absolute bottom-full right-full z-50 mr-2 w-32 origin-bottom-right rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:left-full md:right-auto md:ml-2 md:origin-bottom-left dark:bg-gray-900 dark:ring-gray-700">
                               <MenuItem
                                 as="div"
                                 className={({ focus }: { focus: boolean }) =>
@@ -105,7 +107,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 }
                                 onClick={onClick}
                               >
-                                <MoreLink href="/donations" text="Donations" hideTextOnMobile />
+                                <MoreLink
+                                  hideTextOnMobile
+                                  href="/donations"
+                                  text="Donations"
+                                />
                               </MenuItem>
                               <MenuItem
                                 as="div"
@@ -118,9 +124,9 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://giveth.io"
                                   text="Giveth"
-                                  hideTextOnMobile
                                 />
                               </MenuItem>
                               <MenuItem
@@ -134,9 +140,9 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://thegivingblock.com"
                                   text="GivingBlock"
-                                  hideTextOnMobile
                                 />
                               </MenuItem>
                               <MenuItem
@@ -150,9 +156,9 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://gitcoin.co"
                                   text="Gitcoin"
-                                  hideTextOnMobile
                                 />
                               </MenuItem>
                             </MenuItems>

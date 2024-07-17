@@ -1,11 +1,13 @@
 import type { FC, ReactNode } from 'react';
-import { useState } from 'react';
+
+import NavPost from '@components/Composer/Post/NavPost';
+import cn from '@good/ui/cn';
 import {
+  Bars3Icon,
   BellIcon as BellIconOutline,
   EnvelopeIcon as EnvelopeIconOutline,
   HomeIcon as HomeIconOutline,
-  MagnifyingGlassIcon as MagnifyingGlassIconOutline,
-  Bars3Icon
+  MagnifyingGlassIcon as MagnifyingGlassIconOutline
 } from '@heroicons/react/24/outline';
 import {
   BellIcon as BellIconSolid,
@@ -15,11 +17,11 @@ import {
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import cn from '@good/ui/cn';
+import { useState } from 'react';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import MoreNavItems from './MoreNavItems';
+
 import MenuItems from './MenuItems';
-import NavPost from '@components/Composer/Post/NavPost';
+import MoreNavItems from './MoreNavItems';
 
 const MobileMenuButton: FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -34,10 +36,10 @@ const MobileMenuButton: FC = () => {
     setShowMenu(false);
   };
 
-  const NavItem: FC<{ url: string; current: boolean; icon: ReactNode }> = ({
-    url,
+  const NavItem: FC<{ current: boolean; icon: ReactNode; url: string }> = ({
     current,
-    icon
+    icon,
+    url
   }) => (
     <Link
       className={cn(
@@ -55,50 +57,52 @@ const MobileMenuButton: FC = () => {
   );
 
   return (
-    <div className="md:hidden"> {/* Ensure the whole div is hidden on non-mobile views */}
+    <div className="md:hidden">
+      {' '}
+      {/* Ensure the whole div is hidden on non-mobile views */}
       <button
-        className="fixed right-4 z-20 p-2 bg-pink-500 text-white rounded-full shadow-lg focus:outline-none"
+        className="fixed right-4 z-20 rounded-full bg-pink-500 p-2 text-white shadow-lg focus:outline-none"
         style={{
-          bottom: '80px', // Adjusted position
-          width: '50px',
-          height: '50px',
-          display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          bottom: '80px', // Adjusted position
+          display: 'flex',
+          height: '50px',
+          justifyContent: 'center',
+          width: '50px'
         }}
       >
         <NavPost />
       </button>
       <button
-        className="fixed right-4 z-20 p-2 bg-pink-700 text-white rounded-full shadow-lg focus:outline-none"
-        style={{
-          bottom: '150px', // Raised the button more
-          width: '50px',
-          height: '50px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
+        className="fixed right-4 z-20 rounded-full bg-pink-700 p-2 text-white shadow-lg focus:outline-none"
         onClick={toggleMenu}
+        style={{
+          alignItems: 'center',
+          bottom: '150px', // Raised the button more
+          display: 'flex',
+          height: '50px',
+          justifyContent: 'center',
+          width: '50px'
+        }}
       >
         <Bars3Icon className="h-6 w-6" />
       </button>
       {showMenu && (
         <div
           className="fixed inset-0 z-10 bg-black bg-opacity-50"
-          style={{
-            transition: 'opacity 0.3s ease-in-out',
-            opacity: showMenu ? 1 : 0
-          }}
           onClick={closeMenu}
+          style={{
+            opacity: showMenu ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out'
+          }}
         >
           <div
-            className="absolute bottom-48 right-4 p-6 bg-white dark:bg-black rounded-lg shadow-lg" // Raised the menu more
-            style={{
-              transition: 'transform 0.3s ease-in-out',
-              transform: showMenu ? 'translateY(0)' : 'translateY(100%)'
-            }}
+            className="absolute bottom-48 right-4 rounded-lg bg-white p-6 shadow-lg dark:bg-black" // Raised the menu more
             onClick={(e) => e.stopPropagation()}
+            style={{
+              transform: showMenu ? 'translateY(0)' : 'translateY(100%)',
+              transition: 'transform 0.3s ease-in-out'
+            }}
           >
             <NavItem
               current={pathname === '/'}
