@@ -24,7 +24,13 @@ abstract contract HubRestrictedUpgradeable is Initializable {
     _;
   }
 
-  function initialize(address hub) internal onlyInitializing {
+  function __HubRestricted_init(address hub) internal onlyInitializing {
+    __HubRestricted_init_unchained(hub);
+  }
+
+  function __HubRestricted_init_unchained(
+    address hub
+  ) internal onlyInitializing {
     HUB = hub;
   }
 }
