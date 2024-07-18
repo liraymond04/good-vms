@@ -34,8 +34,8 @@ const DonationDetails: NextPage = () => {
 
         const params = new URLSearchParams();
         const parts = id?.toString().split('-')!;
-        params.append('profileId', parts[0].substring(3));
-        params.append('publicationId', parts[1].substring(2));
+        params.append('profileId', Number(parts[0]).toString(16));
+        params.append('publicationId', Number(parts[1]).toString(16));
         const response = await fetch(
           `${GOOD_API_URL}/donations/all-donations-on-post?${params}`
         );
