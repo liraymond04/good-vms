@@ -25,7 +25,7 @@ const useActOnDonationOpenAction = (
       [data.tokenAddress, data.amount]
     );
 
-    actOnUnknownOpenAction({
+    return actOnUnknownOpenAction({
       address: GOOD_DONATION,
       data: d,
       publicationId: params.publicationId
