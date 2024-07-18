@@ -72,7 +72,7 @@ const PublicationActions: FC<PublicationActionsProps> = ({
       {views > 0 ? <Views showCount={showCount} views={views} /> : null}
       {canRefer ? (
         <Refer
-          publication={targetPublication}
+          profileId={targetPublication.by.id}
           referrers={referrers}
           rootPublicationId={rootPublicationId}
         />

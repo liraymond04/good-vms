@@ -47,7 +47,7 @@ const DonationDetails: NextPage = () => {
 
         let totalAmountDonated = 0;
         for (const donation of donors.donations) {
-          totalAmountDonated += parseFloat(donation.amount);
+          totalAmountDonated += parseInt(donation.amount, 16);
         }
         setTotalDonated(totalAmountDonated);
 
