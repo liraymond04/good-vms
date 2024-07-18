@@ -63,11 +63,6 @@ const FeedType: FC<FeedTypeProps> = ({ feedType, setFeedType }) => {
       icon: <ChartBarIcon className="size-4" />,
       name: 'Stats',
       type: ProfileFeedType.Stats
-    },
-    {
-      icon: <FlagIcon className="size-4" />,
-      name: 'Requests',
-      type: ProfileFeedType.Requests
     }
   ].filter(
     (tab): tab is { icon: JSX.Element; name: string; type: ProfileFeedType } =>

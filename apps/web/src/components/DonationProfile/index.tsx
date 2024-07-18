@@ -32,16 +32,10 @@ const DonationDetails: NextPage = () => {
           return;
         }
 
-        const [profileId, publicationId] = id
-          ?.toString()
-          .split('-')
-          .map((v) => Number(v).toString(16));
-
-        const params = new URLSearchParams({
-          profileId,
-          publicationId
-        });
-
+        const params = new URLSearchParams();
+        const parts = id?.toString().split('-')!;
+        params.append('profileId', Number(parts[0]).toString(16));
+        params.append('publicationId', Number(parts[1]).toString(16));
         const response = await fetch(
           `${GOOD_API_URL}/donations/all-donations-on-post?${params}`
         );
@@ -100,7 +94,13 @@ const DonationDetails: NextPage = () => {
   }
 
   if (!donationPost) {
-    return <div>Donation not found</div>;
+    return (
+      <GridLayout>
+        <GridItemEight>
+          <div>Donation not found</div>
+        </GridItemEight>
+      </GridLayout>
+    );
   }
 
   const DonationPostDetails = {

@@ -7,13 +7,13 @@ import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import { Spinner, Tooltip } from '@good/ui';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import party from 'party-js';
 import { useMemo, useRef } from 'react';
 import { type Address, decodeAbiParameters } from 'viem';
 import { useReadContract } from 'wagmi';
 
-import { DollarIcon } from '../../../../../../../packages/icons/src/DollarIcon';
 import Action from './Action';
 
 interface ReferProps {
@@ -79,7 +79,7 @@ const Refer: FC<ReferProps> = ({ profileId, referrers, rootPublicationId }) => {
         >
           <div ref={confettiDom} />
           <Tooltip content="Referral action" placement="top" withDelay>
-            <DollarIcon className={cn(iconClassName)} />
+            <CurrencyDollarIcon className={cn(iconClassName)} />
           </Tooltip>
         </MenuButton>
         <MenuTransition>
