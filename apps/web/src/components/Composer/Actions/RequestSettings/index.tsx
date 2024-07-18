@@ -4,14 +4,14 @@ import { Tooltip } from '@good/ui';
 import { motion } from 'framer-motion';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
-const LivestreamSettings: FC = () => {
+const RequestSettings: FC = () => {
   const { resetRequestConfig, setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   return (
-    <Tooltip content="Claim GOOD" placement="top">
+    <Tooltip content="Request GOOD" placement="top">
       <motion.button
-        aria-label="Claim GOOD"
+        aria-label="Request GOOD"
         className="rounded-full outline-offset-8"
         onClick={() => {
           resetRequestConfig();
@@ -42,4 +42,4 @@ const LivestreamSettings: FC = () => {
   );
 };
 
-export default LivestreamSettings;
+export default RequestSettings;
