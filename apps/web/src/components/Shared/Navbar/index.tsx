@@ -26,11 +26,12 @@ import styled from 'styled-components';
 import LoginButton from '../LoginButton';
 import MenuItems from './MenuItems';
 import MobileLogoButton from './MobileLogoButton';
+import MobileMenuButton from './MobileMenuButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
 import SiteStatus from './SiteStatus';
-import StaffBar from './StaffBar';
+import StaffBar from './StaffBar'; // Import the new component
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -109,7 +110,7 @@ const Navbar: FC = () => {
         target={target ? '_blank' : '_self'}
       >
         {icon}
-        <div className="nav-text text-black dark:text-white">
+        <div className="nav-text hidden text-black md:block dark:text-white">
           <span className={`text-xl ${current ? 'font-bold' : ''}`}>
             {name}
           </span>
@@ -254,6 +255,7 @@ const Navbar: FC = () => {
           <Search />
         </div>
       ) : null}
+      <MobileMenuButton /> {/* Add the MobileMenuButton component here */}
     </header>
   );
 };
