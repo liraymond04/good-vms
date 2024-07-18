@@ -6,10 +6,12 @@ import type {
   OnchainCommentRequest,
   OnchainPostRequest,
   OnchainQuoteRequest,
+  PublicationMarketplaceMetadataAttribute,
   Quote
 } from '@good/lens';
 import type { IGif } from '@good/types/giphy';
 import type { NewAttachment } from '@good/types/misc';
+// import type { MarketplaceMetadataAttribute } from '@lens-protocol/metadata';
 import type { FC } from 'react';
 
 import NewAttachments from '@components/Composer/NewAttachments';
@@ -55,6 +57,7 @@ import {
   DEFAULT_VIDEO_THUMBNAIL,
   usePublicationVideoStore
 } from 'src/store/non-persisted/publication/usePublicationVideoStore';
+import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useNonceStore } from 'src/store/non-persisted/useNonceStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
@@ -177,6 +180,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
 
   // Attributes store
   const { reset: resetAttributes } = usePublicationAttributesStore();
+
+  const { attributes: formAttributes } = useRequestFormDataStore();
 
   // States
   const [isLoading, setIsLoading] = useState(false);
@@ -331,6 +336,17 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     return isComment ? 'Comment' : isQuote ? 'Quote' : 'Post';
   };
 
+  const mapFormFieldsToAttributes =
+    (): PublicationMarketplaceMetadataAttribute[] => {
+      return !formAttributes
+        ? []
+        : formAttributes.map(({ displayType, traitType, value }) => ({
+            displayType,
+            traitType,
+            value
+          }));
+    };
+
   const createPublication = async () => {
     if (!currentProfile) {
       return toast.error(Errors.SignWallet);
@@ -375,6 +391,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         : `${getTitlePrefix()} by ${getProfile(currentProfile).slugWithPrefix}`;
       const hasAttributes = Boolean(pollId);
 
+      const formDataAttributes = mapFormFieldsToAttributes();
+
       const baseMetadata = {
         content: processedPublicationContent,
         title,
@@ -393,6 +411,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         }),
         marketplace: {
           animation_url: getAnimationUrl(),
+          attributes: formDataAttributes,
           description: processedPublicationContent,
           external_url: `https://bcharity.net${getProfile(currentProfile).link}`,
           name: title
