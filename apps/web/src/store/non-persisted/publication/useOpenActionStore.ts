@@ -12,6 +12,7 @@ export enum ScreenType {
 interface State {
   openAction: null | UnknownOpenActionModuleInput;
   reset: () => void;
+  resetOpenAction: () => void;
   screen: ScreenType;
   selectedOpenAction: null | OpenAction;
   setOpenAction: (openAction: UnknownOpenActionModuleInput) => void;
@@ -29,6 +30,7 @@ const store = create<State>((set) => ({
       screen: ScreenType.List,
       selectedOpenAction: null
     }),
+  resetOpenAction: () => set({ openAction: null }),
   screen: ScreenType.List,
   selectedOpenAction: null,
   setOpenAction: (openAction) => set({ openAction }),

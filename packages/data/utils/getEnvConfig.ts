@@ -9,6 +9,7 @@ const getEnvConfig = (): {
   goodDonation: `0x${string}`;
   goodLensSignup: `0x${string}`;
   goodPro: `0x${string}`;
+  goodReferral: `0x${string}`;
   goodTipping: `0x${string}`;
   lensApiEndpoint: string;
   lensHandles: `0x${string}`;
@@ -25,6 +26,7 @@ const getEnvConfig = (): {
         goodDonation: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
+        goodReferral: TestnetContracts.GoodReferral,
         goodTipping: TestnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Testnet,
         lensHandles: TestnetContracts.LensHandles,
@@ -40,6 +42,7 @@ const getEnvConfig = (): {
         goodDonation: TestnetContracts.GoodDonation,
         goodLensSignup: TestnetContracts.GoodLensSignup,
         goodPro: TestnetContracts.GoodPro,
+        goodReferral: MainnetContracts.GoodReferral,
         goodTipping: TestnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Staging,
         lensHandles: TestnetContracts.LensHandles,
@@ -55,6 +58,7 @@ const getEnvConfig = (): {
         goodDonation: MainnetContracts.GoodDonation,
         goodLensSignup: MainnetContracts.GoodLensSignup,
         goodPro: MainnetContracts.GoodPro,
+        goodReferral: MainnetContracts.GoodReferral,
         goodTipping: MainnetContracts.GoodTipping,
         lensApiEndpoint: LensEndpoint.Mainnet,
         lensHandles: MainnetContracts.LensHandles,

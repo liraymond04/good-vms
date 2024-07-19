@@ -1,33 +1,106 @@
-// pages/donations/[id]/index.tsx
-
+import type { Post } from '@good/lens';
 import type { NextPage } from 'next';
 
-import { PAGEVIEW } from '@good/data/tracking';
+import { GOOD_API_URL } from '@good/data/constants';
 import { GridItemEight, GridItemFour, GridLayout } from '@good/ui';
 import { Leafwatch } from '@helpers/leafwatch';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import useGetSingleCause from 'src/hooks/useGetSingleCause';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 import DonationInfo from './DonationProfileComponents/DonationInfo';
 import DonationMeter from './DonationProfileComponents/DonationMeter';
 import DonationThumbnail from './DonationProfileComponents/DonationThumbnail';
 import Donors from './DonationProfileComponents/Donors';
-import WordsOfSupport from './DonationProfileComponents/WordsOfSupport';
 
 const DonationDetails: NextPage = () => {
   const router = useRouter();
-  const { currentProfile } = useProfileStore();
   const { id } = router.query;
+  const currentProfile = useProfileStore();
+  const { data: posts, error, loading } = useGetSingleCause();
+  const [donationPost, setDonationPost] = useState<null | Post>(null);
+  const [allDonors, setAllDonors] = useState<any>(null);
+  const [topDonors, setTopDonors] = useState<any>(null);
+  const [newDonors, setNewDonors] = useState<any>(null);
+  const [totalDonated, setTotalDonated] = useState<number>(0);
 
   useEffect(() => {
-    if (id) {
-      Leafwatch.track(PAGEVIEW, { page: `donations/${id}` });
-    }
-  }, [id]);
+    const fetchDonationDetails = async () => {
+      try {
+        if (!id || !posts) {
+          return;
+        }
+
+        const params = new URLSearchParams();
+        const parts = id?.toString().split('-')!;
+        params.append('profileId', parts[0].substring(3));
+        params.append('publicationId', parts[1].substring(2));
+        const response = await fetch(
+          `${GOOD_API_URL}/donations/all-donations-on-post?${params}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch donation details');
+        }
+        const donors = await response.json();
+        setAllDonors(donors.donations);
+
+        let totalAmountDonated = 0;
+        for (const donation of donors.donations) {
+          totalAmountDonated += parseFloat(donation.amount);
+        }
+        setTotalDonated(totalAmountDonated);
+
+        const topSortedDonors = donors.donations
+          .slice()
+          .sort((a: any, b: any) => {
+            return parseFloat(b.amount) - parseFloat(a.amount);
+          });
+        setTopDonors(topSortedDonors);
+
+        const recentSortedDonors = donors.donations
+          .slice()
+          .sort((a: any, b: any) => {
+            return (
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+          });
+        setNewDonors(recentSortedDonors);
+
+        const matchingPost = posts.find((post: any) => post.id === id);
+        if (matchingPost) {
+          setDonationPost(matchingPost);
+
+          const topSortedDonors = [...donors].sort((a: any, b: any) => {
+            return parseFloat(b.amount) - parseFloat(a.amount);
+          });
+          setTopDonors(topSortedDonors);
+
+          Leafwatch.track('PAGEVIEW', { page: `donations/${id}` });
+        } else {
+        }
+      } catch (error) {}
+    };
+
+    fetchDonationDetails();
+  }, [id, posts]);
 
   if (!currentProfile) {
     return <div>Not signed in</div>;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!donationPost) {
+    return (
+      <GridLayout>
+        <GridItemEight>
+          <div>Donation not found</div>
+        </GridItemEight>
+      </GridLayout>
+    );
   }
 
   const DonationPostDetails = {
@@ -36,79 +109,26 @@ const DonationDetails: NextPage = () => {
         current: 200,
         goal: 1000
       }
-    ],
-    DonationInfo: [
-      {
-        mission:
-          'Body text of donation post, explains purpose of the donation/cause',
-        updated: new Date(), // date of donation's post updates
-        updateImages: [
-          'https://picsum.photos/200/300',
-          'https://picsum.photos/200/300',
-          'https://picsum.photos/200/300'
-        ], //any images for the updates, can be null. Images displayed in a 3 columns layout
-        updateText:
-          'Text for any updates to the donations post, accompanied by the date it was updated'
-      }
-    ],
-    missionThumbnail:
-      'https://globalnews.ca/wp-content/uploads/2020/11/South-Delta-Food-Bank-food-in-bags.jpg?quality=85&strip=all',
-    organizer: currentProfile, //this will be profile of the donations post creator, placeholder for now
-    title: 'Food Bank'
+    ]
   };
 
-  const topDonors = [
-    { amount: 100, supporter: currentProfile },
-    { amount: 200, supporter: currentProfile },
-    { amount: 150, supporter: currentProfile },
-    { amount: 120, supporter: currentProfile },
-    { amount: 180, supporter: currentProfile },
-    { amount: 250, supporter: currentProfile }
-  ];
-
-  const newDonors = [
-    { amount: 80, supporter: currentProfile },
-    { amount: 110, supporter: currentProfile },
-    { amount: 95, supporter: currentProfile },
-    { amount: 180, supporter: currentProfile },
-    { amount: 250, supporter: currentProfile }
-  ];
-
   return (
-    <>
-      {/**apps\web\src\components\Publication\FullPublication.tsx regular user post reference */}
-      <GridLayout>
-        <GridItemEight className="space-y-5">
-          <DonationThumbnail
-            missionThumbnail={DonationPostDetails.missionThumbnail}
-            title={DonationPostDetails.title}
-          />
+    <GridLayout>
+      <GridItemEight className="space-y-5">
+        <DonationThumbnail post={donationPost} />
 
-          <DonationInfo
-            mission={DonationPostDetails.DonationInfo[0].mission}
-            organizer={DonationPostDetails.organizer}
-            update={DonationPostDetails.DonationInfo[0].updateText}
-            updateDate={DonationPostDetails.DonationInfo[0].updated}
-            updateImages={DonationPostDetails.DonationInfo[0].updateImages}
-          />
-          {/** 
-            <WordsOfSupport
-            amount={DonatedAmounts}
-            description={Descriptions}
-            supporters={Supporters}
-          />
-          */}
-          <Donors newDonors={newDonors} topDonors={topDonors} />
-        </GridItemEight>
+        <DonationInfo post={donationPost} />
 
-        <GridItemFour>
-          <DonationMeter
-            goal={DonationPostDetails.DonatedAmount[0].goal}
-            total={DonationPostDetails.DonatedAmount[0].current}
-          />
-        </GridItemFour>
-      </GridLayout>
-    </>
+        <Donors newDonors={newDonors} topDonors={topDonors} />
+      </GridItemEight>
+
+      <GridItemFour>
+        <DonationMeter
+          goal={DonationPostDetails.DonatedAmount[0].goal}
+          total={totalDonated}
+        />
+      </GridItemFour>
+    </GridLayout>
   );
 };
 

@@ -137,11 +137,6 @@ model AllowedToken {
   @@index([priority])
 }
 
-model ScorableEvent {
-  eventType String @id
-  points    Int
-}
-
 model DraftPublication {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   profileId     String
@@ -173,6 +168,7 @@ model Cause {
   profileId      String
   profileAddress String
   donations      CauseDonation[]
+  createdAt     DateTime @default(now())
 }
 
 model CauseDonation {
@@ -230,18 +226,4 @@ model PinnedPublication {
 
   // Indexes
   @@index([publicationId])
-}
-
-model GitHubConnection {
-  id        String   @id
-  githubId  String
-  username  String
-  createdAt DateTime @default(now())
-}
-
-model DiscordConnection {
-  id        String   @id
-  discordId String
-  username  String
-  createdAt DateTime @default(now())
 }

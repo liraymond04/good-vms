@@ -4,7 +4,7 @@ import type { Dispatch, FC, SetStateAction } from 'react';
 import { GOOD_API_URL } from '@good/data/constants';
 import { STAFFTOOLS } from '@good/data/tracking';
 import { Button, Form, Input, useZodForm } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import axios from 'axios';
 import { useState } from 'react';

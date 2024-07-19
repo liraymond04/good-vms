@@ -1,16 +1,23 @@
 import type { Donation } from '@components/Donations/DonationPost';
+import type { Post } from '@good/lens';
 import type { FC } from 'react';
 
 import DonatorCard from '@components/Donations/DonatorCard';
 import { EmptyState } from '@good/ui';
 import { GiftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 interface DonationModalProps {
   donations: Donation[];
   onClose: () => void;
+  post: Post;
 }
 
-const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
+const DonationModal: FC<DonationModalProps> = ({
+  donations,
+  onClose,
+  post
+}) => {
   // Calculate the total amount donated
   const totalAmountDonated = donations.reduce(
     (total, donation) => total + Number(donation.amount),
@@ -30,7 +37,7 @@ const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
           </button>
         </div>
         <div className="flex space-x-4">
-          <div className="w-1/2 overflow-y-auto" style={{ maxHeight: '300px' }}>
+          <div className="w-2/3 overflow-y-auto" style={{ maxHeight: '300px' }}>
             {donations.length > 0 ? (
               donations.map((donation) => (
                 <DonatorCard donation={donation} key={donation.id} />
@@ -42,21 +49,27 @@ const DonationModal: FC<DonationModalProps> = ({ donations, onClose }) => {
               />
             )}
           </div>
-          <div className="flex w-1/2 flex-col justify-between">
-            <div>
-              <p className="text-lg">
+          <div className="flex w-1/3 flex-col justify-between">
+            <div className="mb-4">
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 Total Amount Donated:{' '}
-                <span className="font-semibold">
-                  {totalAmountDonated} Tokens
+                <span className="font-semibold text-black dark:text-white">
+                  ${totalAmountDonated.toLocaleString()} Tokens
                 </span>
               </p>
-              <p className="text-lg">
-                Goal: <span className="font-semibold">$5,000 USD</span>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Goal:{' '}
+                <span className="font-semibold text-black dark:text-white">
+                  $5,000 USD
+                </span>
               </p>
             </div>
-            <button className="mt-4 rounded-full bg-indigo-500 px-4 py-2 text-white">
+            <Link
+              className="w-full rounded-full bg-pink-500 px-6 py-2 text-center text-white hover:bg-pink-600"
+              href={`/donations/${post.id}`}
+            >
               Donation Page
-            </button>
+            </Link>
           </div>
         </div>
       </div>

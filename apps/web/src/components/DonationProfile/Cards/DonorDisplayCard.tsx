@@ -1,21 +1,43 @@
-import { FC, useState, useEffect } from 'react';
-import { Modal, Card } from '@good/ui';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
 import type { Profile } from '@good/lens';
-import getAvatar from '@good/helpers/getAvatar';
-import { Button } from '@headlessui/react';
-import { Image } from '@good/ui';
+import type { FC } from 'react';
 
-interface DonorsDisplayProps {
-  allNewDonors: { amount: number; supporter: Profile }[];
-  allTopDonors: { amount: number; supporter: Profile }[];
-  top: boolean;
+import getAvatar from '@good/helpers/getAvatar';
+import { Card, Image, Modal } from '@good/ui';
+import { Button } from '@headlessui/react';
+import { useEffect, useState } from 'react';
+import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
+
+interface Donation {
+  amount: string;
+  causeId: string;
+  createdAt: string;
+  fromAddress: string;
+  fromProfileId: string;
+  id: string;
+  tokenAddress: string;
+  txHash: string;
 }
 
-const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors, top }) => {
+interface DonorsDisplayProps {
+  allNewDonors: Donation[];
+  allTopDonors: Donation[];
+  newDonorProfiles: Profile[];
+  top: boolean;
+  topDonorProfiles: Profile[];
+}
+
+const DonorsDisplayCard: FC<DonorsDisplayProps> = ({
+  allNewDonors,
+  allTopDonors,
+  newDonorProfiles,
+  top,
+  topDonorProfiles
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'top' | 'new'>(top ? 'top' : 'new'); 
+  const [selectedTab, setSelectedTab] = useState<'new' | 'top'>(
+    top ? 'top' : 'new'
+  );
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
 
@@ -33,20 +55,30 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
     }
   }, [showModal, top]);
 
-  const renderSupporters = (donors: { amount: number; supporter: Profile }[]) => {
+  const renderSupporters = (
+    donorProfiles: Profile[],
+    donations: Donation[]
+  ) => {
     return (
-      <div className="overflow-y-scroll max-h-96 scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500">
-        {donors.map((donor, index) => (
-          <div className="supporter-details mb-5 flex flex-col items-center" key={index}>
+      <div className="scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-500 max-h-96 overflow-y-scroll">
+        {donorProfiles.map((donorProfile, index) => (
+          <div
+            className="supporter-details mb-5 flex flex-col items-center"
+            key={index}
+          >
             <div className="flex items-center">
               <Image
-                alt={donor.supporter.id}
+                alt={donorProfile.handle?.localName}
                 className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
-                src={getAvatar(donor.supporter)}
+                height={10}
+                src={getAvatar(donorProfile)}
+                width={10}
               />
               <div className="ml-4">
-                <p>{donor.supporter?.handle?.localName}</p>
-                <p>${donor.amount}</p>
+                <p>{donorProfile.handle?.localName}</p>
+                {donations && donations[index] && (
+                  <p>${donations[index].amount}</p>
+                )}
               </div>
             </div>
           </div>
@@ -58,25 +90,33 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
   const modalContent = (
     <Card className="rounded-b-xl rounded-t-none border-none">
       <div className="p-4">
-        <div className="flex justify-center space-x-4 mb-4">
+        <div className="mb-4 flex justify-center space-x-4">
           <Button
-            style={{ backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('top')}
+            style={{
+              backgroundColor: selectedTab === 'top' ? '#da5597' : '#808080'
+            }}
           >
             Top Donors
           </Button>
           <Button
-            style={{ backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080' }}
             className={`rounded-full px-4 py-2 text-lg text-white`}
             onClick={() => setSelectedTab('new')}
+            style={{
+              backgroundColor: selectedTab === 'new' ? '#da5597' : '#808080'
+            }}
           >
             New Donors
           </Button>
         </div>
 
-        {selectedTab === 'top' && <>{renderSupporters(allTopDonors)}</>}
-        {selectedTab === 'new' && <>{renderSupporters(allNewDonors)}</>}
+        {selectedTab === 'top' && (
+          <>{renderSupporters(topDonorProfiles, allTopDonors)}</>
+        )}
+        {selectedTab === 'new' && (
+          <>{renderSupporters(newDonorProfiles, allNewDonors)}</>
+        )}
       </div>
     </Card>
   );
@@ -91,7 +131,7 @@ const DonorsDisplayCard: FC<DonorsDisplayProps> = ({ allNewDonors, allTopDonors,
         Show All
       </Button>
       {showModal && (
-        <Modal show={true} onClose={handleClose} title="Donors">
+        <Modal onClose={handleClose} show={true} title="Donors">
           {modalContent}
         </Modal>
       )}

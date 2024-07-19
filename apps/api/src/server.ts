@@ -12,18 +12,42 @@ import { createPublicClient, webSocket } from 'viem';
 import { polygon, polygonAmoy } from 'viem/chains';
 import ViteExpress from 'vite-express';
 
+// Load environment variables
+const path = require('path');
+dotenv.config({
+  override: true,
+  path: path.resolve(__dirname, '../.env.local')
+});
+import limitDomains from './helpers/middlewares/limitDomains';
 import listenCauses from './listeners/cause-listener';
 import listenDonations from './listeners/donation-listener';
 
 const app = express();
 
+app.disable('x-powered-by');
+
 // Middleware configuration
 app.use(cors());
-app.disable('x-powered-by');
+app.use(limitDomains);
+app.use(express.json({ limit: '1mb' }));
+
+//  Increase request timeout
+app.use((req, _, next) => {
+  req.setTimeout(120000); // 2 minutes
+  next();
+});
+
+// Log request aborted
+app.use((req, _, next) => {
+  req.on('aborted', () => {
+    logger.error('Request aborted by the client');
+  });
+  next();
+});
 
 const setupRoutes = async () => {
   // Route configuration
-  app.use('/', express.json({ limit: '1mb' }), await router());
+  app.use('/', await router());
 
   // Start the server
   ViteExpress.listen(app, 4784, () => {

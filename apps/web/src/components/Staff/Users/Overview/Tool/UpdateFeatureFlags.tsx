@@ -6,7 +6,7 @@ import { GOOD_API_URL } from '@good/data/constants';
 import { STAFFTOOLS } from '@good/data/tracking';
 import getAllFeatureFlags from '@good/helpers/api/getAllFeatureFlags';
 import { Toggle } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';

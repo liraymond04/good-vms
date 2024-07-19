@@ -18,7 +18,7 @@ import formatAddress from '@good/helpers/formatAddress';
 import { Button, HelpTooltip, Input, Select, Spinner } from '@good/ui';
 import cn from '@good/ui/cn';
 import errorToast from '@helpers/errorToast';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import axios from 'axios';
 import { useRef, useState } from 'react';

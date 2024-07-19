@@ -202,6 +202,13 @@ table {
 .plyr--full-ui input[type='range'] {
   @apply !text-brand-500;
 }
+  & a,
+  span[data-hashtag],
+  span[data-cashtag],
+  span[data-mention='profile'],
+  span[data-mention='club'] {
+    @apply text-brand-500;
+  }
 
 .plyr__control {
   @apply hover:!bg-brand-500;
@@ -213,4 +220,45 @@ table {
 
 .leading-md {
   @apply !leading-6 sm:!leading-7;
+}
+
+.request-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#request-table {
+  border-collapse: collapse;
+  @apply rounded-xl
+}
+
+.request-table-head {
+  border-bottom: 1px solid grey; 
+}
+
+.request-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 80%;
+  max-width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.request-table-row {
+  border-bottom: 1px solid grey; 
+  text-align: center;
+}
+
+.request-data-linked {
+  cursor: pointer;
+  @apply rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900;
 }

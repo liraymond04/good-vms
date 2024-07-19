@@ -1,4 +1,4 @@
-import type { Handler } from 'express';
+import type { Request, Response } from 'express';
 
 import { IS_MAINNET } from '@good/data/constants';
 import LensEndpoint from '@good/data/lens-endpoints';
@@ -7,6 +7,7 @@ import goodPg from 'src/db/goodPg';
 import catchedError from 'src/helpers/catchedError';
 import { GOOD_USER_AGENT, SCORE_WORKER_URL } from 'src/helpers/constants';
 import createClickhouseClient from 'src/helpers/createClickhouseClient';
+import { rateLimiter } from 'src/helpers/middlewares/rateLimiter';
 
 const measureQueryTime = async (
   queryFunction: () => Promise<any>
@@ -40,65 +41,68 @@ const pingLensAPI = async (): Promise<string | unknown> => {
   return data?.data?.ping;
 };
 
-export const get: Handler = async (_, res) => {
-  try {
-    // Prepare promises with timings embedded
-    const goodPromise = measureQueryTime(() =>
-      goodPg.query(`SELECT 1 as count;`)
-    );
-    const lensPromise = measureQueryTime(pingLensAPI);
-    const clickhouseClient = createClickhouseClient();
-    const clickhousePromise = measureQueryTime(() =>
-      clickhouseClient.query({
-        format: 'JSONEachRow',
-        query: 'SELECT 1 as count;'
-      })
-    );
-    const scoreWorkerPromise = measureQueryTime(() =>
-      axios.get(SCORE_WORKER_URL, {
-        params: { id: '0x0d', secret: process.env.SECRET }
-      })
-    );
+export const get = [
+  rateLimiter({ requests: 50, within: 1 }),
+  async (_: Request, res: Response) => {
+    try {
+      // Prepare promises with timings embedded
+      const goodPromise = measureQueryTime(() =>
+        goodPg.query(`SELECT 1 as count;`)
+      );
+      const lensPromise = measureQueryTime(pingLensAPI);
+      const clickhouseClient = createClickhouseClient();
+      const clickhousePromise = measureQueryTime(() =>
+        clickhouseClient.query({
+          format: 'JSONEachRow',
+          query: 'SELECT 1 as count;'
+        })
+      );
+      const scoreWorkerPromise = measureQueryTime(() =>
+        axios.get(SCORE_WORKER_URL, {
+          params: { id: '0x0d', secret: process.env.SECRET }
+        })
+      );
 
-    // Execute all promises simultaneously
-    const [goodResult, lensResult, clickhouseResult, scoreWorkerResult] =
-      await Promise.all([
-        goodPromise,
-        lensPromise,
-        clickhousePromise,
-        scoreWorkerPromise
-      ]);
+      // Execute all promises simultaneously
+      const [goodResult, lensResult, clickhouseResult, scoreWorkerResult] =
+        await Promise.all([
+          goodPromise,
+          lensPromise,
+          clickhousePromise,
+          scoreWorkerPromise
+        ]);
 
-    // Check responses
-    const [good, goodTime] = goodResult;
-    const [lens, lensTime] = lensResult;
-    const [clickhouseRows, clickhouseTime] = clickhouseResult;
-    const [scoreWorker, scoreWorkerTime] = scoreWorkerResult;
+      // Check responses
+      const [good, goodTime] = goodResult;
+      const [lens, lensTime] = lensResult;
+      const [clickhouseRows, clickhouseTime] = clickhouseResult;
+      const [scoreWorker, scoreWorkerTime] = scoreWorkerResult;
 
-    if (
-      Number(good[0].count) !== 1 ||
-      lens !== 'pong' ||
-      scoreWorker.data.split(' ')[0] !== 'WITH' ||
-      !clickhouseRows.json
-    ) {
-      return res.status(500).json({ success: false });
-    }
-
-    // Format response times in milliseconds and return
-    return res.status(200).json({
-      meta: {
-        deployment: process.env.RAILWAY_DEPLOYMENT_ID || 'unknown',
-        snapshot: process.env.RAILWAY_SNAPSHOT_ID || 'unknown'
-      },
-      ping: 'pong',
-      responseTimes: {
-        clickhouse: `${Number(clickhouseTime / BigInt(1000000))}ms`,
-        good: `${Number(goodTime / BigInt(1000000))}ms`,
-        lens: `${Number(lensTime / BigInt(1000000))}ms`,
-        scoreWorker: `${Number(scoreWorkerTime / BigInt(1000000))}ms`
+      if (
+        Number(good[0].count) !== 1 ||
+        lens !== 'pong' ||
+        scoreWorker.data.split(' ')[0] !== 'WITH' ||
+        !clickhouseRows.json
+      ) {
+        return res.status(500).json({ success: false });
       }
-    });
-  } catch (error) {
-    return catchedError(res, error);
+
+      // Format response times in milliseconds and return
+      return res.status(200).json({
+        meta: {
+          deployment: process.env.RAILWAY_DEPLOYMENT_ID || 'unknown',
+          snapshot: process.env.RAILWAY_SNAPSHOT_ID || 'unknown'
+        },
+        ping: 'pong',
+        responseTimes: {
+          clickhouse: `${Number(clickhouseTime / BigInt(1000000))}ms`,
+          good: `${Number(goodTime / BigInt(1000000))}ms`,
+          lens: `${Number(lensTime / BigInt(1000000))}ms`,
+          scoreWorker: `${Number(scoreWorkerTime / BigInt(1000000))}ms`
+        }
+      });
+    } catch (error) {
+      return catchedError(res, error);
+    }
   }
-};
+];

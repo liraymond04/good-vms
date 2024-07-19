@@ -1,51 +1,25 @@
-import type { Image as LensImage } from '@good/lens';
+import type { Post } from '@good/lens';
 
+import getPublicationData from '@good/helpers/getPublicationData';
 import React from 'react';
-import styled from 'styled-components';
+
+import Thumbnail from './Thumbnail';
 
 interface DonationThumbnailProps {
-  missionThumbnail?: LensImage | string;
-  title?: string;
+  post: Post;
 }
 
-const ThumbnailContainer = styled.div<{ imageUrl: string }>`
-  width: 100%;
-  height: 275px;
-  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  border: 2px solid white;
-`;
-
-const PlaceholderImage = styled.div`
-  width: 100%;
-  height: 200px;
-  background-color: #ddd;
-  color: #666;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-`;
-
-const DonationThumbnail: React.FC<DonationThumbnailProps> = ({
-  missionThumbnail,
-  title
-}) => {
-  const imageUrl =
-    typeof missionThumbnail === 'string'
-      ? missionThumbnail
-      : missionThumbnail?.uri || '';
+const DonationThumbnail: React.FC<DonationThumbnailProps> = ({ post }) => {
+  const donationMetadata = getPublicationData(post.metadata);
+  const postAttachments = donationMetadata?.attachments ?? [];
+  const postAsset = donationMetadata?.asset;
 
   return (
-    <div className="-top-10 items-center justify-center rounded">
-      <div className="items-left justify-start text-4xl">{title}</div>
-      {imageUrl ? (
-        <ThumbnailContainer imageUrl={imageUrl} />
-      ) : (
-        <PlaceholderImage>{title || 'No Image Available'}</PlaceholderImage>
-      )}
+    <div>
+      <div className="max-w-fit text-4xl">
+        GoodCast Donations: {post.id}
+        <Thumbnail asset={postAsset} attachments={postAttachments} />
+      </div>
     </div>
   );
 };

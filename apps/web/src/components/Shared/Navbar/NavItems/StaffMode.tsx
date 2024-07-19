@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { GOOD_API_URL } from '@good/data/constants';
 import { STAFFTOOLS } from '@good/data/tracking';
 import cn from '@good/ui/cn';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { ShieldCheckIcon as ShieldCheckIconOutline } from '@heroicons/react/24/outline';
 import { ShieldCheckIcon as ShieldCheckIconSolid } from '@heroicons/react/24/solid';

@@ -23,6 +23,7 @@ export const GOOD_PRO = getEnvConfig().goodPro;
 export const GOOD_TIPPING = getEnvConfig().goodTipping;
 export const GOOD_DONATION = getEnvConfig().goodDonation;
 export const SEND_TOKENS = getEnvConfig().sendTokens;
+export const GOOD_REFERRAL = getEnvConfig().goodReferral;
 
 export const IS_MAINNET = LENS_API_URL === LensEndpoint.Mainnet;
 export const ADDRESS_PLACEHOLDER = '0x03Ba3...7EF';
@@ -45,26 +46,25 @@ export const WMATIC_ADDRESS = IS_MAINNET
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const PERMIT_2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3';
 export const REWARDS_ADDRESS = '0x698386C93513d6D0C58f296633A7A3e529bd4026';
+export const PRO_EOA_ADDRESS = '0xCAFEfB235AE1c10dC579338d06D90F0c89c4e5D6';
 export const REWARDS_PROFILE_ID = '12'; // 0x0c
 export const TEST_WALLET_ADDRESS = '0xb9C6e304545386E95d5c4ab183EE97A13555A49d';
 export const TEST_PK =
   '0x8b33302ca865bc1ed65bc02b71dd02067bd3dae3da2f8bb0d95b16509e9ac71e';
 export const TEST_LENS_ID = '0x43';
-export const TEST_NON_STAFF_LENS_ID = '0x5d';
+export const TEST_NON_STAFF_LENS_ID = '0x4c';
 export const GOOD_CURATED_ID = '0x049af3';
 export const ZERO_PUBLICATION_ID = '0x00-0x00';
 export const HANDLE_PREFIX = 'lens/';
 export const CLUB_HANDLE_PREFIX = 'club/';
 export const SIGNUP_PRICE = IS_MAINNET ? 8 : 1;
-export const PRO_TIER_PRICES = {
-  annually: 90,
-  monthly: 8
-};
+export const MONTHLY_PRO_PRICE = 10;
 export const GOOD_MEMBERSHIP_NFT = IS_MAINNET
   ? '0x100372BBF7f975f6b1448fB11AB0F814b2740EEd'
   : '0x75120677aBF34ae95a916C6E9DbB610a06536CC3';
 export const GOOD_MEMBERSHIP_NFT_PUBLICATION_ID = '0x020b69-0x01';
 export const SUPER_ADMIN = '0x0d';
+export const REQUEST_GOOD = '0x29B3f69449e433616455E94630F9013a5dF928ab';
 export const DEFAULT_DECENT_OA_TOKEN = {
   contractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
   decimals: 18,
@@ -107,15 +107,17 @@ export const MOONPAY_URL = IS_MAINNET
   ? 'https://buy.moonpay.com'
   : 'https://buy-sandbox.moonpay.com';
 export const GOOD_IMAGEKIT_URL = 'https://ik.imagekit.io/bcharitydev';
+export const CLUBS_API_URL = 'https://us-central1-orbapp.cloudfunctions.net';
 
 // Tokens / Keys
 export const WALLETCONNECT_PROJECT_ID = 'cd542acc70c2b30f9901a52e70c8';
 export const GIPHY_KEY = 'yNwCXMKkiBrxyyFduF56xCbSuJJM8cMd';
-export const GITCOIN_PASSPORT_KEY = 'xn9e7AFv.aEfS0ioNhaVwnsWtxnrNHspVsS';
-export const LIVEPEER_KEY = '70508bf8-2e16-852d-5aed798f6403';
-export const ALCHEMY_API_KEY = 'Xx-4a1SyWtS9EuRmvgYtGeVOlv7';
-export const THIRDWEB_CLIENT_ID = '0e8fa22aa33b3da60c593ba2e2d1';
-export const CRISP_WEBSITE_ID = '37355035-47aa--ad47-cffc3d1fea16';
+export const GITCOIN_PASSPORT_KEY = 'xn9e7AFv.aEfS0ioNhaVtww1jdwnsWtxnrNHspVsS';
+export const LIVEPEER_KEY = '70508bf8-2e16-4594-852d-5aed798f6403';
+export const ALCHEMY_API_KEY = 'Xx-4a1SyWtS9U4h0cEuRmvgYtGeVOlv7';
+export const THIRDWEB_CLIENT_ID = '0e8fa22aa33b3da60c593b4864a2e2d1';
+export const CLUBS_APP_TOKEN =
+  'Qun7aDFo4FS7Dt2b9Ea8ve5TqvuXiCJXjZZTsao5Y9viFJxSEi5gYZa7DybrSzDGXST5L2vWMjBXzjsppj5RERo3AdPnJ3TVYuY2cLxBFa592rkjzU';
 
 // Named transforms for ImageKit
 export const AVATAR = 'tr:w-350,h-350';
@@ -130,13 +132,13 @@ export const S3_BUCKET = {
 };
 
 // Feature Flags
-export const VERIFIED_FEATURE_ID = 'a0d6d247-50efa045-54fa96054922';
-export const STAFF_PICK_FEATURE_ID = '73d2f48d-0291-adc2-9737057ad2b7';
+export const VERIFIED_FEATURE_ID = 'a0d6d247-50ef-419f-a045-54fa96054922';
+export const STAFF_PICK_FEATURE_ID = '73d2f48d-0291-4a36-adc2-9737057ad2b7';
 
 // Known Lens Protocol Attributes
 export const KNOWN_ATTRIBUTES = {
   HIDE_OEMBED: 'hideOembed',
-  POLL_ID: 'pollId',
+  POLL_ID: 'heyPollId',
   SWAP_OA_DEFAULT_AMOUNT: 'swapOADefaultAmount'
 };
 

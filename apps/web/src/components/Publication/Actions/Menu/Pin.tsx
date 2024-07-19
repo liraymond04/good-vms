@@ -6,7 +6,7 @@ import { PUBLICATION } from '@good/data/tracking';
 import stopEventPropagation from '@good/helpers/stopEventPropagation';
 import cn from '@good/ui/cn';
 import { MenuItem } from '@headlessui/react';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
