@@ -117,11 +117,11 @@ contract JobsActionModule is
   ILensHub public lensHub;
   string internal moduleMetadataURI;
 
-  // Opportunities for which the applicant has applied to
+  // Opportunities for which an applicant has applied to
   mapping(address applicant => OpportunityKey[] keys)
     internal applicantOpportunities;
 
-  // Opportunities created by the organization
+  // Opportunities created by an organization
   mapping(address organization => OpportunityKey[] keys)
     internal organizationCreatedOpportunities;
 
@@ -290,8 +290,7 @@ contract JobsActionModule is
     );
   }
 
-  // Returns whether the given opportunity is active (has been created and
-  // has not been deleted)
+  // Returns whether the given opportunity can be interacted with
   function isActiveOpportunity(
     Opportunity storage opportunity
   ) internal view returns (bool) {
