@@ -64,35 +64,6 @@ const getProfileFragment = async (
   }
 };
 
-const DebugFormState: FC<{
-  attributes: any;
-  errors: any;
-  formData: any;
-  isDonor: boolean;
-}> = ({ attributes, errors, formData, isDonor }) => (
-  <div className="mt-4 rounded-md border bg-gray-50 p-4">
-    <h3 className="text-sm font-medium text-gray-700">Form Data</h3>
-    <pre className="overflow-x-auto text-xs text-gray-600">
-      {JSON.stringify(formData, null, 2)}
-    </pre>
-    <h3 className="mt-2 text-sm font-medium text-gray-700">Errors</h3>
-    <pre className="overflow-x-auto text-xs text-gray-600">
-      {JSON.stringify(errors, null, 2)}
-    </pre>
-    <p
-      className={`mt-1 text-xs font-bold ${isDonor ? 'text-green-600' : 'text-red-600'}`}
-    >
-      {isDonor
-        ? 'Donor Profile ID is filled'
-        : 'Donor Profile ID is not filled'}
-    </p>
-    <h3 className="mt-2 text-sm font-medium text-gray-700">Attributes Store</h3>
-    <pre className="overflow-x-auto text-xs text-gray-600">
-      {JSON.stringify(attributes, null, 2)}
-    </pre>
-  </div>
-);
-
 const RequestForm: FC = () => {
   const emptyForm: FormFields = {
     description: '',
@@ -115,7 +86,7 @@ const RequestForm: FC = () => {
   const fieldMetadataRef = useRef<FieldMetadata[]>([]);
 
   const { setOpenAction, setShowModal } = useOpenActionStore();
-  const { addAttribute, attributes, reset } = useRequestFormDataStore();
+  const { addAttribute, reset } = useRequestFormDataStore();
 
   const [isDonor, setIsDonor] = useState<boolean>(false);
 
@@ -387,12 +358,6 @@ const RequestForm: FC = () => {
           Information successfully embedded!
         </p>
       )}
-      <DebugFormState
-        attributes={attributes}
-        errors={errors}
-        formData={formData}
-        isDonor={isDonor}
-      />
     </div>
   );
 };
