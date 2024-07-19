@@ -18,7 +18,8 @@ interface NewPostProps {
 const NewPost: FC<NewPostProps> = ({ tags }) => {
   const { isReady, push, query } = useRouter();
   const { currentProfile } = useProfileStore();
-  const { setScreen, setShowAuthModal, setShowNewPostModal } = useGlobalModalStateStore();
+  const { setScreen, setShowAuthModal, setShowNewPostModal } =
+    useGlobalModalStateStore();
   const { setPublicationContent, setTags } = usePublicationStore();
 
   const openModal = useCallback(() => {
