@@ -23,11 +23,16 @@ export const get: Handler = async (req, res) => {
       }
     });
 
+    const transformed = data.map((d) => ({
+      ...d,
+      amount: d.amount.toString(16)
+    }));
+
     logger.info(
       `Lens: Fetched all donations on post for score for ${profileId}-${publicationId}`
     );
 
-    return res.status(200).json({ donations: data, success: true });
+    return res.status(200).json({ donations: transformed, success: true });
   } catch (error) {
     catchedError(res, error);
   }

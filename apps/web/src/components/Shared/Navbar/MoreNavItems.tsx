@@ -14,7 +14,7 @@ import MenuTransition from '../MenuTransition';
 import MoreLink from './NavItems/MoreLink';
 import Support from './NavItems/Support';
 
-const MoreNavItems: FC = () => {
+const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
   const { currentProfile } = useProfileStore();
 
   return (
@@ -32,21 +32,18 @@ const MoreNavItems: FC = () => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <span className="nav-text hidden text-xl text-black md:block dark:text-white">
-              More
-            </span>
+            <span className="hidden text-lg lg:block">More</span>{' '}
+            {/* Hide text on tablets */}
           </MenuButton>
           <MenuTransition>
             <MenuItems
               className={cn(
-                'absolute z-50 mt-2 w-40 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
+                'absolute z-50 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
                 'md:fixed md:left-40 md:top-48'
               )}
               style={{
-                left:
-                  window.innerWidth >= 768 && window.innerWidth <= 1024
-                    ? '20px'
-                    : 'initial'
+                marginRight: '10px', // Adjusted for better alignment
+                right: '100%'
               }}
             >
               {currentProfile ? (
@@ -58,8 +55,10 @@ const MoreNavItems: FC = () => {
                     }
                   >
                     <MoreLink
+                      hideTextOnMobile
                       href="/bookmarks"
                       icon={<BookmarkIcon className="size-4" />}
+                      onClick={onClick}
                       text="Bookmarks"
                     />
                   </MenuItem>
@@ -70,8 +69,10 @@ const MoreNavItems: FC = () => {
                     }
                   >
                     <MoreLink
+                      hideTextOnMobile
                       href="https://www.volunteerconnector.org/"
                       icon={<UserIcon className="size-4" />}
+                      onClick={onClick}
                       text="Volunteer"
                     />
                   </MenuItem>
@@ -90,14 +91,12 @@ const MoreNavItems: FC = () => {
                             )}
                           >
                             <CurrencyDollarIcon className="ml-[-4px] size-4" />
-                            <span className="text-m text-gray-700 dark:text-gray-200">
+                            <span className="text-m block text-gray-700 md:hidden lg:block dark:text-gray-200">
                               Donate
                             </span>
                           </MenuButton>
                           <MenuTransition>
-                            <MenuItems className="absolute left-full top-0 z-50 ml-2 w-32 origin-top-left rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700">
-                              {' '}
-                              {/* Adjusted width to 32 and padding */}
+                            <MenuItems className="absolute bottom-full right-full z-50 mr-2 w-32 origin-bottom-right rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:left-full md:right-auto md:ml-2 md:origin-bottom-left dark:bg-gray-900 dark:ring-gray-700">
                               <MenuItem
                                 as="div"
                                 className={({ focus }: { focus: boolean }) =>
@@ -106,8 +105,13 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
-                                <MoreLink href="/donations" text="Donations" />
+                                <MoreLink
+                                  hideTextOnMobile
+                                  href="/donations"
+                                  text="Donations"
+                                />
                               </MenuItem>
                               <MenuItem
                                 as="div"
@@ -117,8 +121,10 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://giveth.io"
                                   text="Giveth"
                                 />
@@ -131,8 +137,10 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://thegivingblock.com"
                                   text="GivingBlock"
                                 />
@@ -145,8 +153,10 @@ const MoreNavItems: FC = () => {
                                     'm-1 rounded-lg'
                                   )
                                 }
+                                onClick={onClick}
                               >
                                 <MoreLink
+                                  hideTextOnMobile
                                   href="https://gitcoin.co"
                                   text="Gitcoin"
                                 />
@@ -165,8 +175,9 @@ const MoreNavItems: FC = () => {
                 className={({ focus }: { focus: boolean }) =>
                   cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                 }
+                onClick={onClick}
               >
-                <Support />
+                <Support hideTextOnMobile />
               </MenuItem>
             </MenuItems>
           </MenuTransition>
