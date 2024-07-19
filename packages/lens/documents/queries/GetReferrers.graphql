@@ -1,0 +1,67 @@
+query GetReferrers($request: PublicationRequest!) {
+  publication(request: $request) {
+    ... on Post {
+      id
+      by {
+        id
+      }
+      openActionModules {
+        ... on UnknownOpenActionModuleSettings {
+          contract {
+            address
+            chainId
+          }
+          type
+        }
+      }
+    }
+    ... on Comment {
+      by {
+        id
+      }
+      commentOn {
+        ... on Post {
+          id
+        }
+        ... on Comment {
+          id
+        }
+        ... on Quote {
+          id
+        }
+      }
+    }
+    ... on Quote {
+      by {
+        id
+      }
+      quoteOn {
+        ... on Post {
+          id
+        }
+        ... on Comment {
+          id
+        }
+        ... on Quote {
+          id
+        }
+      }
+    }
+    ... on Mirror {
+      by {
+        id
+      }
+      mirrorOn {
+        ... on Post {
+          id
+        }
+        ... on Comment {
+          id
+        }
+        ... on Quote {
+          id
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { Errors } from '@good/data/errors';
 import { SETTINGS } from '@good/data/tracking';
 import { Button, Form, Input, useZodForm } from '@good/ui';
 import errorToast from '@helpers/errorToast';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import axios from 'axios';
 import { useEffect, useState } from 'react';

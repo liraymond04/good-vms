@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import { GOOD_API_URL } from '@good/data/constants';
 import { Button } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { ChatBubbleLeftIcon, NoSymbolIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';

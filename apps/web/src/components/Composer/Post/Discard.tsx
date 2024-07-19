@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { GOOD_API_URL } from '@good/data/constants';
 import { Alert } from '@good/ui';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useCollectModuleStore } from 'src/store/non-persisted/publication/useCollectModuleStore';

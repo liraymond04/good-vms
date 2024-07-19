@@ -15,10 +15,10 @@ import {
   HomeIcon as HomeIconSolid,
   MagnifyingGlassIcon as MagnifyingGlassIconSolid
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { usePreferencesStore } from 'src/store/non-persisted/usePreferencesStore';
 import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import styled from 'styled-components';
@@ -26,10 +26,12 @@ import styled from 'styled-components';
 import LoginButton from '../LoginButton';
 import MenuItems from './MenuItems';
 import MobileLogoButton from './MobileLogoButton';
+import MobileMenuButton from './MobileMenuButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
-import StaffBar from './StaffBar';
+import SiteStatus from './SiteStatus';
+import StaffBar from './StaffBar'; // Import the new component
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -38,89 +40,40 @@ const NavbarContainer = styled.div`
   margin: 0;
   .nav-text,
   .auth-buttons {
-  display: block;
-}
+    display: block;
+  }
 
-@media (max-width: 1024px) {
+  @media (max-width: 1024px) {
     .nav-text,
     .auth-buttons {
-    display: none;
-  }
-}
-
-  .hide-on-mobile {
-  display: block; 
-}
-
-
-@media (max-width: 760px) {
-  .hide-on-mobile {
-    display: none; 
-  }
-}
-
-
-  .display-on-mobile {
-  display: none; 
-}
-
-@media (max-width: 760px) {
-    .display-on-mobile {
-    display: block; 
+      display: none;
     }
   }
 
-}
+  .hide-on-mobile {
+    display: block;
+  }
 
+  @media (max-width: 760px) {
+    .hide-on-mobile {
+      display: none;
+    }
+  }
 
-`;
-
-const BottomButtonsContainer = styled.div`
-  margin-top: 1rem;
-  width: 100%;
-`;
-
-const PostButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background-color: #da5597;
-  color: white;
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
-
-  @media (max-width: 430px) {
+  .display-on-mobile {
     display: none;
   }
-`;
 
-const MobilePostButton = styled.button`
-  display: none;
-
-  @media (max-width: 430px) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #da5597;
-    color: white;
-    width: 56px;
-    height: 56px;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    z-index: 10;
-    font-size: 2rem;
+  @media (max-width: 760px) {
+    .display-on-mobile {
+      display: flex;
+    }
   }
 `;
 
 const Navbar: FC = () => {
   const { currentProfile } = useProfileStore();
   const { staffMode } = useFeatureFlagsStore();
-  const { appIcon } = usePreferencesStore();
   const [showSearch, setShowSearch] = useState(false);
   const [isShortScreen, setIsShortScreen] = useState(false);
 
@@ -138,10 +91,11 @@ const Navbar: FC = () => {
     current: boolean;
     icon: ReactNode;
     name: string;
+    target: any;
     url: string;
   }
 
-  const NavItem: FC<NavItemProps> = ({ current, icon, name, url }) => {
+  const NavItem: FC<NavItemProps> = ({ current, icon, name, target, url }) => {
     return (
       <Link
         className={cn(
@@ -153,9 +107,10 @@ const Navbar: FC = () => {
           }
         )}
         href={url}
+        target={target ? '_blank' : '_self'}
       >
         {icon}
-        <div className="nav-text text-black dark:text-white">
+        <div className="nav-text hidden text-black md:block dark:text-white">
           <span className={`text-xl ${current ? 'font-bold' : ''}`}>
             {name}
           </span>
@@ -178,6 +133,7 @@ const Navbar: FC = () => {
             )
           }
           name="Home"
+          target={false}
           url="/"
         />
         <NavItem
@@ -190,6 +146,7 @@ const Navbar: FC = () => {
             )
           }
           name="Explore"
+          target={false}
           url="/explore"
         />
         <NavItem
@@ -202,6 +159,7 @@ const Navbar: FC = () => {
             )
           }
           name="Notifications"
+          target={false}
           url="/notifications"
         />
         <NavItem
@@ -214,6 +172,7 @@ const Navbar: FC = () => {
             )
           }
           name="Messages"
+          target={false}
           url="/messages"
         />
         <MoreNavItems />
@@ -222,47 +181,46 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 min-w-fit bg-white dark:bg-black">
+    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white md:w-fit dark:border-gray-700 dark:bg-black">
+      <SiteStatus />
       {staffMode ? <StaffBar /> : null}
-      <NavbarContainer className="container mx-auto w-1/12">
-        <div className="relative flex h-full w-1/12 flex-col items-start justify-start">
+      <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
+        <div className="relative flex h-full w-full flex-col items-start justify-center">
           <button
             className="hide-on-mobile inline-flex items-start justify-start rounded-md text-gray-500 focus:outline-none md:hidden"
             onClick={() => setShowSearch(!showSearch)}
             type="button"
           />
           <Link className="hide-on-mobile" href="/">
-            <div className="text-white-900 inline-flex flex-grow items-start justify-start font-bold">
+            <div className="text-white-900 flex flex-grow items-center justify-start font-bold">
               <div className="ml-6 text-3xl font-black">
-                <img
+                <Image
                   alt="Logo"
                   className="h-12 w-12"
-                  src="apps/web/public/logo1.svg"
+                  height={12}
+                  src="/logo1.svg"
+                  width={12}
                 />
               </div>
-              <span className="nav-text ml-3 mr-3 flex flex-grow">
-                Goodcast
-              </span>
+              <span className="nav-text ml-3 mr-3">Goodcast</span>
             </div>
           </Link>
+
           <div className="display-on-mobile">
             <MobileLogoButton />
           </div>
+          <div className="absolute" style={{ left: '-9999px', top: '-9999px' }}>
+            <MenuItems />
+          </div>
 
-          <div className="hidden max-h-[70vh] overflow-y-auto pr-4 pt-5 sm:ml-6 md:block">
+          <div className="hide-on-mobile max-h-[70vh] overflow-y-scroll pr-6 pt-5 sm:ml-6 md:block">
             <div className="relative flex h-fit flex-col items-start">
               <NavItems />
-              <div className="desktop-post-button mt-5 w-full">
+              <div className="mt-5 w-full">
                 <NavPost />
                 {!currentProfile ? <LoginButton /> : null}
                 {!currentProfile ? <SignupButton /> : null}
-                <div
-                  className={
-                    isShortScreen
-                      ? 'mt-4 flex items-start justify-between'
-                      : 'fixed bottom-0 md:fixed'
-                  }
-                >
+                <div className="">
                   <Link
                     className={cn(
                       'max-h-[100vh] md:hidden',
@@ -281,24 +239,23 @@ const Navbar: FC = () => {
                   <div
                     className="mt-4 flex items-start justify-between"
                     id="profile"
-                  >
-                    <div className="flex items-center gap-2">
-                      {currentProfile ? <MenuItems /> : null}
-                      <ModIcon />
-                    </div>
-                  </div>
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="hide-on-mobile ml-6 flex items-center gap-2">
+          {currentProfile ? <MenuItems /> : null}
+          <ModIcon />
+        </div>
       </NavbarContainer>
-      <MobilePostButton className="mobile-post-button">+</MobilePostButton>
       {showSearch ? (
         <div className="m-3 md:hidden">
           <Search />
         </div>
       ) : null}
+      <MobileMenuButton /> {/* Add the MobileMenuButton component here */}
     </header>
   );
 };

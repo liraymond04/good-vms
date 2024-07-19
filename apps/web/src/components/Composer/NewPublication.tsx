@@ -107,7 +107,9 @@ const LivestreamSettings = dynamic(
 );
 const RequestSettings = dynamic(
   () => import('@components/Composer/Actions/RequestSettings'),
-  { loading: () => Shimmer }
+  {
+    loading: () => Shimmer
+  }
 );
 const DraftSettings = dynamic(
   () => import('@components/Composer/Actions/DraftSettings'),
@@ -135,7 +137,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     publicationContent,
     quotedPublication,
     setPublicationContent,
-    setQuotedPublication
+    setQuotedPublication,
+    setTags
   } = usePublicationStore();
 
   // Audio store
@@ -157,7 +160,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     usePublicationPollStore();
 
   // Request store
-  const { setShowRequestEditor, showRequestEditor } =
+  const { requestConfig, setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   // License store
@@ -211,6 +214,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
   const reset = () => {
     editor?.setMarkdown('');
     setPublicationContent('');
+    setTags(null);
     setShowPollEditor(false);
     setShowRequestEditor(false);
     resetPollConfig();

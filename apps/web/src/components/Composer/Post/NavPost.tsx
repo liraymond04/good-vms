@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
@@ -40,12 +41,12 @@ const NavPost: FC = () => {
 
   return (
     <button
-      className="bg-custom-pink mb-5 mt-5 inline-flex hidden w-full items-center justify-center rounded-full px-4 py-2 text-black focus:outline-none md:block dark:text-white"
+      className="mb-7 mt-2 flex w-min items-center justify-center rounded-full bg-[#da5597] px-2 py-2 text-white focus:outline-none lg:w-full"
       onClick={openModal}
-      style={{ backgroundColor: '#da5597' }}
       type="button"
     >
-      <span className="text-xl">Post</span>
+      <span className="block text-xl max-[1024px]:hidden">Post</span>
+      <PencilSquareIcon className="hidden size-8 max-[1024px]:block" />
     </button>
   );
 };

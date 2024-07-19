@@ -1,10 +1,7 @@
 import type { FC } from 'react';
 
 import { Card, Tooltip } from '@good/ui';
-// import { ClockIcon } from '@heroicons/react/24/outline';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-// import { useState } from 'react';
-// import plur from 'plur';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
 import GiveGiftIcon from './GiveGiftIcon';
@@ -13,9 +10,9 @@ import RequestForm from './RequestForm';
 // Created based on PollSetting's index.tsx, adjust as required
 const RequestEditor: FC = () => {
   const {
-    // requestConfig,
+    requestConfig,
     resetRequestConfig,
-    // setRequestConfig,
+    setRequestConfig,
     setShowRequestEditor
   } = usePublicationRequestStore();
   // const [showPollLengthModal, setShowPollLengthModal] = useState(false);

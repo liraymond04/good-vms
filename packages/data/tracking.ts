@@ -14,6 +14,7 @@ export const AUTH = {
 
 export const PROFILE = {
   BLOCK: 'Block profile',
+  COPY_PROFILE_ADDRESS: 'Copy profile address',
   COPY_PROFILE_LINK: 'Copy profile link',
   DISMISS_RECOMMENDED_PROFILE: 'Dismiss recommended profile',
   FOLLOW: 'Follow profile',
@@ -43,6 +44,7 @@ export const PUBLICATION = {
   BOOKMARK: 'Bookmark publication',
   CLICK_CASHTAG: 'Click publication cashtag',
   CLICK_CLUB: 'Click publication club',
+  CLICK_FRAME_BUTTON: 'Click publication frame button',
   CLICK_HASHTAG: 'Click publication hashtag',
   CLICK_MENTION: 'Click publication mention',
   CLICK_OEMBED: 'Click publication oembed',
@@ -143,8 +145,7 @@ export const SETTINGS = {
   },
   PREFERENCES: {
     TOGGLE_HIGH_SIGNAL_NOTIFICATION_FILTER:
-      'Toggle high signal notification filter',
-    TOGGLE_PUSH_NOTIFICATIONS: 'Toggle push notifications'
+      'Toggle high signal notification filter'
   },
   PRO: {
     APP_ICON: 'Update app icon'
@@ -187,9 +188,6 @@ export const STAFFTOOLS = {
     CREATE: 'Staff Tool: Create feature flag',
     DELETE: 'Staff Tool: Delete feature flag',
     KILL: 'Staff Tool: Kill feature flag'
-  },
-  SIGNUP_CONTRACT: {
-    REFILL: 'Staff Tool: Refill relayer'
   },
   STAFF_PICKS: {
     CREATE: 'Staff Tool: Create staff pick',
@@ -260,6 +258,7 @@ export const ALL_EVENTS = {
 };
 
 export enum ProfileLinkSource {
+  ClubMembers = 'club-members',
   Collects = 'collects',
   Followers = 'followers',
   Following = 'following',

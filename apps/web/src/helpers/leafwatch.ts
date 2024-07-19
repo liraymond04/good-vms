@@ -1,7 +1,7 @@
 import { GIT_COMMIT_SHA, GOOD_API_URL } from '@good/data/constants';
 import { Localstorage } from '@good/data/storage';
 
-import getAuthApiHeaders from './getAuthApiHeaders';
+import { getAuthApiHeadersWithAccessToken } from './getAuthApiHeaders';
 
 let worker: Worker;
 
@@ -19,10 +19,12 @@ export const Leafwatch = {
     const fingerprint = localStorage.getItem(Localstorage.FingerprintStore);
 
     worker.postMessage({
-      accessToken: getAuthApiHeaders()['X-Identity-Token'] || undefined,
+      accessToken:
+        getAuthApiHeadersWithAccessToken()['X-Identity-Token'] || undefined,
       fingerprint: fingerprint || undefined,
       name,
-      network: getAuthApiHeaders()['X-Lens-Network'] || undefined,
+      network:
+        getAuthApiHeadersWithAccessToken()['X-Lens-Network'] || undefined,
       platform: 'web',
       properties,
       referrer: referrerDomain,

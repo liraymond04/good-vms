@@ -21,7 +21,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useModFilterStore } from './Filter';
 
-const SKIPPED_PROFILE_IDS = IS_MAINNET ? ['0x027290'] : [];
+const SKIPPED_PROFILE_IDS = IS_MAINNET ? ['0x027290', '0x24b6'] : [];
 
 const LatestFeed: FC = () => {
   const {
@@ -33,7 +33,6 @@ const LatestFeed: FC = () => {
     setRefreshing
   } = useModFilterStore();
 
-  // Variables
   const request: ModExplorePublicationRequest = {
     limit: LimitType.Fifty,
     orderBy: ExplorePublicationsOrderByType.Latest,
@@ -61,13 +60,11 @@ const LatestFeed: FC = () => {
   }, [refresh, publicationTypes, mainContentFocus, customFilters]);
 
   const onEndReached = async () => {
-    if (!hasMore) {
-      return;
+    if (hasMore) {
+      await fetchMore({
+        variables: { request: { ...request, cursor: pageInfo?.next } }
+      });
     }
-
-    return await fetchMore({
-      variables: { request: { ...request, cursor: pageInfo?.next } }
-    });
   };
 
   if (loading) {
@@ -99,21 +96,19 @@ const LatestFeed: FC = () => {
           !SKIPPED_PROFILE_IDS.includes(publication?.by?.id as string)
       )}
       endReached={onEndReached}
-      itemContent={(index, publication) => {
-        return (
-          <Card>
-            <SinglePublication
-              isFirst
-              isLast={false}
-              publication={publication as AnyPublication}
-              showActions={false}
-              showThread={false}
-            />
-            <div className="divider" />
-            <HigherActions publication={publication as MirrorablePublication} />
-          </Card>
-        );
-      }}
+      itemContent={(_, publication) => (
+        <Card>
+          <SinglePublication
+            isFirst
+            isLast={false}
+            publication={publication as AnyPublication}
+            showActions={false}
+            showThread={false}
+          />
+          <div className="divider" />
+          <HigherActions publication={publication as MirrorablePublication} />
+        </Card>
+      )}
       useWindowScroll
     />
   );

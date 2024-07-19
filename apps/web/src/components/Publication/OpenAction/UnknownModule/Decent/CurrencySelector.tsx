@@ -28,7 +28,7 @@ const CurrencySelector: FC<CurrencySelectorProps> = ({ onSelectCurrency }) => {
       address,
       chainId: 137,
       query: { refetchInterval: 10000 },
-      token: SUPPORTED_DECENT_OA_TOKENS.WMATIC.address
+      token: SUPPORTED_DECENT_OA_TOKENS.WMATIC.address // MIGRATE: token param no longer supported, use useReadContracts instead
     });
 
   const { data: wethBalanceData, isLoading: wethBalanceLoading } = useBalance({

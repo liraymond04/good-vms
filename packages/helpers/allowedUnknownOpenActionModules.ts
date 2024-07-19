@@ -2,7 +2,6 @@ import { VerifiedOpenActionModules } from '@good/data/verified-openaction-module
 
 const allowedUnknownOpenActionModules = [
   VerifiedOpenActionModules.DecentNFT,
-  VerifiedOpenActionModules.RentableBillboard,
   VerifiedOpenActionModules.Swap
 ];
 

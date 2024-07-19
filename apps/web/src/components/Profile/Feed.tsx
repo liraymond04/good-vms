@@ -36,7 +36,8 @@ interface FeedProps {
     | ProfileFeedType.Collects
     | ProfileFeedType.Feed
     | ProfileFeedType.Media
-    | ProfileFeedType.Replies;
+    | ProfileFeedType.Replies
+    | ProfileFeedType.Requests;
 }
 
 const Feed: FC<FeedProps> = ({
@@ -71,7 +72,6 @@ const Feed: FC<FeedProps> = ({
     return filters;
   };
 
-  // Variables
   const publicationTypes: PublicationType[] =
     type === ProfileFeedType.Feed
       ? [PublicationType.Post, PublicationType.Mirror, PublicationType.Quote]
@@ -142,19 +142,17 @@ const Feed: FC<FeedProps> = ({
   };
 
   const onEndReached = async () => {
-    if (!hasMore) {
-      return;
+    if (hasMore) {
+      const { data } = await fetchMore({
+        variables: { request: { ...request, cursor: pageInfo?.next } }
+      });
+      const ids =
+        data?.publications?.items?.map((p) => {
+          return p.__typename === 'Mirror' ? p.mirrorOn?.id : p.id;
+        }) || [];
+      await fetchAndStoreViews(ids);
+      await fetchAndStoreTips(ids);
     }
-
-    const { data } = await fetchMore({
-      variables: { request: { ...request, cursor: pageInfo?.next } }
-    });
-    const ids =
-      data?.publications?.items?.map((p) => {
-        return p.__typename === 'Mirror' ? p.mirrorOn?.id : p.id;
-      }) || [];
-    await fetchAndStoreViews(ids);
-    await fetchAndStoreTips(ids);
   };
 
   if (loading || profileDetailsLoading || pinnedPublicationLoading) {
@@ -171,7 +169,9 @@ const Feed: FC<FeedProps> = ({
             ? "hasn't replied yet!"
             : type === ProfileFeedType.Collects
               ? "hasn't collected anything yet!"
-              : '';
+              : type === ProfileFeedType.Requests
+                ? "doesn't have any requests yet!"
+                : '';
 
     return (
       <EmptyState
@@ -215,19 +215,17 @@ const Feed: FC<FeedProps> = ({
         data={publications}
         endReached={onEndReached}
         isScrolling={onScrolling}
-        itemContent={(index, publication) => {
-          return (
-            <SinglePublication
-              isFirst={index === 0}
-              isLast={index === (publications?.length || 0) - 1}
-              publication={publication as AnyPublication}
-              showThread={
-                type !== ProfileFeedType.Media &&
-                type !== ProfileFeedType.Collects
-              }
-            />
-          );
-        }}
+        itemContent={(index, publication) => (
+          <SinglePublication
+            isFirst={index === 0}
+            isLast={index === (publications?.length || 0) - 1}
+            publication={publication as AnyPublication}
+            showThread={
+              type !== ProfileFeedType.Media &&
+              type !== ProfileFeedType.Collects
+            }
+          />
+        )}
         ref={virtuoso}
         restoreStateFrom={
           virtuosoState.ranges.length === 0

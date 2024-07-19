@@ -2,7 +2,7 @@ import type { Handler } from 'express';
 
 import logger from '@good/helpers/logger';
 import catchedError from 'src/helpers/catchedError';
-import { SWR_CACHE_AGE_10_MINS_30_DAYS } from 'src/helpers/constants';
+import { CACHE_AGE_1_DAY } from 'src/helpers/constants';
 import getMetadata from 'src/helpers/oembed/getMetadata';
 import { noBody } from 'src/helpers/responses';
 
@@ -15,16 +15,18 @@ export const get: Handler = async (req, res) => {
 
   try {
     const oembed = await getMetadata(url as string);
+
+    if (!oembed) {
+      return res.status(200).json({ oembed: null, success: false });
+    }
+
     const skipCache = oembed.frame !== null;
 
     logger.info(`Oembed generated for ${url}`);
 
     return res
       .status(200)
-      .setHeader(
-        'Cache-Control',
-        skipCache ? 'no-cache' : SWR_CACHE_AGE_10_MINS_30_DAYS
-      )
+      .setHeader('Cache-Control', skipCache ? 'no-cache' : CACHE_AGE_1_DAY)
       .json({ oembed, success: true });
   } catch (error) {
     return catchedError(res, error);

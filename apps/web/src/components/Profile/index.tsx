@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 
 import MetaTags from '@components/Common/MetaTags';
 import NewPost from '@components/Composer/Post/New';
+import Cover from '@components/Shared/Cover';
 import {
   APP_NAME,
   HANDLE_PREFIX,
@@ -24,13 +25,13 @@ import Custom500 from 'src/pages/500';
 import { useFeatureFlagsStore } from 'src/store/persisted/useFeatureFlagsStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
-import Cover from './Cover';
 import Details from './Details';
 import Feed from './Feed';
 import FeedType from './FeedType';
 import Followers from './Followers';
 import Following from './Following';
 import MutualFollowersList from './MutualFollowers/List';
+import Requests from './Requests';
 import ProfilePageShimmer from './Shimmer';
 import Stats from './Stats';
 import SuspendedDetails from './SuspendedDetails';
@@ -71,6 +72,7 @@ const ViewProfile: NextPage = () => {
     ProfileFeedType.Replies.toLowerCase(),
     ProfileFeedType.Media.toLowerCase(),
     ProfileFeedType.Collects.toLowerCase(),
+    ProfileFeedType.Requests.toLowerCase(),
     ProfileFeedType.Stats.toLowerCase()
   ];
 
@@ -172,7 +174,7 @@ const ViewProfile: NextPage = () => {
             />
           ) : (
             <>
-              <FeedType feedType={feedType} />
+              <FeedType feedType={feedType as ProfileFeedType} />
               {currentProfile?.id === profile?.id ? <NewPost /> : null}
               {feedType === ProfileFeedType.Feed ||
               feedType === ProfileFeedType.Replies ||
@@ -189,6 +191,13 @@ const ViewProfile: NextPage = () => {
                 />
               ) : feedType === ProfileFeedType.Stats ? (
                 <Stats profileId={profile.id} />
+              ) : feedType === ProfileFeedType.Requests ? (
+                <Requests
+                  handle={getProfile(profile).slugWithPrefix}
+                  profileDetailsLoading={profileDetailsLoading}
+                  profileId={profile.id}
+                  type={feedType}
+                />
               ) : null}
             </>
           )}

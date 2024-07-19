@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import ToggleWithHelper from '@components/Shared/ToggleWithHelper';
 import { GOOD_API_URL } from '@good/data/constants';
 import { SETTINGS } from '@good/data/tracking';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import { Leafwatch } from '@helpers/leafwatch';
 import { SwatchIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';

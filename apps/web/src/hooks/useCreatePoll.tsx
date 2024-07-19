@@ -1,5 +1,5 @@
 import { GOOD_API_URL } from '@good/data/constants';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
+import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
 import axios from 'axios';
 import { usePublicationPollStore } from 'src/store/non-persisted/publication/usePublicationPollStore';
 
