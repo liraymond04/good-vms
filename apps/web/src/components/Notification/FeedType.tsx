@@ -23,29 +23,31 @@ const FeedType: FC<FeedTypeProps> = ({ feedType }) => {
     });
   };
 
+  const iconClass = 'size-8 sm:size-4';
+
   const tabs = [
     {
-      icon: <BellIcon className="size-4" />,
+      icon: <BellIcon className={iconClass} />,
       name: 'All notifications',
       type: NotificationTabType.All
     },
     {
-      icon: <AtSymbolIcon className="size-4" />,
+      icon: <AtSymbolIcon className={iconClass} />,
       name: 'Mentions',
       type: NotificationTabType.Mentions
     },
     {
-      icon: <ChatBubbleLeftIcon className="size-4" />,
+      icon: <ChatBubbleLeftIcon className={iconClass} />,
       name: 'Comments',
       type: NotificationTabType.Comments
     },
     {
-      icon: <HeartIcon className="size-4" />,
+      icon: <HeartIcon className={iconClass} />,
       name: 'Likes',
       type: NotificationTabType.Likes
     },
     {
-      icon: <RectangleStackIcon className="size-4" />,
+      icon: <RectangleStackIcon className={iconClass} />,
       name: 'Collects',
       type: NotificationTabType.Collects
     }
