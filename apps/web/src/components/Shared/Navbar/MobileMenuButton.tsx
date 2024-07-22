@@ -166,7 +166,7 @@ const MobileMenuButton: FC = () => {
             <MoreNavItems onClick={closeMenu} />
             {currentProfile && (
               <button
-                className="mt-6 focus:outline-none md:hidden"
+                className="mt-6 focus:outline-none"
                 onClick={() => {
                   setShowMobileDrawer(true);
                   closeMenu();
