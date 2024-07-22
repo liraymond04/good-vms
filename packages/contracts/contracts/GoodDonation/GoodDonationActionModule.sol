@@ -67,7 +67,7 @@ contract GoodDonationActionModule is
   ) public initializer {
     __Pausable_init();
     __AccessControl_init();
-    HubRestrictedUpgradeable.initialize(lensHubAddress);
+    __HubRestricted_init(lensHubAddress);
 
     _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
     _grantRole(PAUSER_ROLE, pauser);
