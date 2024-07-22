@@ -58,21 +58,10 @@ const MobileMenuButton: FC = () => {
 
   return (
     <div className="md:hidden">
-      {' '}
       {/* Ensure the whole div is hidden on non-mobile views */}
-      <button
-        className="fixed right-4 z-20 rounded-full bg-pink-500 p-2 text-white shadow-lg focus:outline-none"
-        style={{
-          alignItems: 'center',
-          bottom: '80px', // Adjusted position
-          display: 'flex',
-          height: '50px',
-          justifyContent: 'center',
-          width: '50px'
-        }}
-      >
+      <div className="fixed bottom-16 right-4 z-20 flex h-[50px] w-[50px] items-center justify-center">
         <NavPost />
-      </button>
+      </div>
       <button
         className="fixed right-4 z-20 rounded-full bg-pink-700 p-2 text-white shadow-lg focus:outline-none"
         onClick={toggleMenu}
