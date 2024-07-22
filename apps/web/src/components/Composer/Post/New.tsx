@@ -18,8 +18,7 @@ interface NewPostProps {
 const NewPost: FC<NewPostProps> = ({ tags }) => {
   const { isReady, push, query } = useRouter();
   const { currentProfile } = useProfileStore();
-  const { setScreen, setShowAuthModal, setShowNewPostModal } =
-    useGlobalModalStateStore();
+  const { setShowAuthModal, setShowNewPostModal } = useGlobalModalStateStore();
   const { setPublicationContent, setTags } = usePublicationStore();
 
   const openModal = useCallback(() => {
@@ -31,13 +30,6 @@ const NewPost: FC<NewPostProps> = ({ tags }) => {
 
   useEffect(() => {
     if (isReady && query.text) {
-      if (!currentProfile?.id) {
-        // Open login modal if no profile ID
-        setScreen('choose');
-        setShowAuthModal(true, 'login');
-        return;
-      }
-
       const { hashtags, text, url, via } = query;
       let processedHashtags;
 
@@ -63,7 +55,6 @@ const NewPost: FC<NewPostProps> = ({ tags }) => {
     setPublicationContent,
     setTags,
     openModal,
-    setScreen,
     setShowAuthModal
   ]);
 
@@ -75,12 +66,8 @@ const NewPost: FC<NewPostProps> = ({ tags }) => {
           className="size-11 cursor-pointer rounded-full border bg-gray-200 dark:border-gray-700"
           height={44}
           onClick={() => {
-            if (currentProfile?.id) {
-              push(getProfile(currentProfile).link);
-            } else {
-              setScreen('choose');
-              setShowAuthModal(true, 'login');
-            }
+            const profile = getProfile(currentProfile);
+            push(profile.link);
           }}
           onError={({ currentTarget }) => {
             currentTarget.src = getLennyURL(currentProfile?.id || 'default');
