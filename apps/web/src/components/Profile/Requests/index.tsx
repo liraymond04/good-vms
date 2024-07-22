@@ -23,6 +23,7 @@ import { useProfileFeedStore } from 'src/store/non-persisted/useProfileFeedStore
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useTransactionStore } from 'src/store/persisted/useTransactionStore';
 
+import RequestListing from './RequestListing';
 import RequestTable from './RequestTable';
 
 let virtuosoState: any = { ranges: [], screenTop: 0 };
@@ -55,6 +56,10 @@ const Requests: FC<RequestProps> = ({
   const [filteredPublications, setFilteredPublications] = useState<
     AnyPublication[]
   >([]);
+  const [showRequest, setShowRequest] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<AnyPublication | null>(
+    null
+  );
 
   const getMediaFilters = () => {
     const filters: PublicationMetadataMainFocusType[] = [];
@@ -230,7 +235,14 @@ const Requests: FC<RequestProps> = ({
       setFilteredPublications(sortPubsAmount(arr));
     }
   };
+  const onRequestOpen = (publication: AnyPublication) => {
+    setSelectedRequest(publication);
+    setShowRequest(true);
+  };
 
+  const onRequestClose = () => {
+    setShowRequest(false);
+  };
   return (
     <Card className="space-y-3 p-5">
       {/* Replace the "false" below with the attribute that tells us 
@@ -275,7 +287,22 @@ const Requests: FC<RequestProps> = ({
         </span>
       </div>
 
-      <RequestTable publications={filteredPublications} />
+      <RequestTable
+        onRequestClose={onRequestClose}
+        onRequestOpen={onRequestOpen}
+        publications={filteredPublications}
+        selectedRequest={selectedRequest}
+        showRequest={showRequest}
+      />
+      <div>
+        {selectedRequest && (
+          <RequestListing
+            onClose={onRequestClose}
+            open={showRequest}
+            requestData={selectedRequest}
+          />
+        )}
+      </div>
     </Card>
   );
 };

@@ -4,10 +4,16 @@ import { Tooltip } from '@good/ui';
 import { useRouter } from 'next/router';
 
 interface RequestTableProps {
-  publications: any;
+  onRequestClose: () => void;
+  onRequestOpen: (request: AnyPublication) => void;
+  publications: AnyPublication[];
+  selectedRequest: AnyPublication | null;
+  showRequest: boolean;
 }
-
-const RequestTable: React.FC<RequestTableProps> = ({ publications }) => {
+const RequestTable: React.FC<RequestTableProps> = ({
+  onRequestOpen,
+  publications
+}) => {
   // Potential filter function, for when we get the metadata working
   // const filterRequestPublications = () => {
   //   publicationsData?.publications.items?.filter((publication) => {
@@ -32,7 +38,11 @@ const RequestTable: React.FC<RequestTableProps> = ({ publications }) => {
         </thead>
         <tbody>
           {publications.map((publication: AnyPublication) => (
-            <tr className="request-table-row" key={publication.id}>
+            <tr
+              className="request-table-row"
+              key={publication.id}
+              onClick={() => onRequestOpen(publication)}
+            >
               {/* Replace the "false" below with the attribute that tells us 
                 whether the user is a volunteer or organization.
                 E.g. currentProfile?.metadata?.attributes?[index of volunteer/organization] */}
