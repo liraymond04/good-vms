@@ -55,7 +55,6 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                     }
                   >
                     <MoreLink
-                      hideTextOnMobile
                       href="/bookmarks"
                       icon={<BookmarkIcon className="size-4" />}
                       onClick={onClick}
@@ -69,7 +68,6 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                     }
                   >
                     <MoreLink
-                      hideTextOnMobile
                       href="https://www.volunteerconnector.org/"
                       icon={<UserIcon className="size-4" />}
                       onClick={onClick}
@@ -107,11 +105,7 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 }
                                 onClick={onClick}
                               >
-                                <MoreLink
-                                  hideTextOnMobile
-                                  href="/donations"
-                                  text="Donations"
-                                />
+                                <MoreLink href="/donations" text="Donations" />
                               </MenuItem>
                               <MenuItem
                                 as="div"
@@ -124,7 +118,6 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
-                                  hideTextOnMobile
                                   href="https://giveth.io"
                                   text="Giveth"
                                 />
@@ -140,7 +133,6 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
-                                  hideTextOnMobile
                                   href="https://thegivingblock.com"
                                   text="GivingBlock"
                                 />
@@ -156,7 +148,6 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                                 onClick={onClick}
                               >
                                 <MoreLink
-                                  hideTextOnMobile
                                   href="https://gitcoin.co"
                                   text="Gitcoin"
                                 />
@@ -177,7 +168,7 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                 }
                 onClick={onClick}
               >
-                <Support hideTextOnMobile />
+                <Support />
               </MenuItem>
             </MenuItems>
           </MenuTransition>

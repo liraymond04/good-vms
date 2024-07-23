@@ -149,7 +149,7 @@ const MobileMenuButton: FC = () => {
               url="/messages"
             />
             <MoreNavItems onClick={closeMenu} />
-            <MenuItems onClick={closeMenu} />
+            <MenuItems />
           </div>
         </div>
       )}
