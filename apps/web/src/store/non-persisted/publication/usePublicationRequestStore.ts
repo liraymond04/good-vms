@@ -1,45 +1,31 @@
-import type { PublicationTip } from '@good/types/good';
-
-import getPublicationsTips from '@good/helpers/api/getPublicationsTips';
-import getAuthApiHeaders from '@helpers/getAuthApiHeaders';
 import { createTrackedSelector } from 'react-tracked';
 import { create } from 'zustand';
 
 interface State {
-  addTip: (id: string) => void;
-  fetchAndStoreTips: (ids: string[]) => void;
-  publicationTips: PublicationTip[];
+  requestParams: {
+    id: string;
+    organizationName: string;
+    donorProfileID: string;
+    donationAmount: number;
+    transactionURL: string;
+    projectURL: string;
+    volunteerHours: number;
+    evidenceURL: string;
+    description: string;
+    createdAt: Date;
+  };
+  resetRequestParams: () => void;
+  setRequestParams: (requestParams: State['requestParams']) => void;
+  setShowRequestEditor: (showRequestEditor: boolean) => void;
+  showRequestEditor: boolean;
 }
 
-const store = create<State>((set, get) => ({
-  addTip: (id) => {
-    const existingTip = get().publicationTips.find((tip) => tip.id === id);
-    if (existingTip) {
-      set((state) => ({
-        publicationTips: state.publicationTips.map((tip) =>
-          tip.id === id ? { ...tip, count: tip.count + 1, tipped: true } : tip
-        )
-      }));
-    } else {
-      set((state) => ({
-        publicationTips: [
-          ...state.publicationTips,
-          { count: 1, id, tipped: true }
-        ]
-      }));
-    }
-  },
-  fetchAndStoreTips: async (ids) => {
-    if (!ids.length) {
-      return;
-    }
-
-    const tipsResponse = await getPublicationsTips(ids, getAuthApiHeaders());
-    set((state) => ({
-      publicationTips: [...state.publicationTips, ...tipsResponse]
-    }));
-  },
-  publicationTips: []
+const store = create<State>((set) => ({
+  requestParams: { id: '', organizationName: '', donorProfileID: '', donationAmount: 0, transactionURL: '', projectURL: '', volunteerHours: 0, evidenceURL: '', description: '', createdAt: new Date() },
+  resetRequestParams: () => set(() => ({ requestParams: { id: '', organizationName: '', donorProfileID: '', donationAmount: 0, transactionURL: '', projectURL: '', volunteerHours: 0, evidenceURL: '', description: '', createdAt: new Date() } })),
+  setRequestParams: (requestParams) => set(() => ({ requestParams })),
+  setShowRequestEditor: (showRequestEditor) => set(() => ({ showRequestEditor })),
+  showRequestEditor: false
 }));
 
-export const useTipsStore = createTrackedSelector(store);
+export const usePublicationRequestStore = createTrackedSelector(store);

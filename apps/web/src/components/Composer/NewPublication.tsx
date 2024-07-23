@@ -72,6 +72,7 @@ import { Editor, useEditorContext, withEditorContext } from './Editor';
 import LinkPreviews from './LinkPreviews';
 import OpenActionsPreviews from './OpenActionsPreviews';
 import Discard from './Post/Discard';
+import useCreateRequest from 'src/hooks/useCreateRequest';
 
 const Shimmer = <div className="shimmer mb-1 size-5 rounded-lg" />;
 
@@ -160,7 +161,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     usePublicationPollStore();
 
   // Request store
-  const { requestConfig, setShowRequestEditor, showRequestEditor } =
+  const { requestParams, setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   // License store
@@ -193,6 +194,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
   const editor = useEditorContext();
 
   const createPoll = useCreatePoll();
+  const createRequest = useCreateRequest();
   const getMetadata = usePublicationMetadata();
 
   const { canUseLensManager } = checkDispatcherPermissions(currentProfile);
@@ -383,13 +385,17 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
       if (showPollEditor) {
         pollId = await createPoll();
       }
+      let requestId;
+      if (showRequestEditor) {
+        requestId = await createRequest();
+      }
 
       const processedPublicationContent =
         publicationContent.length > 0 ? publicationContent : undefined;
       const title = hasAudio
         ? audioPublication.title
         : `${getTitlePrefix()} by ${getProfile(currentProfile).slugWithPrefix}`;
-      const hasAttributes = Boolean(pollId);
+      const hasAttributes = Boolean(pollId || requestId);
 
       const formDataAttributes = mapFormFieldsToAttributes();
 
@@ -398,15 +404,24 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         title,
         ...(hasAttributes && {
           attributes: [
-            ...(pollId
-              ? [
-                  {
-                    key: KNOWN_ATTRIBUTES.POLL_ID,
-                    type: MetadataAttributeType.STRING,
-                    value: pollId
-                  }
-                ]
-              : [])
+        ...(pollId
+          ? [
+          {
+            key: KNOWN_ATTRIBUTES.POLL_ID,
+            type: MetadataAttributeType.STRING,
+            value: pollId
+          }
+            ]
+          : []),
+        ...(requestId
+          ? [
+          {
+            key: KNOWN_ATTRIBUTES.REQUEST_ID,
+            type: MetadataAttributeType.STRING,
+            value: requestId
+          }
+            ]
+          : [])
           ]
         }),
         marketplace: {

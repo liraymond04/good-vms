@@ -14,56 +14,30 @@ export const get: Handler = async (req, res) => {
   }
 
   try {
-    const identityToken = req.headers['x-identity-token'] as string;
-    const payload = parseJwt(identityToken);
-
-    const data = await prisma.poll.findUnique({
-      select: {
-        endsAt: true,
+    const data = await prisma.request.findUnique({
+      select: { 
         id: true,
-        options: {
-          orderBy: { index: 'asc' },
-          select: {
-            _count: { select: { responses: true } },
-            id: true,
-            option: true,
-            responses: {
-              select: { id: true },
-              where: { profileId: payload.id }
-            }
-          }
-        }
+        organizationName: true,
+        donorProfileID: true,
+        donationAmount: true,
+        transactionURL: true,
+        projectURL: true,
+        volunteerHours: true,
+        evidenceURL: true,
+        description: true,
+        createdAt: true,
+        status: true
       },
       where: { id: id as string }
     });
 
     if (!data) {
-      return res.status(400).json({ error: 'Poll not found.', success: false });
+      return res.status(400).json({ error: 'Request not found.', success: false });
     }
 
-    const totalResponses = data.options.reduce(
-      (acc, option) => acc + option._count.responses,
-      0
-    );
+    logger.info('Request fetched');
 
-    const sanitizedData = {
-      endsAt: data.endsAt,
-      id: data.id,
-      options: data.options.map((option) => ({
-        id: option.id,
-        option: option.option,
-        percentage:
-          totalResponses > 0
-            ? (option._count.responses / totalResponses) * 100
-            : 0,
-        responses: option._count.responses,
-        voted: option.responses.length > 0
-      }))
-    };
-
-    logger.info('Poll fetched');
-
-    return res.status(200).json({ result: sanitizedData, success: true });
+    return res.status(200).json({ result: data, success: true });
   } catch (error) {
     return catchedError(res, error);
   }

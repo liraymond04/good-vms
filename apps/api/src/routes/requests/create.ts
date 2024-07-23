@@ -1,18 +1,26 @@
-import type { Handler } from 'express';
+import type { Request, Response } from 'express';
 
 import logger from '@good/helpers/logger';
 import catchedError from 'src/helpers/catchedError';
 import validateLensAccount from 'src/helpers/middlewares/validateLensAccount';
 import prisma from 'src/helpers/prisma';
-import { invalidBody, noBody, notAllowed } from 'src/helpers/responses';
-import { array, number, object, string } from 'zod';
+import { invalidBody, noBody } from 'src/helpers/responses';
+import { number, object, string } from 'zod';
 
 const validationSchema = object({
-  length: number(),
-  options: array(string())
+  organizationName: string(),
+  donorProfileID: string(),
+  donationAmount: number(),
+  transactionURL: string(),
+  projectURL: string(),
+  volunteerHours: number(),
+  evidenceURL: string(),
+  description: string(),
 });
 
-export const post: Handler = async (req, res) => {
+export const post = [
+  validateLensAccount,
+  async (req: Request, res: Response) => {
   const { body } = req;
 
   if (!body) {
@@ -25,17 +33,20 @@ export const post: Handler = async (req, res) => {
     return invalidBody(res);
   }
 
-  const validateLensAccountStatus = await validateLensAccount(req);
-  if (validateLensAccountStatus !== 200) {
-    return notAllowed(res, validateLensAccountStatus);
-  }
-
   try {
+    console.log("body:" + body);
     const data = await prisma.request.create({
       data: {
-        
+        organizationName: body.organizationName,
+        donorProfileID: body.donorProfileID,
+        donationAmount: body.donationAmount,
+        transactionURL: body.transactionURL,
+        projectURL: body.projectURL,
+        volunteerHours: body.volunteerHours,
+        evidenceURL: body.evidenceURL,
+        description: body.description,
       },
-      select: { createdAt: true, endsAt: true, id: true, options: true }
+      select: { createdAt: true, id: true}
     });
 
     logger.info(`Created a request ${data.id}`);
@@ -44,4 +55,5 @@ export const post: Handler = async (req, res) => {
   } catch (error) {
     return catchedError(res, error);
   }
-};
+}
+];

@@ -24,6 +24,7 @@ import Metadata from './Metadata';
 import NotSupportedPublication from './NotSupportedPublication';
 import OpenActionOnBody from './OpenAction/OnBody';
 import Poll from './Poll';
+import Request from './Request';
 
 interface PublicationBodyProps {
   contentClassName?: string;
@@ -78,6 +79,13 @@ const PublicationBody: FC<PublicationBodyProps> = ({
     KNOWN_ATTRIBUTES.POLL_ID
   );
   const showPoll = Boolean(pollId);
+  // Show request
+  const requestId = getPublicationAttribute(
+    metadata.attributes,
+    KNOWN_ATTRIBUTES.REQUEST_ID
+  );
+  const showRequest = Boolean(requestId);
+  console.log('showRequest', showRequest);
   // Show sharing link
   const showSharingLink = metadata.__typename === 'LinkMetadataV3';
   // Show quote
@@ -130,6 +138,8 @@ const PublicationBody: FC<PublicationBodyProps> = ({
       ) : null}
       {/* Poll */}
       {showPoll ? <Poll id={pollId} /> : null}
+      {/* Request */}
+      {showRequest ? <Request id={requestId} /> : null}
       {showLive ? (
         <div className="mt-3">
           <Video src={metadata.liveURL || metadata.playbackURL} />

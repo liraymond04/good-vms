@@ -7,6 +7,7 @@ import { MarketplaceMetadataAttributeDisplayType } from '@good/lens';
 import { Button } from '@good/ui';
 import React, { useRef, useState } from 'react';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
+import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { encodeAbiParameters } from 'viem';
@@ -16,6 +17,7 @@ import type { FieldMetadata } from './InputField';
 
 import getLensProfile from '../../../../helpers/getLensProfile';
 import { InputField } from './InputField';
+import { request } from 'http';
 
 interface FormFields {
   description: string;

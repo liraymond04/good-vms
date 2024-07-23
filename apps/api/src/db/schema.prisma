@@ -111,18 +111,18 @@ model PollResponse {
 }
 
 model Request {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organizationId String
-  DonorId       String
-  DonationAmount Float
-  TransactionUrl String
-  CauseUrl      String
-  VolunteerHours Int
-  VolunteerEvidence    String
-  Description   String
-  createdAt DateTime @default(now())
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationName String
+  donorProfileID   String
+  donationAmount   Float
+  transactionURL   String
+  projectURL       String
+  volunteerHours   Int
+  evidenceURL      String
+  description      String
+  status           RequestStatus @default(SUBMITTED)
+  createdAt        DateTime      @default(now())
 }
-
 
 model AllowedToken {
   id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -168,7 +168,7 @@ model Cause {
   profileId      String
   profileAddress String
   donations      CauseDonation[]
-  createdAt     DateTime @default(now())
+  createdAt      DateTime        @default(now())
 }
 
 model CauseDonation {

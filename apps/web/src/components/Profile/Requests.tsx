@@ -54,24 +54,6 @@ const Requests = () => {
       volunteerName: 'SEND GOOD (USD)',
       publicationId: '0x03',
       date: '2022-01-01',
-    },
-    {
-      amount: 1,
-      currencyRequested: 'TimeDonation',
-      date: '2022-01-02',
-      hours: 10,
-      publicationId: '0x03',
-      volunteerName: 'SEND GOOD (VHR)',
-      // volunteerProfile: '0x02ee'
-    },
-    {
-      amount: 10,
-      currencyRequested: 'VHR',
-      date: '2022-01-02',
-      hours: 10,
-      publicationId: '0x03',
-      volunteerName: 'SEND VHR',
-      // volunteerProfile: '0x02ee'
     }
   ];
 
@@ -280,7 +262,6 @@ const Requests = () => {
         </span>
       </div>
       <Button onClick={enableSending}>Enable Sending GOOD and VHR</Button>
-      <Button onClick={handleInitializePublication}>Initialize Publication</Button>
 
   {requests.map((request, index) => (
   <div

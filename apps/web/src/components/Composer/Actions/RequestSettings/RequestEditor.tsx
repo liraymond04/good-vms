@@ -10,9 +10,9 @@ import RequestForm from './RequestForm';
 // Created based on PollSetting's index.tsx, adjust as required
 const RequestEditor: FC = () => {
   const {
-    requestConfig,
-    resetRequestConfig,
-    setRequestConfig,
+    requestParams,
+    resetRequestParams,
+    setRequestParams,
     setShowRequestEditor
   } = usePublicationRequestStore();
   // const [showPollLengthModal, setShowPollLengthModal] = useState(false);
@@ -30,7 +30,7 @@ const RequestEditor: FC = () => {
             <button
               className="flex"
               onClick={() => {
-                resetRequestConfig();
+                resetRequestParams();
                 setShowRequestEditor(false);
               }}
               type="button"
