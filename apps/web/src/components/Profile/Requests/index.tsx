@@ -10,6 +10,8 @@ import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
 
 // import GoodAction from './GoodAction';
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
+import { JobsActionModule } from '@good/abis';
+import { REQUEST_GOOD } from '@good/data/constants';
 import {
   PublicationMetadataMainFocusType,
   PublicationType,
@@ -17,12 +19,16 @@ import {
 } from '@good/lens';
 import { Card } from '@good/ui';
 import React, { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 // import VHRAction from './VHRAction';
 import { ProfileFeedType } from 'src/enums';
 import { useProfileFeedStore } from 'src/store/non-persisted/useProfileFeedStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useTransactionStore } from 'src/store/persisted/useTransactionStore';
+import { useAccount, useReadContract } from 'wagmi';
 
+import OrganizationListing from './OrganizationListing';
+import OrganizationTable from './OrganizationTable';
 import RequestListing from './RequestListing';
 import RequestTable from './RequestTable';
 
@@ -39,7 +45,16 @@ interface RequestProps {
     | ProfileFeedType.Replies
     | ProfileFeedType.Requests;
 }
-
+interface RequestData {
+  amount: number;
+  currency: string;
+  date: string;
+  hours: number;
+  publicationUrl: string;
+  status: string;
+  volunteerName: string;
+  volunteerProfile: string;
+}
 const Requests: FC<RequestProps> = ({
   handle,
   profileDetailsLoading,
@@ -49,6 +64,7 @@ const Requests: FC<RequestProps> = ({
   const { currentProfile } = useProfileStore();
   const { mediaFeedFilters } = useProfileFeedStore();
   const { indexedPostHash } = useTransactionStore();
+  const { address } = useAccount();
   const virtuoso = useRef<VirtuosoHandle>(null);
 
   const [sortBy, setSortBy] = useState('Name');
@@ -57,9 +73,9 @@ const Requests: FC<RequestProps> = ({
     AnyPublication[]
   >([]);
   const [showRequest, setShowRequest] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<AnyPublication | null>(
-    null
-  );
+  const [selectedRequest, setSelectedRequest] = useState<
+    AnyPublication | null | RequestData
+  >(null);
 
   const getMediaFilters = () => {
     const filters: PublicationMetadataMainFocusType[] = [];
@@ -74,6 +90,27 @@ const Requests: FC<RequestProps> = ({
     }
     return filters;
   };
+  const {
+    data: accountData,
+    error,
+    isError,
+    isLoading
+  } = useReadContract({
+    abi: JobsActionModule,
+    address: REQUEST_GOOD,
+    args: [address!],
+    functionName: 'isOrganization',
+    query: {
+      enabled: !!address,
+      staleTime: 1 * 60 * 1000
+    }
+  });
+
+  if (isError) {
+    toast.error(`Failed to retrieve verified organization status.`);
+    console.error(`Failed to retrieve verified organization status: ${error}`);
+  }
+  const isVerifiedOrganization = !!accountData;
 
   const publicationTypes: PublicationType[] =
     type === ProfileFeedType.Feed
@@ -239,6 +276,10 @@ const Requests: FC<RequestProps> = ({
     setSelectedRequest(publication);
     setShowRequest(true);
   };
+  const onRequestOpenOrg = (publication: RequestData) => {
+    setSelectedRequest(publication);
+    setShowRequest(true);
+  };
 
   const onRequestClose = () => {
     setShowRequest(false);
@@ -286,17 +327,32 @@ const Requests: FC<RequestProps> = ({
           </select>
         </span>
       </div>
-
-      <RequestTable
-        onRequestClose={onRequestClose}
-        onRequestOpen={onRequestOpen}
-        publications={filteredPublications}
-        selectedRequest={selectedRequest}
-        showRequest={showRequest}
-      />
+      {!isVerifiedOrganization ? (
+        <RequestTable
+          onRequestClose={onRequestClose}
+          onRequestOpen={onRequestOpen}
+          publications={filteredPublications}
+          selectedRequest={selectedRequest}
+          showRequest={showRequest}
+        />
+      ) : (
+        <OrganizationTable
+          onRequestClose={onRequestClose}
+          onRequestOpen={onRequestOpenOrg}
+          publications={filteredPublications}
+          selectedRequest={selectedRequest}
+          showRequest={showRequest}
+        />
+      )}
       <div>
-        {selectedRequest && (
+        {selectedRequest && !isVerifiedOrganization ? (
           <RequestListing
+            onClose={onRequestClose}
+            open={showRequest}
+            requestData={selectedRequest}
+          />
+        ) : (
+          <OrganizationListing
             onClose={onRequestClose}
             open={showRequest}
             requestData={selectedRequest}

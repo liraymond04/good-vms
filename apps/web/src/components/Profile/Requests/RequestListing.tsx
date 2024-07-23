@@ -4,10 +4,28 @@ import { Card } from '@good/ui';
 import { LinkIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
+interface RequestData {
+  amount: number;
+  currency: string;
+  date: string;
+  hours: number;
+  publicationUrl: string;
+  status: string;
+  volunteerName: string;
+  volunteerProfile: string;
+}
+
 interface RequestListingProps {
   onClose: () => void;
   open: boolean;
-  requestData: AnyPublication;
+  requestData: AnyPublication | RequestData;
+}
+
+// Type guard function to check if requestData is of type AnyPublication
+function isAnyPublication(data: any): data is AnyPublication {
+  return (
+    data && typeof data.id === 'string' && typeof data.createdAt === 'string'
+  );
 }
 
 const RequestListing = ({
@@ -15,7 +33,7 @@ const RequestListing = ({
   open,
   requestData
 }: RequestListingProps) => {
-  if (!open) {
+  if (!open || !isAnyPublication(requestData)) {
     return null;
   }
 
