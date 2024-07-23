@@ -20,10 +20,10 @@ export const Card: FC<CardProps> = ({
   return (
     <Tag
       className={cn(
-        forceRounded
-          ? 'rounded-xl'
-          : 'rounded-none border-x-0 sm:rounded-xl sm:border-x',
-        'border bg-white dark:border-gray-700 dark:bg-black',
+        'rounded-none border border-x-0 bg-white dark:border-gray-700 dark:bg-black',
+        {
+          'sm:rounded-xl sm:border-x': forceRounded
+        },
         className
       )}
       onClick={onClick}
