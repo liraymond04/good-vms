@@ -128,47 +128,6 @@ const Requests = () => {
     setIsLoading(false);
   };
 
-  const handleInitializePublication = async (request: any) => {
-    if (isLoading) {
-      return;
-    }
-    setIsLoading(true);
-    if (isSuspended) {
-      return toast.error(Errors.Suspended);
-    }
-    try {
-      // encode some data
-      const encodedData = encodeAbiParameters(
-        [
-          { name: 'x', type: 'string' },
-          { name: 'y', type: 'uint' },
-          { name: 'z', type: 'bool' }
-        ],
-        ['wagmi', 420n, true]
-      )
-
-
-      const { openAction } = useOpenActionStore();
-      const hash = writeContractAsync({
-        abi: SendTokens,
-        address: SEND_TOKENS,
-        args: [
-          currentProfile?.ownedBy.address,
-          0x03,
-          currentProfile?.ownedBy.address,
-          encodedData
-        ],
-        functionName: 'initializePublicationAction'
-      });
-      // openAction(hash);
-      return;
-    } catch (error) {
-      onError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   const handleSendTokens = async (request: any) => {
     if (isLoading) {
       return;
@@ -210,13 +169,6 @@ const Requests = () => {
       } else { 
         finalVHRRate = request.amount * 10 ** 18;
       }
-
-      console.log(currentProfile?.ownedBy.address)
-      console.log(totalGOOD);
-      console.log("vhr rate", finalVHRRate)
-      console.log(currentProfile?.id);
-      console.log(request.publicationId);
-      console.log(request.currencyRequested)
 
       setIsLoading(true);
       const hash = writeContractAsync({

@@ -85,7 +85,6 @@ const PublicationBody: FC<PublicationBodyProps> = ({
     KNOWN_ATTRIBUTES.REQUEST_ID
   );
   const showRequest = Boolean(requestId);
-  console.log('showRequest', showRequest);
   // Show sharing link
   const showSharingLink = metadata.__typename === 'LinkMetadataV3';
   // Show quote
