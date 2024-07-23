@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import NewPublication from '@components/Composer/NewPublication';
 import ReportPublication from '@components/Shared/Modal/ReportPublication';
+import VolunteerEditor from '@components/Volunteer/VolunteerEditor';
 import { Modal } from '@good/ui';
 import {
   ArrowRightCircleIcon,
@@ -32,6 +33,7 @@ const GlobalModals: FC = () => {
     setShowAuthModal,
     setShowDiscardModal,
     setShowNewPostModal,
+    setShowNewVolunteerPostModal,
     setShowOptimisticTransactionsModal,
     setShowProfileSwitchModal,
     setShowPublicationReportModal,
@@ -39,6 +41,7 @@ const GlobalModals: FC = () => {
     // setShowScoreModal,
     showAuthModal,
     showNewPostModal,
+    showNewVolunteerPostModal,
     showOptimisticTransactionsModal,
     showProfileSwitchModal,
     showPublicationReportModal,
@@ -124,6 +127,20 @@ const GlobalModals: FC = () => {
         title="Create post"
       >
         <NewPublication />
+      </Modal>
+
+
+
+      <Modal
+         onClose={() => {
+          setShowNewVolunteerPostModal(false);
+        }}
+        show = {showNewVolunteerPostModal}
+        size="md"
+        title="Create Volunteer Post"
+      >
+        <VolunteerEditor/>
+
       </Modal>
       <Modal
         icon={<CircleStackIcon className="size-5" />}
