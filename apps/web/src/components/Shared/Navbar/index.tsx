@@ -181,7 +181,7 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white md:w-fit dark:border-gray-700 dark:bg-black">
+    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit border-b border-t bg-white md:w-fit md:rounded-xl md:border dark:border-gray-700 dark:bg-black">
       <SiteStatus />
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
