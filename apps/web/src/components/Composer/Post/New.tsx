@@ -6,7 +6,7 @@ import getProfile from '@good/helpers/getProfile';
 import { Card, Image } from '@good/ui';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
@@ -18,15 +18,15 @@ interface NewPostProps {
 const NewPost: FC<NewPostProps> = ({ tags }) => {
   const { isReady, push, query } = useRouter();
   const { currentProfile } = useProfileStore();
-  const { setShowNewPostModal } = useGlobalModalStateStore();
+  const { setShowAuthModal, setShowNewPostModal } = useGlobalModalStateStore();
   const { setPublicationContent, setTags } = usePublicationStore();
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     if (tags) {
       setTags(tags);
     }
     setShowNewPostModal(true);
-  };
+  }, [setTags, setShowNewPostModal, tags]);
 
   useEffect(() => {
     if (isReady && query.text) {
@@ -48,18 +48,29 @@ const NewPost: FC<NewPostProps> = ({ tags }) => {
       setPublicationContent(content);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    isReady,
+    query,
+    currentProfile,
+    setPublicationContent,
+    setTags,
+    openModal,
+    setShowAuthModal
+  ]);
 
   return (
     <Card className="space-y-3 p-5">
       <div className="flex items-center space-x-3">
         <Image
-          alt={currentProfile?.id}
+          alt={currentProfile?.id || 'default'}
           className="size-11 cursor-pointer rounded-full border bg-gray-200 dark:border-gray-700"
           height={44}
-          onClick={() => push(getProfile(currentProfile).link)}
+          onClick={() => {
+            const profile = getProfile(currentProfile);
+            push(profile.link);
+          }}
           onError={({ currentTarget }) => {
-            currentTarget.src = getLennyURL(currentProfile?.id);
+            currentTarget.src = getLennyURL(currentProfile?.id || 'default');
           }}
           src={getAvatar(currentProfile)}
           width={44}

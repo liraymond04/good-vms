@@ -26,6 +26,7 @@ import styled from 'styled-components';
 import LoginButton from '../LoginButton';
 import MenuItems from './MenuItems';
 import MobileLogoButton from './MobileLogoButton';
+import MobileMenuButton from './MobileMenuButton';
 import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
@@ -112,7 +113,7 @@ const Navbar: FC = () => {
         target={target ? '_blank' : '_self'}
       >
         {icon}
-        <div className="nav-text text-black dark:text-white">
+        <div className="nav-text hidden text-black md:block dark:text-white">
           <span className={`text-xl ${current ? 'font-bold' : ''}`}>
             {name}
           </span>
@@ -183,7 +184,7 @@ const Navbar: FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit rounded-xl border bg-white md:w-fit dark:border-gray-700 dark:bg-black">
+    <header className="sticky top-0 z-10 mt-8 min-h-fit min-w-fit border-b border-t bg-white md:w-fit md:rounded-xl md:border dark:border-gray-700 dark:bg-black">
       <SiteStatus />
       {staffMode ? <StaffBar /> : null}
       <NavbarContainer className="container mx-auto w-full pb-2 pt-2 lg:pb-6 lg:pt-6">
@@ -258,6 +259,7 @@ const Navbar: FC = () => {
           <Search />
         </div>
       ) : null}
+      <MobileMenuButton /> {/* Add the MobileMenuButton component here */}
     </header>
   );
 };
