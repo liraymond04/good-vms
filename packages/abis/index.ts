@@ -3,6 +3,7 @@ export * from './ERC20Token';
 export * from './GoodDonation';
 export * from './GoodLensSignup';
 export * from './GoodMembershipNft';
+export * from './GoodOrganizationStore';
 export * from './GoodReferral';
 export * from './GoodTipping';
 export * from './JobsActionModule';

@@ -1,6 +1,10 @@
+import type { Profile } from '@good/lens';
 import type { FC, ReactNode } from 'react';
 
 import NavPost from '@components/Composer/Post/NavPost';
+import getAvatar from '@good/helpers/getAvatar';
+import getLennyURL from '@good/helpers/getLennyURL';
+import { Image } from '@good/ui';
 import cn from '@good/ui/cn';
 import {
   Bars3Icon,
@@ -18,14 +22,15 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
-import MenuItems from './MenuItems';
 import MoreNavItems from './MoreNavItems';
 
 const MobileMenuButton: FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const { pathname } = useRouter();
+  const { setShowMobileDrawer } = useGlobalModalStateStore();
   const { currentProfile } = useProfileStore();
 
   const toggleMenu = () => {
@@ -56,23 +61,23 @@ const MobileMenuButton: FC = () => {
     </Link>
   );
 
+  const Avatar = () => (
+    <Image
+      alt={currentProfile?.id}
+      className="size-12 cursor-pointer rounded-full border dark:border-gray-700"
+      onError={({ currentTarget }) => {
+        currentTarget.src = getLennyURL(currentProfile?.id);
+      }}
+      src={getAvatar(currentProfile as Profile)}
+    />
+  );
+
   return (
     <div className="md:hidden">
-      {' '}
       {/* Ensure the whole div is hidden on non-mobile views */}
-      <button
-        className="fixed right-4 z-20 rounded-full bg-pink-500 p-2 text-white shadow-lg focus:outline-none"
-        style={{
-          alignItems: 'center',
-          bottom: '80px', // Adjusted position
-          display: 'flex',
-          height: '50px',
-          justifyContent: 'center',
-          width: '50px'
-        }}
-      >
+      <div className="fixed bottom-16 right-4 z-20 flex h-[50px] w-[50px] items-center justify-center">
         <NavPost />
-      </button>
+      </div>
       <button
         className="fixed right-4 z-20 rounded-full bg-pink-700 p-2 text-white shadow-lg focus:outline-none"
         onClick={toggleMenu}
@@ -97,7 +102,7 @@ const MobileMenuButton: FC = () => {
           }}
         >
           <div
-            className="absolute bottom-48 right-4 rounded-lg bg-white p-6 shadow-lg dark:bg-black" // Raised the menu more
+            className="absolute bottom-52 right-4 rounded-lg bg-white p-6 shadow-lg dark:bg-black" // Raised the menu more
             onClick={(e) => e.stopPropagation()}
             style={{
               transform: showMenu ? 'translateY(0)' : 'translateY(100%)',
@@ -149,7 +154,18 @@ const MobileMenuButton: FC = () => {
               url="/messages"
             />
             <MoreNavItems onClick={closeMenu} />
-            <MenuItems />
+            {currentProfile && (
+              <button
+                className="mt-6 focus:outline-none"
+                onClick={() => {
+                  setShowMobileDrawer(true);
+                  closeMenu();
+                }}
+                type="button"
+              >
+                <Avatar />
+              </button>
+            )}
           </div>
         </div>
       )}
