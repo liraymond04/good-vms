@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import CreateVolunteerCard from '@components/Volunteer/CreateVolunteerCard';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
@@ -13,7 +14,6 @@ import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import MenuTransition from '../MenuTransition';
 import MoreLink from './NavItems/MoreLink';
 import Support from './NavItems/Support';
-import CreateVolunteerCard from '@components/Volunteer/CreateVolunteerCard';
 
 const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
   const { currentProfile } = useProfileStore();
@@ -81,10 +81,7 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
                     }
                   >
-                    
-                    <CreateVolunteerCard/>
-
-
+                    <CreateVolunteerCard />
                   </MenuItem>
                   <MenuItem>
                     <Menu as="div" className="relative m-2 rounded-lg">
@@ -170,12 +167,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       )}
                     </Menu>
                   </MenuItem>
-                  
+
                   <div className="divider" />
-                  
                 </>
               ) : null}
-              
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>

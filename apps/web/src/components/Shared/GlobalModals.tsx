@@ -129,18 +129,15 @@ const GlobalModals: FC = () => {
         <NewPublication />
       </Modal>
 
-
-
       <Modal
-         onClose={() => {
+        onClose={() => {
           setShowNewVolunteerPostModal(false);
         }}
-        show = {showNewVolunteerPostModal}
+        show={showNewVolunteerPostModal}
         size="md"
         title="Create Volunteer Post"
       >
-        <VolunteerEditor/>
-
+        <VolunteerEditor />
       </Modal>
       <Modal
         icon={<CircleStackIcon className="size-5" />}

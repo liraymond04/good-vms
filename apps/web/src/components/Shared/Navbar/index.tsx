@@ -32,9 +32,6 @@ import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
 import SiteStatus from './SiteStatus';
 import StaffBar from './StaffBar';
-import CreateVolunteerCard from '@components/Volunteer/CreateVolunteerCard';
-import NewPublication from '@components/Composer/NewPublication';
-import Editor from '@components/Volunteer/VolunteerEditor';
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -252,7 +249,6 @@ const Navbar: FC = () => {
           {currentProfile ? <MenuItems /> : null}
           <ModIcon />
         </div>
-        
       </NavbarContainer>
       {showSearch ? (
         <div className="m-3 md:hidden">

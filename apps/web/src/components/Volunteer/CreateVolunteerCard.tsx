@@ -1,17 +1,13 @@
 import type { FC } from 'react';
 
-import getAvatar from '@good/helpers/getAvatar';
-import getLennyURL from '@good/helpers/getLennyURL';
-import getProfile from '@good/helpers/getProfile';
-import { Card, Image } from '@good/ui';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { MenuItem } from '@headlessui/react';
+import { UserIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
-import { MenuItem } from '@headlessui/react';
-import {UserIcon} from '@heroicons/react/24/outline';
+
 import MoreLink from '../../components/Shared/Navbar/NavItems/MoreLink';
 
 interface CreateVolunteerCardProps {
@@ -53,17 +49,12 @@ const CreateVolunteerCard: FC<CreateVolunteerCardProps> = ({ tags }) => {
   }, []);
 
   return (
-    <MenuItem
-      as="button"  
-      onClick={openModal}
-      type="button"
-
-    >
-          <MoreLink
-            onClick={openModal} 
-            icon={<UserIcon className="size-4" />}
-            text="Volunteer Post"
-          />
+    <MenuItem as="button" onClick={openModal} type="button">
+      <MoreLink
+        icon={<UserIcon className="size-4" />}
+        onClick={openModal}
+        text="Volunteer Post"
+      />
     </MenuItem>
   );
 };

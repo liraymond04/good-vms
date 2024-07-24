@@ -1,6 +1,3 @@
-import React, { FC, useState, useEffect, SyntheticEvent } from 'react';
-import { Button } from '@headlessui/react';
-
 import type {
   MirrorablePublication,
   MomokaCommentRequest,
@@ -11,102 +8,54 @@ import type {
   OnchainQuoteRequest,
   Quote
 } from '@good/lens';
+import type { FC } from 'react';
 
+import Attachment from '@components/Composer/Actions/Attachment';
+import { useEditorHandle } from '@components/Composer/Editor/EditorHandle';
+import { AudioPublicationSchema } from '@components/Shared/Audio';
+import { KNOWN_ATTRIBUTES } from '@good/data/constants';
+import { Errors } from '@good/data/errors';
+import checkDispatcherPermissions from '@good/helpers/checkDispatcherPermissions';
+import collectModuleParams from '@good/helpers/collectModuleParams';
 import getAvatar from '@good/helpers/getAvatar';
+import getMentions from '@good/helpers/getMentions';
+import getProfile from '@good/helpers/getProfile';
+import { ReferenceModuleType } from '@good/lens';
 import { Image } from '@good/ui';
+import { Button } from '@headlessui/react';
+import errorToast from '@helpers/errorToast';
 import { defineEditorExtension } from '@helpers/prosekit/extension';
 import { htmlFromMarkdown } from '@helpers/prosekit/markdown';
+import uploadToArweave from '@helpers/uploadToArweave';
+import { MetadataAttributeType } from '@lens-protocol/metadata';
 import dynamic from 'next/dynamic';
 import 'prosekit/basic/style.css';
 import { createEditor } from 'prosekit/core';
 import { ProseKit } from 'prosekit/react';
-import { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import useContentChange from 'src/hooks/prosekit/useContentChange';
 import { usePaste } from 'src/hooks/prosekit/usePaste';
-import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
-import { useProfileStore } from 'src/store/persisted/useProfileStore';
-
-import { useEditorHandle } from '@components/Composer/Editor/EditorHandle';
-import Discard from '@components/Composer/Post/Discard';
-import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
-import Attachment from '@components/Composer/Actions/Attachment';
-import useCreatePublication from 'src/hooks/useCreatePublication';
-import errorToast from '@helpers/errorToast';
-import { usePublicationAudioStore } from 'src/store/non-persisted/publication/usePublicationAudioStore';
-
-import type { IGif } from '@good/types/giphy';
-import type { NewAttachment } from '@good/types/misc';
-
-import NewAttachments from '@components/Composer/NewAttachments';
-import QuotedPublication from '@components/Publication/QuotedPublication';
-import { AudioPublicationSchema } from '@components/Shared/Audio';
-import Wrapper from '@components/Shared/Embed/Wrapper';
-import { KNOWN_ATTRIBUTES } from '@good/data/constants';
-import { Errors } from '@good/data/errors';
-import { PUBLICATION } from '@good/data/tracking';
-import checkDispatcherPermissions from '@good/helpers/checkDispatcherPermissions';
-import collectModuleParams from '@good/helpers/collectModuleParams';
-import getMentions from '@good/helpers/getMentions';
-import getProfile from '@good/helpers/getProfile';
-import removeQuoteOn from '@good/helpers/removeQuoteOn';
-import { ReferenceModuleType } from '@good/lens';
-import { Card, ErrorMessage } from '@good/ui';
-import cn from '@good/ui/cn';
-import { Leafwatch } from '@helpers/leafwatch';
-import uploadToArweave from '@helpers/uploadToArweave';
-import { MetadataAttributeType } from '@lens-protocol/metadata';
-import { useUnmountEffect } from 'framer-motion';
-import toast from 'react-hot-toast';
 import useCreatePoll from 'src/hooks/useCreatePoll';
+import useCreatePublication from 'src/hooks/useCreatePublication';
 import usePublicationMetadata from 'src/hooks/usePublicationMetadata';
 import { useCollectModuleStore } from 'src/store/non-persisted/publication/useCollectModuleStore';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
 import { usePublicationAttachmentStore } from 'src/store/non-persisted/publication/usePublicationAttachmentStore';
-import { usePublicationAttributesStore } from 'src/store/non-persisted/publication/usePublicationAttributesStore';
-import {
-  DEFAULT_AUDIO_PUBLICATION,
-} from 'src/store/non-persisted/publication/usePublicationAudioStore';
-import { usePublicationLicenseStore } from 'src/store/non-persisted/publication/usePublicationLicenseStore';
-import { usePublicationLiveStore } from 'src/store/non-persisted/publication/usePublicationLiveStore';
+import { usePublicationAudioStore } from 'src/store/non-persisted/publication/usePublicationAudioStore';
 import { usePublicationPollStore } from 'src/store/non-persisted/publication/usePublicationPollStore';
-import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
-import {
-  DEFAULT_VIDEO_THUMBNAIL,
-  usePublicationVideoStore
-} from 'src/store/non-persisted/publication/usePublicationVideoStore';
+import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
+import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useNonceStore } from 'src/store/non-persisted/useNonceStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
-import { useProStore } from 'src/store/non-persisted/useProStore';
 import { useReferenceModuleStore } from 'src/store/non-persisted/useReferenceModuleStore';
-
-import LivestreamEditor from '@components/Composer/Actions/LivestreamSettings/LivestreamEditor';
-import PollEditor from '@components/Composer/Actions/PollSettings/PollEditor';
-import RequestEditor from '@components/Composer/Actions/RequestSettings/RequestEditor';
-import { Editor,useEditorContext, withEditorContext } from '@components/Composer/Editor';
-import LinkPreviews from '@components/Composer/LinkPreviews';
-import OpenActionsPreviews from '@components/Composer/OpenActionsPreviews';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
 // Lazy load EditorMenus to reduce bundle size
-const EditorMenus = dynamic(() => import('@components/Composer/Editor/EditorMenus'), { ssr: false });
-
+const EditorMenus = dynamic(
+  () => import('@components/Composer/Editor/EditorMenus'),
+  { ssr: false }
+);
 
 interface VolunteerPublicationProps {
   publication?: MirrorablePublication;
@@ -117,7 +66,7 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
   const content = '';
   const defaultMarkdownRef = useRef(content);
   const { setShowDiscardModal, setShowNewPostModal } =
-  useGlobalModalStateStore();
+    useGlobalModalStateStore();
   const [publicationContentError, setPublicationContentError] = useState('');
   const { audioPublication, setAudioPublication } = usePublicationAudioStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -126,15 +75,12 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
   const [exceededMentionsLimit, setExceededMentionsLimit] = useState(false);
   const { addAttachments, attachments, isUploading, setAttachments } =
     usePublicationAttachmentStore((state) => state);
-    const { isSuspended } = useProfileStatus();
-    const { pollConfig, resetPollConfig, setShowPollEditor, showPollEditor } =
+  const { isSuspended } = useProfileStatus();
+  const { pollConfig, resetPollConfig, setShowPollEditor, showPollEditor } =
     usePublicationPollStore();
-    const { degreesOfSeparation, onlyFollowers, selectedReferenceModule } =
+  const { degreesOfSeparation, onlyFollowers, selectedReferenceModule } =
     useReferenceModuleStore();
-    const { lensHubOnchainSigNonce } = useNonceStore();
-
-
-
+  const { lensHubOnchainSigNonce } = useNonceStore();
 
   // Collect module store
   const { collectModule, reset: resetCollectSettings } = useCollectModuleStore(
@@ -144,26 +90,23 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
   // Open action store
   const { openAction, reset: resetOpenActionSettings } = useOpenActionStore();
 
-
-
-
   const defaultHTML = useMemo(() => {
     const markdown = defaultMarkdownRef.current;
     return markdown ? htmlFromMarkdown(markdown) : undefined;
   }, []);
 
   const [formData, setFormData] = useState({
-    opportunityName: '',
-    startDate: '',
+    category: '',
+    desc: '',
     endDate: '',
     expectedHours: '',
-    category: '',
-    website: '',
-    desc: '',
-    imageFile: null, 
+    imageFile: null,
+    opportunityName: '',
+    startDate: '',
+    website: ''
   });
 
-   const {
+  const {
     publicationContent,
     quotedPublication,
     setPublicationContent,
@@ -171,11 +114,13 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
     setTags
   } = usePublicationStore();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -183,7 +128,6 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
   const getMetadata = usePublicationMetadata();
 
   const { canUseLensManager } = checkDispatcherPermissions(currentProfile);
-
 
   const editor = useMemo(() => {
     const extension = defineEditorExtension();
@@ -194,7 +138,15 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
   usePaste(editor);
   useEditorHandle(editor);
 
-  const { opportunityName, startDate, endDate, expectedHours, category, website, desc } = formData;
+  const {
+    category,
+    desc,
+    endDate,
+    expectedHours,
+    opportunityName,
+    startDate,
+    website
+  } = formData;
 
   const onError = (error?: any) => {
     errorToast(error);
@@ -211,12 +163,9 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
       __typename === 'RelayError' ||
       __typename === 'LensProfileManagerRelayError'
     ) {
-      return  onError;
-
+      return onError;
     }
-
   };
-
 
   const {
     createCommentOnChain,
@@ -253,7 +202,6 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
     }
   }, [publicationContent]);
 
-
   const isComment = Boolean(publication);
   const isQuote = Boolean(quotedPublication);
   const hasAudio = attachments[0]?.type === 'Audio';
@@ -267,7 +215,6 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
     : isQuote
       ? quotedPublication?.momoka?.proof
       : noCollect && noOpenAction;
-
 
   const getAnimationUrl = () => {
     const fallback =
@@ -287,8 +234,6 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
 
     return isComment ? 'Comment' : isQuote ? 'Quote' : 'Post';
   };
-
-
 
   const createPublication = async () => {
     const combinedData = `
@@ -505,7 +450,6 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
     }
   };
 
-
   return (
     <ProseKit editor={editor}>
       <div className="box-border flex h-full w-full justify-stretch overflow-y-auto overflow-x-hidden px-5 py-4">
@@ -516,111 +460,123 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
         />
         <div className="flex flex-1 flex-col overflow-x-hidden">
           <EditorMenus />
-          <div className="p-4 flex flex-col items-center justify-center w-full">
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Volunteer opportunity name</label>
+          <div className="flex w-full flex-col items-center justify-center p-4">
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Volunteer opportunity name
+              </label>
               <input
-                type="text"
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="opportunityName"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
+                onChange={handleChange}
                 placeholder="Medical Internship"
+                required
+                type="text"
                 value={opportunityName}
-                onChange={handleChange}
-                required
               />
             </div>
 
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Start Date</label>
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Start Date
+              </label>
               <input
-                type="date"
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="startDate"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
-                value={startDate}
                 onChange={handleChange}
                 required
-              />
-            </div>
-
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">End Date</label>
-              <input
                 type="date"
+                value={startDate}
+              />
+            </div>
+
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                End Date
+              </label>
+              <input
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="endDate"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
+                onChange={handleChange}
+                required
+                type="date"
                 value={endDate}
-                onChange={handleChange}
-                required
               />
             </div>
 
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Expected number of hours</label>
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Expected number of hours
+              </label>
               <input
-                type="number"
-                name="expectedHours"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
-                placeholder="Ex: 5"
-                value={expectedHours}
-                onChange={handleChange}
-                required
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 min="0"
+                name="expectedHours"
+                onChange={handleChange}
+                placeholder="Ex: 5"
+                required
+                type="number"
+                value={expectedHours}
               />
             </div>
 
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Category</label>
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Category
+              </label>
               <input
-                type="text"
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="category"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
+                onChange={handleChange}
                 placeholder="Healthcare"
-                value={category}
-                onChange={handleChange}
                 required
-              />
-            </div>
-
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Website (leave empty if not linking to external opportunity)</label>
-              <input
                 type="text"
+                value={category}
+              />
+            </div>
+
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Website (leave empty if not linking to external opportunity)
+              </label>
+              <input
+                className="w-full rounded-full border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="website"
-                className="border-2 border-black rounded-full px-5 py-3 text-black w-full focus:border-pink-500"
+                onChange={handleChange}
                 placeholder="https://ecssen.ca/"
+                type="text"
                 value={website}
-                onChange={handleChange}
               />
             </div>
 
-            <div className="relative w-full mb-5">
-              <label className="text-xs dark:text-white text-black">Activity Description</label>
+            <div className="relative mb-5 w-full">
+              <label className="text-xs text-black dark:text-white">
+                Activity Description
+              </label>
               <textarea
+                className="h-40 w-full resize-none rounded-lg border-2 border-black px-5 py-3 text-black focus:border-pink-500"
                 name="desc"
-                className="border-2 border-black rounded-lg px-5 py-3 text-black w-full focus:border-pink-500 h-40 resize-none"
-                placeholder="Tell us more about this volunteer opportunity"
-                value={desc}
                 onChange={handleChange}
+                placeholder="Tell us more about this volunteer opportunity"
                 required
+                value={desc}
               />
             </div>
-            <div className="relative w-full mb-5">
-            <Attachment/>
-             
+            <div className="relative mb-5 w-full">
+              <Attachment />
             </div>
-
           </div>
         </div>
       </div>
       <div style={{ textAlign: 'right' }}>
         <Button
-           onClick={createPublication}
           className="mb-5 mr-8 rounded-full px-4 py-2 text-sm text-white"
+          onClick={createPublication}
           style={{ background: '#da5597' }}
         >
           Create Opportunity
         </Button>
-      </div>   
+      </div>
     </ProseKit>
   );
 };

@@ -40,7 +40,7 @@ interface State {
   showDiscardModal: boolean;
   showMobileDrawer: boolean;
   showNewPostModal: boolean;
-  showNewVolunteerPostModal: boolean; 
+  showNewVolunteerPostModal: boolean;
   showOptimisticTransactionsModal: boolean;
   showProfileSwitchModal: boolean;
   showPublicationReportModal: boolean;
@@ -60,8 +60,8 @@ const store = create<State>((set) => ({
   setShowDiscardModal: (showDiscardModal) => set(() => ({ showDiscardModal })),
   setShowMobileDrawer: (showMobileDrawer) => set(() => ({ showMobileDrawer })),
   setShowNewPostModal: (showNewPostModal) => set(() => ({ showNewPostModal })),
-  setShowNewVolunteerPostModal: (showNewVolunteerPostModal) => 
-    set(() => ({ showNewVolunteerPostModal })), 
+  setShowNewVolunteerPostModal: (showNewVolunteerPostModal) =>
+    set(() => ({ showNewVolunteerPostModal })),
   setShowOptimisticTransactionsModal: (showOptimisticTransactionsModal) =>
     set(() => ({ showOptimisticTransactionsModal })),
   setShowProfileSwitchModal: (showProfileSwitchModal) =>
@@ -82,13 +82,12 @@ const store = create<State>((set) => ({
   showDiscardModal: false,
   showMobileDrawer: false,
   showNewPostModal: false,
-  showNewVolunteerPostModal: false, 
+  showNewVolunteerPostModal: false,
   showOptimisticTransactionsModal: false,
   showProfileSwitchModal: false,
   showPublicationReportModal: false,
   showReportProfileModal: false,
   showScoreModal: false
 }));
-
 
 export const useGlobalModalStateStore = createTrackedSelector(store);
