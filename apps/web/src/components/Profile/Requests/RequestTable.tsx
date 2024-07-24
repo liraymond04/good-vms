@@ -2,12 +2,21 @@ import type { AnyPublication, Post } from '@good/lens';
 
 import { Tooltip } from '@good/ui';
 import { useRouter } from 'next/router';
-
+interface RequestData {
+  amount: number;
+  currency: string;
+  date: string;
+  hours: number;
+  publicationUrl: string;
+  status: string;
+  volunteerName: string;
+  volunteerProfile: string;
+}
 interface RequestTableProps {
   onRequestClose: () => void;
   onRequestOpen: (request: AnyPublication) => void;
   publications: AnyPublication[];
-  selectedRequest: AnyPublication | null;
+  selectedRequest: AnyPublication | null | RequestData;
   showRequest: boolean;
 }
 const RequestTable: React.FC<RequestTableProps> = ({
