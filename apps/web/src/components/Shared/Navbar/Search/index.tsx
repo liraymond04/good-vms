@@ -103,7 +103,7 @@ const Search: FC<SearchProps> = ({ placeholder = 'Search…' }) => {
       </form>
       {pathname !== '/search' && showDropdown ? (
         <div
-          className="absolute mt-2 flex w-[94%] max-w-md flex-col"
+          className="absolute mt-2 flex w-[100%] max-w-md flex-col"
           ref={dropdownRef}
         >
           <Card className="z-[2] max-h-[80vh] overflow-y-auto py-2">
