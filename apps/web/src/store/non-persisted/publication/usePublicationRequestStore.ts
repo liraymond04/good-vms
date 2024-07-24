@@ -1,25 +1,30 @@
-// Created based on usePublicationPollStore.ts, adjust as required
 import { createTrackedSelector } from 'react-tracked';
 import { create } from 'zustand';
 
 interface State {
-  requestConfig: {
-    length: number;
-    options: string[];
+  requestParams: {
+    id: string;
+    organizationName: string;
+    donorProfileID: string;
+    donationAmount: number;
+    transactionURL: string;
+    projectURL: string;
+    volunteerHours: number;
+    evidenceURL: string;
+    description: string;
+    createdAt: Date;
   };
-  resetRequestConfig: () => void;
-  setRequestConfig: (pollConfig: { length: number; options: string[] }) => void;
-  setShowRequestEditor: (showPollEditor: boolean) => void;
+  resetRequestParams: () => void;
+  setRequestParams: (requestParams: State['requestParams']) => void;
+  setShowRequestEditor: (showRequestEditor: boolean) => void;
   showRequestEditor: boolean;
 }
 
 const store = create<State>((set) => ({
-  requestConfig: { length: 7, options: ['', ''] },
-  resetRequestConfig: () =>
-    set(() => ({ requestConfig: { length: 1, options: ['', ''] } })),
-  setRequestConfig: (requestConfig) => set(() => ({ requestConfig })),
-  setShowRequestEditor: (showRequestEditor) =>
-    set(() => ({ showRequestEditor })),
+  requestParams: { id: '', organizationName: '', donorProfileID: '', donationAmount: 0, transactionURL: '', projectURL: '', volunteerHours: 0, evidenceURL: '', description: '', createdAt: new Date() },
+  resetRequestParams: () => set(() => ({ requestParams: { id: '', organizationName: '', donorProfileID: '', donationAmount: 0, transactionURL: '', projectURL: '', volunteerHours: 0, evidenceURL: '', description: '', createdAt: new Date() } })),
+  setRequestParams: (requestParams) => set(() => ({ requestParams })),
+  setShowRequestEditor: (showRequestEditor) => set(() => ({ showRequestEditor })),
   showRequestEditor: false
 }));
 

@@ -69,6 +69,19 @@ export type Poll = {
   options: PollOption[];
 };
 
+export type Request = {
+  id: string;
+  organizationId: string;
+  DonorId: string;
+  DonationAmount: number;
+  TransactionUrl: string;
+  CauseUrl: string;
+  VolunteerHours: number;
+  VolunteerEvidence: string;
+  Description: string;
+  createdAt: Date;
+}
+
 export type Preferences = {
   appIcon: number;
   email: null | string;

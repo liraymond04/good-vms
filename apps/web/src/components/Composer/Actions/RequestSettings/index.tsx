@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { usePublicationRequestStore } from 'src/store/non-persisted/publication/usePublicationRequestStore';
 
 const RequestSettings: FC = () => {
-  const { resetRequestConfig, setShowRequestEditor, showRequestEditor } =
+  const { resetRequestParams, setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   return (
@@ -14,7 +14,7 @@ const RequestSettings: FC = () => {
         aria-label="Request GOOD"
         className="rounded-full outline-offset-8"
         onClick={() => {
-          resetRequestConfig();
+          resetRequestParams();
           setShowRequestEditor(!showRequestEditor);
         }}
         type="button"
