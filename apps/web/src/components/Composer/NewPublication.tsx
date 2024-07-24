@@ -39,6 +39,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useCreatePoll from 'src/hooks/useCreatePoll';
 import useCreatePublication from 'src/hooks/useCreatePublication';
+import useCreateRequest from 'src/hooks/useCreateRequest';
 import usePublicationMetadata from 'src/hooks/usePublicationMetadata';
 import { useCollectModuleStore } from 'src/store/non-persisted/publication/useCollectModuleStore';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
@@ -72,7 +73,6 @@ import { Editor, useEditorContext, withEditorContext } from './Editor';
 import LinkPreviews from './LinkPreviews';
 import OpenActionsPreviews from './OpenActionsPreviews';
 import Discard from './Post/Discard';
-import useCreateRequest from 'src/hooks/useCreateRequest';
 
 const Shimmer = <div className="shimmer mb-1 size-5 rounded-lg" />;
 
@@ -404,24 +404,24 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
         title,
         ...(hasAttributes && {
           attributes: [
-        ...(pollId
-          ? [
-          {
-            key: KNOWN_ATTRIBUTES.POLL_ID,
-            type: MetadataAttributeType.STRING,
-            value: pollId
-          }
-            ]
-          : []),
-        ...(requestId
-          ? [
-          {
-            key: KNOWN_ATTRIBUTES.REQUEST_ID,
-            type: MetadataAttributeType.STRING,
-            value: requestId
-          }
-            ]
-          : [])
+            ...(pollId
+              ? [
+                  {
+                    key: KNOWN_ATTRIBUTES.POLL_ID,
+                    type: MetadataAttributeType.STRING,
+                    value: pollId
+                  }
+                ]
+              : []),
+            ...(requestId
+              ? [
+                  {
+                    key: KNOWN_ATTRIBUTES.REQUEST_ID,
+                    type: MetadataAttributeType.STRING,
+                    value: requestId
+                  }
+                ]
+              : [])
           ]
         }),
         marketplace: {

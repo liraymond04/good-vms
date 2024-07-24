@@ -49,7 +49,7 @@ const Poll: FC<SnapshotProps> = ({ id }) => {
     return null;
   }
 
-  return <Request request={data} refetch={refetch} />;
+  return <Request refetch={refetch} request={data} />;
 };
 
 export default Poll;

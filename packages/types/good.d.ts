@@ -70,17 +70,17 @@ export type Poll = {
 };
 
 export type Request = {
+  CauseUrl: string;
+  createdAt: Date;
+  Description: string;
+  DonationAmount: number;
+  DonorId: string;
   id: string;
   organizationId: string;
-  DonorId: string;
-  DonationAmount: number;
   TransactionUrl: string;
-  CauseUrl: string;
-  VolunteerHours: number;
   VolunteerEvidence: string;
-  Description: string;
-  createdAt: Date;
-}
+  VolunteerHours: number;
+};
 
 export type Preferences = {
   appIcon: number;

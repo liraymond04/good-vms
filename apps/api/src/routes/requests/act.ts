@@ -9,21 +9,21 @@ import { invalidBody, noBody } from 'src/helpers/responses';
 import { object, string } from 'zod';
 
 type StatusChangeRequest = {
-    requestId: string;
-    statusChange: string;
-    };
+  requestId: string;
+  statusChange: string;
+};
 
 // Request Schema
 const validationSchema = object({
-    requestId: string().uuid(),
-    statusChange: string().regex(/^(SUBMITTED|INREVIEW|APPROVED|REJECTED)$/),
+  requestId: string().uuid(),
+  statusChange: string().regex(/^(SUBMITTED|INREVIEW|APPROVED|REJECTED)$/)
 });
 
 export const post = [
   validateLensAccount,
   async (req: Request, res: Response) => {
     const { body } = req;
-    console.log("start")
+    console.log('start');
 
     if (!body) {
       return noBody(res);
@@ -40,7 +40,7 @@ export const post = [
     try {
       const identityToken = req.headers['x-identity-token'] as string;
       const payload = parseJwt(identityToken);
-      console.log("attempt  to change status of request");
+      console.log('attempt  to change status of request');
 
       const data = await goodPg.query(
         `

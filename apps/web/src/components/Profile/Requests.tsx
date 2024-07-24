@@ -5,7 +5,11 @@ import { Errors } from '@good/data';
 import { MAX_UINT256, SEND_TOKENS } from '@good/data/constants';
 import { Button, Card, Tooltip } from '@good/ui';
 import errorToast from '@helpers/errorToast';
-import { CheckCircleIcon, XCircleIcon, ArchiveBoxArrowDownIcon } from '@heroicons/react/24/outline';
+import {
+  ArchiveBoxArrowDownIcon,
+  CheckCircleIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import useHandleWrongNetwork from 'src/hooks/useHandleWrongNetwork';
@@ -13,15 +17,12 @@ import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
 import { useAllowedTokensStore } from 'src/store/persisted/useAllowedTokensStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 import { useRatesStore } from 'src/store/persisted/useRatesStore';
+// import encodeAbiParameters
 import {
   useAccount,
   useWaitForTransactionReceipt,
   useWriteContract
 } from 'wagmi';
-
-// import encodeAbiParameters
-import { encodeAbiParameters } from 'viem';
-import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
 
 const Requests = () => {
   const { currentProfile } = useProfileStore();
@@ -46,14 +47,14 @@ const Requests = () => {
     //   date: "YYYY-MM-DD",
     // },
     {
-      organizationName: '0x01',
-      donorId: '0x02',
       amount: 1,
       currencyRequested: 'MoneyDonation',
-      hours: 0,
-      volunteerName: 'SEND GOOD (USD)',
-      publicationId: '0x03',
       date: '2022-01-01',
+      donorId: '0x02',
+      hours: 0,
+      organizationName: '0x01',
+      publicationId: '0x03',
+      volunteerName: 'SEND GOOD (USD)'
     }
   ];
 
@@ -128,6 +129,7 @@ const Requests = () => {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line require-await
   const handleSendTokens = async (request: any) => {
     if (isLoading) {
       return;
@@ -141,7 +143,10 @@ const Requests = () => {
       if (request.currencyRequested === 'VHR') {
         currencyAddress = allowedTokens.find((token) => token.symbol === 'VHR')
           ?.contractAddress as Address;
-      } else if (request.currencyRequested === 'TimeDonation' || request.currencyRequested === 'MoneyDonation') {
+      } else if (
+        request.currencyRequested === 'TimeDonation' ||
+        request.currencyRequested === 'MoneyDonation'
+      ) {
         currencyAddress = allowedTokens.find((token) => token.symbol === 'GOOD')
           ?.contractAddress as Address;
       }
@@ -159,14 +164,16 @@ const Requests = () => {
 
       // Use GOOD rate if request is Time or Money donation
       if (request.currencyRequested !== 'VHR') {
-        GOODRate = !usdRate ? request.amount : Number((request.amount / usdRate).toFixed(2));
+        GOODRate = !usdRate
+          ? request.amount
+          : Number((request.amount / usdRate).toFixed(2));
         finalGOODRate = GOODRate * 10 ** 18;
         if (request.currencyRequested === 'MoneyDonation') {
           totalGOOD = (finalGOODRate * 0.003) / 0.0001;
         } else if (request.currencyRequested === 'TimeDonation') {
           totalGOOD = (finalGOODRate * 30 * 0.003) / 0.0001;
         }
-      } else { 
+      } else {
         finalVHRRate = request.amount * 10 ** 18;
       }
 
@@ -215,49 +222,53 @@ const Requests = () => {
       </div>
       <Button onClick={enableSending}>Enable Sending GOOD and VHR</Button>
 
-  {requests.map((request, index) => (
-  <div
-    className="grid grid-cols-[180px,auto,auto,auto,auto] gap-2 w-full items-center rounded-xl border bg-gray-100 px-4 py-2 dark:border-gray-700 dark:bg-gray-900"
-    id="goodRequest"
-    key={index}
-  >
-    <span className="">{request.volunteerName}</span>
-    <span className="">
-      {request.currencyRequested === 'MoneyDonation' ? '$' : null}
-      {request.amount} {request.currencyRequested === 'VHR' || request.currencyRequested === 'TimeDonation' ? 'VHR' : null}
-    </span>
-    <span className="">{request.hours}h</span>
-    <span className="">{request.date}</span>
-    <span className="py-2 justify-self-end">
-      <Tooltip className="" content="Deny" placement="top">
-        <button
-          className="rounded-full outline-offset-8"
-          style={{ verticalAlign: 'middle' }}
+      {requests.map((request, index) => (
+        <div
+          className="grid w-full grid-cols-[180px,auto,auto,auto,auto] items-center gap-2 rounded-xl border bg-gray-100 px-4 py-2 dark:border-gray-700 dark:bg-gray-900"
+          id="goodRequest"
+          key={index}
         >
-          <XCircleIcon className="size-8" />
-        </button>
-      </Tooltip>
-      <Tooltip className="" content="Accept" placement="top">
-        <button
-          className="rounded-full outline-offset-8"
-          onClick={() => handleSendTokens(request)}
-          style={{ verticalAlign: 'middle' }}
-        >
-          <CheckCircleIcon className="size-8" />
-        </button>
-      </Tooltip>
-      <Tooltip className="" content="Set to in-review" placement="top">
-        <button
-          className="rounded-full outline-offset-8"
-          style={{ verticalAlign: 'middle' }}
-          // onClick={() => handleSetInReview(request)}
-        >
-          <ArchiveBoxArrowDownIcon className="size-8" />
-        </button>
-      </Tooltip>
-    </span>
-  </div>
-))}
+          <span className="">{request.volunteerName}</span>
+          <span className="">
+            {request.currencyRequested === 'MoneyDonation' ? '$' : null}
+            {request.amount}{' '}
+            {request.currencyRequested === 'VHR' ||
+            request.currencyRequested === 'TimeDonation'
+              ? 'VHR'
+              : null}
+          </span>
+          <span className="">{request.hours}h</span>
+          <span className="">{request.date}</span>
+          <span className="justify-self-end py-2">
+            <Tooltip className="" content="Deny" placement="top">
+              <button
+                className="rounded-full outline-offset-8"
+                style={{ verticalAlign: 'middle' }}
+              >
+                <XCircleIcon className="size-8" />
+              </button>
+            </Tooltip>
+            <Tooltip className="" content="Accept" placement="top">
+              <button
+                className="rounded-full outline-offset-8"
+                onClick={() => handleSendTokens(request)}
+                style={{ verticalAlign: 'middle' }}
+              >
+                <CheckCircleIcon className="size-8" />
+              </button>
+            </Tooltip>
+            <Tooltip className="" content="Set to in-review" placement="top">
+              <button
+                className="rounded-full outline-offset-8"
+                style={{ verticalAlign: 'middle' }}
+                // onClick={() => handleSetInReview(request)}
+              >
+                <ArchiveBoxArrowDownIcon className="size-8" />
+              </button>
+            </Tooltip>
+          </span>
+        </div>
+      ))}
     </Card>
   );
 };

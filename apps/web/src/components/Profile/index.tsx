@@ -192,12 +192,7 @@ const ViewProfile: NextPage = () => {
               ) : feedType === ProfileFeedType.Stats ? (
                 <Stats profileId={profile.id} />
               ) : feedType === ProfileFeedType.Requests ? (
-                <Requests
-                  handle={getProfile(profile).slugWithPrefix}
-                  profileDetailsLoading={profileDetailsLoading}
-                  profileId={profile.id}
-                  type={feedType}
-                />
+                <Requests />
               ) : null}
             </>
           )}
