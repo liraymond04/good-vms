@@ -251,7 +251,6 @@ const Navbar: FC = () => {
           {currentProfile ? <MenuItems /> : null}
           <ModIcon />
         </div>
-        <CreateVolunteerCard/>
         
       </NavbarContainer>
       {showSearch ? (

@@ -618,7 +618,7 @@ const VolunteerEditor: FC<VolunteerPublicationProps> = ({ publication }) => {
           className="mb-5 mr-8 rounded-full px-4 py-2 text-sm text-white"
           style={{ background: '#da5597' }}
         >
-          Volunteer
+          Create Opportunity
         </Button>
       </div>   
     </ProseKit>
