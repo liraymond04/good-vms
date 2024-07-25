@@ -52,7 +52,7 @@ const Explore: NextPage = () => {
           <div className="mb-5">
             <Search />
           </div>
-          <TabList className="divider space-x-8">
+          <TabList className="divider flex space-x-2 overflow-x-auto whitespace-nowrap">
             {tabs.map((tab, index) => (
               <Tab
                 className={({ selected }) =>
