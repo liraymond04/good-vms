@@ -6,12 +6,10 @@ import type {
   OnchainCommentRequest,
   OnchainPostRequest,
   OnchainQuoteRequest,
-  PublicationMarketplaceMetadataAttribute,
   Quote
 } from '@good/lens';
 import type { IGif } from '@good/types/giphy';
 import type { NewAttachment } from '@good/types/misc';
-// import type { MarketplaceMetadataAttribute } from '@lens-protocol/metadata';
 import type { FC } from 'react';
 
 import NewAttachments from '@components/Composer/NewAttachments';
@@ -338,17 +336,6 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     return isComment ? 'Comment' : isQuote ? 'Quote' : 'Post';
   };
 
-  const mapFormFieldsToAttributes =
-    (): PublicationMarketplaceMetadataAttribute[] => {
-      return !formAttributes
-        ? []
-        : formAttributes.map(({ displayType, traitType, value }) => ({
-            displayType,
-            traitType,
-            value
-          }));
-    };
-
   const createPublication = async () => {
     if (!currentProfile) {
       return toast.error(Errors.SignWallet);
@@ -395,9 +382,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
       const title = hasAudio
         ? audioPublication.title
         : `${getTitlePrefix()} by ${getProfile(currentProfile).slugWithPrefix}`;
-      const hasAttributes = Boolean(pollId || requestId);
-
-      const formDataAttributes = mapFormFieldsToAttributes();
+      const hasAttributes = Boolean(pollId || requestId || formAttributes);
 
       const baseMetadata = {
         content: processedPublicationContent,
@@ -421,12 +406,12 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
                     value: requestId
                   }
                 ]
-              : [])
+              : []),
+            ...(formAttributes ? formAttributes : [])
           ]
         }),
         marketplace: {
           animation_url: getAnimationUrl(),
-          attributes: formDataAttributes,
           description: processedPublicationContent,
           external_url: `https://bcharity.net${getProfile(currentProfile).link}`,
           name: title

@@ -1,7 +1,7 @@
 import type { Handler } from 'express';
 
-import { GoodDonation } from '@good/abis';
-import { GOOD_DONATION, IS_MAINNET } from '@good/data/constants';
+import { GoodOrganizationStore } from '@good/abis';
+import { GOOD_ORGANIZATION_STORE, IS_MAINNET } from '@good/data/constants';
 import logger from '@good/helpers/logger';
 import catchedError from 'src/helpers/catchedError';
 import { noBody } from 'src/helpers/responses';
@@ -15,10 +15,10 @@ const publicClient = createPublicClient({
 
 async function verifyDoneeId(doneeId: `0x${string}`) {
   const verified = await publicClient.readContract({
-    abi: GoodDonation,
-    address: GOOD_DONATION,
+    abi: GoodOrganizationStore,
+    address: GOOD_ORGANIZATION_STORE,
     args: [doneeId],
-    functionName: 'isVerifiedDonee'
+    functionName: 'isOrganization'
   });
 
   return verified;

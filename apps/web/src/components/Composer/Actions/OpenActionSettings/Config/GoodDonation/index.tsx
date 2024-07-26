@@ -1,7 +1,7 @@
 import SaveOrCancel from '@components/Composer/Actions/OpenActionSettings/SaveOrCancel';
 import ToggleWithHelper from '@components/Shared/ToggleWithHelper';
-import { GoodDonation } from '@good/abis';
-import { GOOD_DONATION } from '@good/data/constants';
+import { GoodOrganizationStore } from '@good/abis';
+import { GOOD_DONATION, GOOD_ORGANIZATION_STORE } from '@good/data/constants';
 import { type FC, useState } from 'react';
 import toast from 'react-hot-toast';
 import { createTrackedSelector } from 'react-tracked';
@@ -28,10 +28,10 @@ const DonationConfig: FC = () => {
   const [toggleOn, setToggleOn] = useState(enabled);
 
   const { data, error, isError, isLoading } = useReadContract({
-    abi: GoodDonation,
-    address: GOOD_DONATION,
+    abi: GoodOrganizationStore,
+    address: GOOD_ORGANIZATION_STORE,
     args: [address!],
-    functionName: 'isVerifiedDonee',
+    functionName: 'isOrganization',
     query: {
       enabled: !!address,
       staleTime: 1 * 60 * 1000
