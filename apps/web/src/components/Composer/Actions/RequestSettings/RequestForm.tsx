@@ -100,7 +100,7 @@ const RequestForm: FC = () => {
       addAttribute({
         key: key,
         type: MetadataAttributeType.STRING,
-        value: value
+        value: value ? value : '_EMPTY_VALUE'
       });
     });
 
