@@ -8,7 +8,6 @@ import type {
 import type { FC } from 'react';
 import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
 
-// import GoodAction from './GoodAction';
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
 import { GoodOrganizationStore } from '@good/abis';
 import { GOOD_ORGANIZATION_STORE } from '@good/data/constants';
@@ -17,10 +16,9 @@ import {
   PublicationType,
   usePublicationsQuery
 } from '@good/lens';
-import { Card } from '@good/ui';
+import { Button, Card } from '@good/ui';
 import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-// import VHRAction from './VHRAction';
 import { ProfileFeedType } from 'src/enums';
 import { useProfileFeedStore } from 'src/store/non-persisted/useProfileFeedStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
@@ -30,6 +28,7 @@ import { useAccount, useReadContract } from 'wagmi';
 import OrganizationListing from './OrganizationListing';
 import OrganizationTable from './OrganizationTable';
 import RequestListing from './RequestListing';
+import RequestPrototype from './RequestPrototype';
 import RequestTable from './RequestTable';
 
 let virtuosoState: any = { ranges: [], screenTop: 0 };
@@ -37,7 +36,7 @@ let virtuosoState: any = { ranges: [], screenTop: 0 };
 interface RequestProps {
   handle: string;
   profileDetailsLoading: boolean;
-  profileId: string;
+  profileId: null | string;
   type:
     | ProfileFeedType.Collects
     | ProfileFeedType.Feed
@@ -70,7 +69,7 @@ const Requests: FC<RequestProps> = ({
   const [sortBy, setSortBy] = useState('Name');
   const [filterBy, setFilterBy] = useState('All');
   const [filteredPublications, setFilteredPublications] = useState<
-    AnyPublication[]
+    (Comment | Post | Quote)[]
   >([]);
   const [showRequest, setShowRequest] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<
@@ -184,7 +183,9 @@ const Requests: FC<RequestProps> = ({
     }
   };
 
-  function sortPubsName(arr: (Comment | Post | Quote)[]): AnyPublication[] {
+  function sortPubsName(
+    arr: (Comment | Post | Quote)[]
+  ): (Comment | Post | Quote)[] {
     if (arr.length <= 1) {
       return arr;
     }
@@ -202,7 +203,9 @@ const Requests: FC<RequestProps> = ({
     return [...sortPubsName(left), ...middle, ...sortPubsName(right)];
   }
 
-  function sortPubsAmount(arr: (Comment | Post | Quote)[]): AnyPublication[] {
+  function sortPubsAmount(
+    arr: (Comment | Post | Quote)[]
+  ): (Comment | Post | Quote)[] {
     if (arr.length <= 1) {
       return arr;
     }
@@ -283,11 +286,41 @@ const Requests: FC<RequestProps> = ({
   const onRequestClose = () => {
     setShowRequest(false);
   };
+
+  // Function for getting request data
+  // const getRequest = async (): Promise<null | TRequest> => {
+  //   if (filteredPublications.length == 0) {
+  //     return null;
+  //   }
+
+  //   const requestId = getPublicationAttribute(
+  //     filteredPublications[0]?.metadata?.attributes,
+  //     KNOWN_ATTRIBUTES.REQUEST_ID
+  //   );
+
+  //   try {
+  //     const response = await axios.get(`${GOOD_API_URL}/requests/get`, {
+  //       headers: { ...getAuthApiHeaders(), 'X-Skip-Cache': true },
+  //       params: { requestId }
+  //     });
+  //     const { data } = response;
+
+  //     console.log(data?.result)
+  //     return data?.result;
+  //   } catch {
+  //     console.log("An error occurred while fetching request data")
+  //     return null;
+  //   }
+  // };
   return (
     <Card className="space-y-3 p-5">
       {/* Replace the "false" below with the attribute that tells us 
           whether the user is a volunteer or organization.
           E.g. currentProfile?.metadata?.attributes?[index of volunteer/organization] */}
+
+      {/* {filteredPublications.length != 0 ? <Button onClick={() => getRequest()}>
+          Try getting data for first request in table
+        </Button> : null} */}
 
       <div> {false ? 'Incoming Requests' : 'Outgoing Requests'}: </div>
 
@@ -324,6 +357,9 @@ const Requests: FC<RequestProps> = ({
             <option>Good</option>
             <option>VHR</option>
           </select>
+          {filteredPublications.length == 0 ? (
+            <Button onClick={filterPubs}>Load Requests</Button>
+          ) : null}
         </span>
       </div>
       {!isVerifiedOrganization ? (
@@ -357,6 +393,8 @@ const Requests: FC<RequestProps> = ({
             requestData={selectedRequest}
           />
         )}
+        <div>Prototype for Incoming Requests:</div>
+        <RequestPrototype />
       </div>
     </Card>
   );
