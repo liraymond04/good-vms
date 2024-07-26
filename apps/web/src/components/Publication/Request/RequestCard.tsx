@@ -15,7 +15,7 @@ interface RequestFormProps {
   request: any;
 }
 
-const RequestForm: React.FC<RequestFormProps> = ({ refetch, request }) => {
+const RequestCard: React.FC<RequestFormProps> = ({ refetch, request }) => {
   // Implement your component logic here
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
@@ -71,47 +71,43 @@ const RequestForm: React.FC<RequestFormProps> = ({ refetch, request }) => {
       <div className="px-6 pb-4">
         {request.organizationName && (
           <div className="mb-4">
-            <b>Organization Name:</b> <br />
-            {request.organizationName}
+            <b>Organization Name:</b> <br />@{request.organizationName}
           </div>
         )}
         {request.donorProfileID && (
           <div className="mb-4">
-            <b>Donor's Profile ID:</b> <br />
-            {request.donorProfileID}
+            <b>Donor's Profile ID:</b> <br />@{request.donorProfileID}
           </div>
         )}
         {request.donationAmount != 0 && (
           <div className="mb-4">
-            <b>Donation Amount</b>
-            <br /> {request.donationAmount}
+            <b>Donation Amount</b> <br />${request.donationAmount}
           </div>
         )}
         {request.projectURL && (
           <div className="mb-4">
-            <b>Project or Cause URL</b>
-            <br /> {request.projectURL}
+            <b>Project or Cause URL</b> <br />
+            <a href={request.projectURL}>{request.projectURL}</a>
           </div>
         )}
         {request.transactionURL && (
           <div className="mb-4">
             <b>Donation Transaction URL</b> <br />
-            {request.transactionURL}
+            <a href={request.transactionURL}>{request.transactionURL}</a>
           </div>
         )}
 
         {request.volunteerHours != 0 && (
           <div className="mb-4">
-            <b>Volunteer Hours</b>
-            <br />
-            {request.volunteerHours}
+            <b>Volunteer Hours</b> <br />
+            {request.volunteerHours} hours
           </div>
         )}
 
         {request.evidenceURL && (
           <div className="mb-4">
             <b>Evidence of Volunteer Activities URL</b> <br />
-            {request.evidenceURL}
+            <a href={request.evidencetURL}>{request.evidenceURL}</a>
           </div>
         )}
         {request.description && (
@@ -150,4 +146,4 @@ const RequestForm: React.FC<RequestFormProps> = ({ refetch, request }) => {
   );
 };
 
-export default RequestForm;
+export default RequestCard;
