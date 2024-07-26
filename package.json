@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@good/abis": "workspace:^",
+    "@lens-protocol/client": "^2.3.0",
     "styled-components": "^6.1.11"
   },
   "devDependencies": {

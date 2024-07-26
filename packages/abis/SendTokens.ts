@@ -64,11 +64,6 @@ export const SendTokens = [
   },
   {
     inputs: [],
-    name: 'InsufficientAllowance',
-    type: 'error'
-  },
-  {
-    inputs: [],
     name: 'InvalidInitialization',
     type: 'error'
   },
@@ -85,12 +80,12 @@ export const SendTokens = [
   },
   {
     inputs: [],
-    name: 'NotInitializing',
+    name: 'NotHub',
     type: 'error'
   },
   {
     inputs: [],
-    name: 'ReentrancyGuardReentrantCall',
+    name: 'NotInitializing',
     type: 'error'
   },
   {
@@ -103,6 +98,60 @@ export const SendTokens = [
     ],
     name: 'SafeERC20FailedOperation',
     type: 'error'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'organization',
+        type: 'address'
+      }
+    ],
+    name: 'UnverifiedOrganization',
+    type: 'error'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'organizationProfileId',
+        type: 'uint256'
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'toProfileId',
+        type: 'uint256'
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'publicationId',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'GOODAmount',
+        type: 'uint256'
+      }
+    ],
+    name: 'GoodTokenSent',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -128,6 +177,55 @@ export const SendTokens = [
       }
     ],
     name: 'Paused',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'profileId',
+        type: 'uint256'
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'publicationId',
+        type: 'uint256'
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'profileOwner',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'organizationAddress',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'recipientAddress',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'GOODAmount',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'VHRAmount',
+        type: 'uint256'
+      }
+    ],
+    name: 'RequestCreated',
     type: 'event'
   },
   {
@@ -211,7 +309,45 @@ export const SendTokens = [
       {
         indexed: true,
         internalType: 'uint256',
-        name: 'fromProfileId',
+        name: 'profileId',
+        type: 'uint256'
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'publicationId',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'enum SendTokenActionModule.RequestStatus',
+        name: 'requestStatus',
+        type: 'uint8'
+      }
+    ],
+    name: 'StatusChanged',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'Unpaused',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'organizationProfileId',
         type: 'uint256'
       },
       {
@@ -229,12 +365,6 @@ export const SendTokens = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'token',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'address',
         name: 'from',
         type: 'address'
       },
@@ -247,29 +377,42 @@ export const SendTokens = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'amount',
+        name: 'VHRAmount',
         type: 'uint256'
       }
     ],
-    name: 'TokensSent',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'account',
-        type: 'address'
-      }
-    ],
-    name: 'Unpaused',
+    name: 'VHRTokenSent',
     type: 'event'
   },
   {
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'GOOD',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'ORGANIZATION_ROLE',
     outputs: [
       {
         internalType: 'bytes32',
@@ -294,24 +437,39 @@ export const SendTokens = [
     type: 'function'
   },
   {
-    inputs: [
+    inputs: [],
+    name: 'VHR',
+    outputs: [
       {
-        internalType: 'address',
-        name: 'tokenAddress',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
-        name: 'owner',
+        internalType: 'contract IERC20',
+        name: '',
         type: 'address'
       }
     ],
-    name: 'checkAllowance',
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'addOrganization',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getModuleMetadataURI',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'string',
         name: '',
-        type: 'uint256'
+        type: 'string'
       }
     ],
     stateMutability: 'view',
@@ -394,11 +552,74 @@ export const SendTokens = [
         internalType: 'address',
         name: 'lensHubAddress',
         type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'GOODAddress',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'VHRAddress',
+        type: 'address'
       }
     ],
     name: 'initialize',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'profileId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'pubId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: 'transactionExecutor',
+        type: 'address'
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes'
+      }
+    ],
+    name: 'initializePublicationAction',
+    outputs: [
+      {
+        internalType: 'bytes',
+        name: '',
+        type: 'bytes'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'isOrganization',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -437,6 +658,85 @@ export const SendTokens = [
   {
     inputs: [
       {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'publicationActedProfileId',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'publicationActedId',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'actorProfileId',
+            type: 'uint256'
+          },
+          {
+            internalType: 'address',
+            name: 'actorProfileOwner',
+            type: 'address'
+          },
+          {
+            internalType: 'address',
+            name: 'transactionExecutor',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256[]',
+            name: 'referrerProfileIds',
+            type: 'uint256[]'
+          },
+          {
+            internalType: 'uint256[]',
+            name: 'referrerPubIds',
+            type: 'uint256[]'
+          },
+          {
+            internalType: 'enum Types.PublicationType[]',
+            name: 'referrerPubTypes',
+            type: 'uint8[]'
+          },
+          {
+            internalType: 'bytes',
+            name: 'actionModuleData',
+            type: 'bytes'
+          }
+        ],
+        internalType: 'struct Types.ProcessActionParams',
+        name: 'params',
+        type: 'tuple'
+      }
+    ],
+    name: 'processPublicationAction',
+    outputs: [
+      {
+        internalType: 'bytes',
+        name: '',
+        type: 'bytes'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'removeOrganization',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
         internalType: 'bytes32',
         name: 'role',
         type: 'bytes32'
@@ -450,6 +750,50 @@ export const SendTokens = [
     name: 'renounceRole',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'request',
+    outputs: [
+      {
+        internalType: 'enum SendTokenActionModule.RequestStatus',
+        name: 'requestStatus',
+        type: 'uint8'
+      },
+      {
+        internalType: 'bool',
+        name: 'postedByOrganization',
+        type: 'bool'
+      },
+      {
+        internalType: 'address',
+        name: 'recipientAddress',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'GOODAmount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'VHRAmount',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -474,22 +818,17 @@ export const SendTokens = [
     inputs: [
       {
         internalType: 'address',
-        name: 'tokenAddress',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
         name: 'recipient',
         type: 'address'
       },
       {
         internalType: 'uint256',
-        name: 'amount',
+        name: 'GOODAmount',
         type: 'uint256'
       },
       {
         internalType: 'uint256',
-        name: 'fromProfileId',
+        name: 'organizationProfileId',
         type: 'uint256'
       },
       {
@@ -501,9 +840,114 @@ export const SendTokens = [
         internalType: 'uint256',
         name: 'publicationId',
         type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address'
       }
     ],
-    name: 'sendTokens',
+    name: 'sendGood',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'VHRAmount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'organizationProfileId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'toProfileId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'publicationId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address'
+      }
+    ],
+    name: 'sendVHR',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_good',
+        type: 'address'
+      }
+    ],
+    name: 'setGOOD',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_metadataURI',
+        type: 'string'
+      }
+    ],
+    name: 'setModuleMetadataURI',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'profileId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'publicationId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'enum SendTokenActionModule.RequestStatus',
+        name: 'statusToSet',
+        type: 'uint8'
+      }
+    ],
+    name: 'setRequestStatus',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_vhr',
+        type: 'address'
+      }
+    ],
+    name: 'setVHR',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -512,7 +956,7 @@ export const SendTokens = [
     inputs: [
       {
         internalType: 'bytes4',
-        name: 'interfaceId',
+        name: 'interfaceID',
         type: 'bytes4'
       }
     ],
@@ -524,7 +968,7 @@ export const SendTokens = [
         type: 'bool'
       }
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
     type: 'function'
   },
   {

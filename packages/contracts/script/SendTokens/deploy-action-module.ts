@@ -7,8 +7,10 @@ async function deployProxy() {
   const GOOD = '0x2d4139144F9Dc09C4A97Dd1fFA83acAf60ff275E';
   const VHR = '0x7E6A70e1e1B0cC0Af51424Bb70d98445A1af5CCA';
 
-  const SendTokens = await hre.ethers.getContractFactory('SendTokens');
-  const deployProxy = await hre.upgrades.deployProxy(SendTokens as any, [
+  const SendGoodVHRToken = await hre.ethers.getContractFactory(
+    'SendTokenActionModule'
+  );
+  const deployProxy = await hre.upgrades.deployProxy(SendGoodVHRToken as any, [
     defaultAdmin,
     pauser,
     lensHub,
@@ -17,7 +19,7 @@ async function deployProxy() {
   ]);
   await deployProxy.deployed();
 
-  console.log(`SendTokens deployed to ${await deployProxy.address}`);
+  console.log(`SendTokenActionModule deployed to ${await deployProxy.address}`);
 }
 
 deployProxy().catch((error) => {

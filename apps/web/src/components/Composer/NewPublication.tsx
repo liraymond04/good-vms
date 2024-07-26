@@ -37,6 +37,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useCreatePoll from 'src/hooks/useCreatePoll';
 import useCreatePublication from 'src/hooks/useCreatePublication';
+import useCreateRequest from 'src/hooks/useCreateRequest';
 import usePublicationMetadata from 'src/hooks/usePublicationMetadata';
 import { useCollectModuleStore } from 'src/store/non-persisted/publication/useCollectModuleStore';
 import { useOpenActionStore } from 'src/store/non-persisted/publication/useOpenActionStore';
@@ -55,6 +56,7 @@ import {
   DEFAULT_VIDEO_THUMBNAIL,
   usePublicationVideoStore
 } from 'src/store/non-persisted/publication/usePublicationVideoStore';
+import { useRequestFormDataStore } from 'src/store/non-persisted/publication/useRequestFormDataStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useNonceStore } from 'src/store/non-persisted/useNonceStore';
 import { useProfileStatus } from 'src/store/non-persisted/useProfileStatus';
@@ -157,7 +159,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
     usePublicationPollStore();
 
   // Request store
-  const { requestConfig, setShowRequestEditor, showRequestEditor } =
+  const { requestParams, setShowRequestEditor, showRequestEditor } =
     usePublicationRequestStore();
 
   // License store
@@ -178,6 +180,8 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
   // Attributes store
   const { reset: resetAttributes } = usePublicationAttributesStore();
 
+  const { attributes: formAttributes } = useRequestFormDataStore();
+
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -188,6 +192,7 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
   const editor = useEditorContext();
 
   const createPoll = useCreatePoll();
+  const createRequest = useCreateRequest();
   const getMetadata = usePublicationMetadata();
 
   const { canUseLensManager } = checkDispatcherPermissions(currentProfile);
@@ -367,13 +372,17 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
       if (showPollEditor) {
         pollId = await createPoll();
       }
+      let requestId;
+      if (showRequestEditor) {
+        requestId = await createRequest();
+      }
 
       const processedPublicationContent =
         publicationContent.length > 0 ? publicationContent : undefined;
       const title = hasAudio
         ? audioPublication.title
         : `${getTitlePrefix()} by ${getProfile(currentProfile).slugWithPrefix}`;
-      const hasAttributes = Boolean(pollId);
+      const hasAttributes = Boolean(pollId || requestId || formAttributes);
 
       const baseMetadata = {
         content: processedPublicationContent,
@@ -388,7 +397,17 @@ const NewPublication: FC<NewPublicationProps> = ({ publication }) => {
                     value: pollId
                   }
                 ]
-              : [])
+              : []),
+            ...(requestId
+              ? [
+                  {
+                    key: KNOWN_ATTRIBUTES.REQUEST_ID,
+                    type: MetadataAttributeType.STRING,
+                    value: requestId
+                  }
+                ]
+              : []),
+            ...(formAttributes ? formAttributes : [])
           ]
         }),
         marketplace: {

@@ -53,6 +53,13 @@ enum FeatureType {
   MODE
 }
 
+enum RequestStatus {
+  SUBMITTED
+  INREVIEW
+  APPROVED
+  REJECTED
+}
+
 model ProfileFeature {
   profileId String
   featureId String   @db.Uuid
@@ -103,6 +110,20 @@ model PollResponse {
   @@index([optionId])
 }
 
+model Request {
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationName String
+  donorProfileID   String
+  donationAmount   Float
+  transactionURL   String
+  projectURL       String
+  volunteerHours   Int
+  evidenceURL      String
+  description      String
+  status           RequestStatus @default(SUBMITTED)
+  createdAt        DateTime      @default(now())
+}
+
 model AllowedToken {
   id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String
@@ -147,7 +168,7 @@ model Cause {
   profileId      String
   profileAddress String
   donations      CauseDonation[]
-  createdAt     DateTime @default(now())
+  createdAt      DateTime        @default(now())
 }
 
 model CauseDonation {

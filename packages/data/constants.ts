@@ -66,6 +66,7 @@ export const GOOD_MEMBERSHIP_NFT = IS_MAINNET
   : '0x75120677aBF34ae95a916C6E9DbB610a06536CC3';
 export const GOOD_MEMBERSHIP_NFT_PUBLICATION_ID = '0x020b69-0x01';
 export const SUPER_ADMIN = '0x0d';
+export const REQUEST_GOOD = '0x29B3f69449e433616455E94630F9013a5dF928ab';
 export const DEFAULT_DECENT_OA_TOKEN = {
   contractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
   decimals: 18,
@@ -140,6 +141,7 @@ export const STAFF_PICK_FEATURE_ID = '73d2f48d-0291-4a36-adc2-9737057ad2b7';
 export const KNOWN_ATTRIBUTES = {
   HIDE_OEMBED: 'hideOembed',
   POLL_ID: 'heyPollId',
+  REQUEST_ID: 'heyRequestId',
   SWAP_OA_DEFAULT_AMOUNT: 'swapOADefaultAmount'
 };
 
