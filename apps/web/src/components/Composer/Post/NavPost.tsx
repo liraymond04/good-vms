@@ -41,11 +41,11 @@ const NavPost: FC = () => {
 
   return (
     <button
-      className="mb-7 mt-2 flex w-min items-center justify-center rounded-full bg-[#da5597] px-2 py-2 text-white focus:outline-none lg:w-full"
+      className="mb-7 mt-2 flex w-full items-center justify-center rounded-full bg-[#da5597] px-2 py-2 text-white focus:outline-none max-[1024px]:w-min"
       onClick={openModal}
       type="button"
     >
-      <span className="block text-xl max-[1024px]:hidden">Post</span>
+      <span className="text-xl max-[1024px]:hidden">Post</span>
       <PencilSquareIcon className="hidden size-8 max-[1024px]:block" />
     </button>
   );
