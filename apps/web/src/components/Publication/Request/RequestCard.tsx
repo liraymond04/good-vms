@@ -15,7 +15,7 @@ interface RequestFormProps {
   request: any;
 }
 
-const RequestForm: React.FC<RequestFormProps> = ({ refetch, request }) => {
+const RequestCard: React.FC<RequestFormProps> = ({ refetch, request }) => {
   // Implement your component logic here
   const { currentProfile } = useProfileStore();
   const { isSuspended } = useProfileStatus();
@@ -149,4 +149,4 @@ const RequestForm: React.FC<RequestFormProps> = ({ refetch, request }) => {
   );
 };
 
-export default RequestForm;
+export default RequestCard;
