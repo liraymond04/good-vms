@@ -319,23 +319,9 @@ export const JobsActionModule = [
   },
   {
     inputs: [],
-    name: 'ORGANIZATION_ROLE',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'PAUSER_ROLE',
     outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-    name: 'addOrganization',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -449,7 +435,12 @@ export const JobsActionModule = [
     inputs: [
       { internalType: 'address', name: 'defaultAdmin', type: 'address' },
       { internalType: 'address', name: 'pauser', type: 'address' },
-      { internalType: 'address', name: 'lensHubAddress', type: 'address' }
+      { internalType: 'address', name: 'lensHubAddress', type: 'address' },
+      {
+        internalType: 'address',
+        name: 'organizationStoreAddress',
+        type: 'address'
+      }
     ],
     name: 'initialize',
     outputs: [],
@@ -469,16 +460,18 @@ export const JobsActionModule = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-    name: 'isOrganization',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    inputs: [],
+    name: 'lensHub',
+    outputs: [{ internalType: 'contract ILensHub', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'lensHub',
-    outputs: [{ internalType: 'contract ILensHub', name: '', type: 'address' }],
+    name: 'organizationStore',
+    outputs: [
+      { internalType: 'contract IOrganizationStore', name: '', type: 'address' }
+    ],
     stateMutability: 'view',
     type: 'function'
   },
@@ -549,13 +542,6 @@ export const JobsActionModule = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-    name: 'removeOrganization',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
     inputs: [
       { internalType: 'bytes32', name: 'role', type: 'bytes32' },
       { internalType: 'address', name: 'callerConfirmation', type: 'address' }
@@ -592,8 +578,30 @@ export const JobsActionModule = [
     type: 'function'
   },
   {
+    inputs: [
+      { internalType: 'address', name: 'lensHubAddress', type: 'address' }
+    ],
+    name: 'setLensHub',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [{ internalType: 'string', name: '_metadataURI', type: 'string' }],
     name: 'setModuleMetadataURI',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'organizationStoreAddress',
+        type: 'address'
+      }
+    ],
+    name: 'setOrganizationStore',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'

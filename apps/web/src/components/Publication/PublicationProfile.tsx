@@ -6,6 +6,7 @@ import { apps } from '@good/data/apps';
 import formatRelativeOrAbsolute from '@good/helpers/datetime/formatRelativeOrAbsolute';
 import getProfile from '@good/helpers/getProfile';
 import hasMisused from '@good/helpers/hasMisused';
+import cn from '@good/ui/cn';
 import isVerified from '@helpers/isVerified';
 import {
   CheckBadgeIcon,
@@ -33,9 +34,18 @@ const PublicationProfile: FC<FeedUserProfileProps> = ({
   tags,
   timestamp
 }) => {
-  const WrappedLink = ({ children }: { children: ReactNode }) => (
+  const WrappedLink = ({
+    children,
+    className = ''
+  }: {
+    children: ReactNode;
+    className?: string;
+  }) => (
     <Link
-      className="truncate outline-none hover:underline focus:underline"
+      className={cn(
+        'truncate outline-none hover:underline focus:underline',
+        className
+      )}
       href={getProfile(profile).link}
     >
       <UserPreview
@@ -49,8 +59,8 @@ const PublicationProfile: FC<FeedUserProfileProps> = ({
   );
 
   return (
-    <div className="flex max-w-sm flex-wrap items-center">
-      <WrappedLink>
+    <div className="flex min-w-0 max-w-sm items-center">
+      <WrappedLink className="min-w-fit">
         <span className="font-semibold">{getProfile(profile).displayName}</span>
       </WrappedLink>
       <WrappedLink>
@@ -60,13 +70,13 @@ const PublicationProfile: FC<FeedUserProfileProps> = ({
         />
       </WrappedLink>
       {isVerified(profile.id) ? (
-        <CheckBadgeIcon className="text-brand-500 ml-1 size-4" />
+        <CheckBadgeIcon className="text-brand-500 ml-1 size-4 min-w-fit" />
       ) : null}
       {hasMisused(profile.id) ? (
-        <ExclamationCircleIcon className="ml-1 size-4" />
+        <ExclamationCircleIcon className="ml-1 size-4 min-w-fit" />
       ) : null}
       {timestamp ? (
-        <span className="ld-text-gray-500 truncate">
+        <span className="ld-text-gray-500 min-w-fit">
           <span className="mx-1">·</span>
           <Link
             className="text-xs hover:underline"
