@@ -71,31 +71,28 @@ const RequestCard: React.FC<RequestFormProps> = ({ refetch, request }) => {
       <div className="px-6 pb-4">
         {request.organizationName && (
           <div className="mb-4">
-            <b>Organization Name:</b> <br />
-            @{request.organizationName}
+            <b>Organization Name:</b> <br />@{request.organizationName}
           </div>
         )}
         {request.donorProfileID && (
           <div className="mb-4">
-            <b>Donor's Profile ID:</b> <br />
-            @{request.donorProfileID}
+            <b>Donor's Profile ID:</b> <br />@{request.donorProfileID}
           </div>
         )}
         {request.donationAmount != 0 && (
           <div className="mb-4">
-            <b>Donation Amount</b> <br /> 
-            ${request.donationAmount}
+            <b>Donation Amount</b> <br />${request.donationAmount}
           </div>
         )}
         {request.projectURL && (
           <div className="mb-4">
-            <b>Project or Cause URL</b> <br /> 
+            <b>Project or Cause URL</b> <br />
             <a href={request.projectURL}>{request.projectURL}</a>
           </div>
         )}
         {request.transactionURL && (
           <div className="mb-4">
-            <b>Donation Transaction URL</b> <br /> 
+            <b>Donation Transaction URL</b> <br />
             <a href={request.transactionURL}>{request.transactionURL}</a>
           </div>
         )}
