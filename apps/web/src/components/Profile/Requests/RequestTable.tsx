@@ -1,4 +1,4 @@
-import type { AnyPublication, Post } from '@good/lens';
+import type { AnyPublication, Post, Comment, Quote } from '@good/lens';
 
 import { Tooltip } from '@good/ui';
 import { useRouter } from 'next/router';
@@ -55,7 +55,6 @@ const RequestTable: React.FC<RequestTableProps> = ({
               {/* Replace the "false" below with the attribute that tells us 
                 whether the user is a volunteer or organization.
                 E.g. currentProfile?.metadata?.attributes?[index of volunteer/organization] */}
-
               <td
                 className="request-data-linked"
                 onClick={() => {

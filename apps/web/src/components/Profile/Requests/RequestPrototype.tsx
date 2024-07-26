@@ -24,7 +24,7 @@ import {
   useWriteContract
 } from 'wagmi';
 
-const Requests = () => {
+const RequestPrototype = () => {
   const { currentProfile } = useProfileStore();
   const { allowedTokens } = useAllowedTokensStore();
   const { fiatRates } = useRatesStore();
@@ -273,4 +273,4 @@ const Requests = () => {
   );
 };
 
-export default Requests;
+export default RequestPrototype;
