@@ -7,6 +7,7 @@ import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol'
 import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 
 import { HubRestrictedUpgradeable } from '../lib/HubRestrictedUpgradeable.sol';
+import { IOrganizationStore } from '../GoodOrganizationStore/IOrganizationStore.sol';
 
 import { IPublicationActionModule } from 'lens-modules/contracts/interfaces/IPublicationActionModule.sol';
 import { Types } from 'lens-modules/contracts/libraries/constants/Types.sol';
@@ -98,7 +99,7 @@ contract JobsActionModule is
   );
 
   modifier onlyOrganization(address account) {
-    if (!hasRole(ORGANIZATION_ROLE, account)) {
+    if (!organizationStore.isOrganization(account)) {
       revert NotAnOrganization(account);
     }
     _;
@@ -112,7 +113,9 @@ contract JobsActionModule is
   }
 
   bytes32 public constant PAUSER_ROLE = keccak256('PAUSER_ROLE');
-  bytes32 public constant ORGANIZATION_ROLE = keccak256('ORGANIZATION_ROLE');
+  bytes32[15] __gap_roles;
+
+  IOrganizationStore public organizationStore;
 
   ILensHub public lensHub;
   string internal moduleMetadataURI;
@@ -137,7 +140,8 @@ contract JobsActionModule is
   function initialize(
     address defaultAdmin,
     address pauser,
-    address lensHubAddress
+    address lensHubAddress,
+    address organizationStoreAddress
   ) public initializer {
     __Pausable_init();
     __AccessControl_init();
@@ -147,6 +151,7 @@ contract JobsActionModule is
     _grantRole(PAUSER_ROLE, pauser);
 
     lensHub = ILensHub(lensHubAddress);
+    organizationStore = IOrganizationStore(organizationStoreAddress);
   }
 
   function pause() public onlyRole(PAUSER_ROLE) {
@@ -175,24 +180,16 @@ contract JobsActionModule is
     return moduleMetadataURI;
   }
 
-  /////////////////////////////
-  // ORGANIZATION MANAGEMENT //
-  /////////////////////////////
-
-  function isOrganization(address account) external view returns (bool) {
-    return hasRole(ORGANIZATION_ROLE, account);
+  function setLensHub(
+    address lensHubAddress
+  ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    lensHub = ILensHub(lensHubAddress);
   }
 
-  function addOrganization(address account) external {
-    // Caller's permissions are checked by the function so no need
-    // to do it ourselves
-    grantRole(ORGANIZATION_ROLE, account);
-  }
-
-  function removeOrganization(address account) external {
-    // Caller's permissions are checked by the function so no need
-    // to do it ourselves
-    revokeRole(ORGANIZATION_ROLE, account);
+  function setOrganizationStore(
+    address organizationStoreAddress
+  ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    organizationStore = IOrganizationStore(organizationStoreAddress);
   }
 
   ////////////////////////////

@@ -1,7 +1,7 @@
 import { ethers, run, upgrades } from 'hardhat';
 
 async function upgradeActionModuleProxy() {
-  const PROXY_ADDRESS = '0x8E6E173929FA8c5151A140e201Ff9e72BaCD9D29';
+  const PROXY_ADDRESS = '0x7Fc20D60b6eC42caD04603AEE02dCc324a2F6DcF';
 
   const JobsActionModule = await ethers.getContractFactory('JobsActionModule');
   const contract = await upgrades.upgradeProxy(PROXY_ADDRESS, JobsActionModule);

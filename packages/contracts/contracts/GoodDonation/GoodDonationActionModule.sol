@@ -10,6 +10,7 @@ import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
 import { HubRestrictedUpgradeable } from '../lib/HubRestrictedUpgradeable.sol';
+import { IOrganizationStore } from '../GoodOrganizationStore/IOrganizationStore.sol';
 
 import { IPublicationActionModule } from 'lens-modules/contracts/interfaces/IPublicationActionModule.sol';
 import { Types } from 'lens-modules/contracts/libraries/constants/Types.sol';
@@ -32,8 +33,12 @@ contract GoodDonationActionModule is
   string private moduleMetadataURI;
 
   bytes32 public constant PAUSER_ROLE = keccak256('PAUSER_ROLE');
-  bytes32 public constant VERIFIED_DONEE_ROLE =
+
+  // Deprecated after creation of separate organization storage contract.
+  bytes32 private constant __DEPRECATED__VERIFIED_DONEE_ROLE =
     keccak256('VERIFIED_DONEE_ROLE');
+
+  IOrganizationStore public organizationStore;
 
   event CauseCreated(
     uint256 indexed profileId,
@@ -63,7 +68,8 @@ contract GoodDonationActionModule is
   function initialize(
     address defaultAdmin,
     address pauser,
-    address lensHubAddress
+    address lensHubAddress,
+    address organizationStoreAddress
   ) public initializer {
     __Pausable_init();
     __AccessControl_init();
@@ -73,6 +79,7 @@ contract GoodDonationActionModule is
     _grantRole(PAUSER_ROLE, pauser);
 
     lensHub = ILensHub(lensHubAddress);
+    organizationStore = IOrganizationStore(organizationStoreAddress);
   }
 
   function supportsInterface(
@@ -101,16 +108,16 @@ contract GoodDonationActionModule is
     return moduleMetadataURI;
   }
 
-  function isVerifiedDonee(address account) public view returns (bool) {
-    return hasRole(VERIFIED_DONEE_ROLE, account);
+  function setLensHub(
+    address lensHubAddress
+  ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    lensHub = ILensHub(lensHubAddress);
   }
 
-  function addVerifiedDonee(address account) external {
-    grantRole(VERIFIED_DONEE_ROLE, account);
-  }
-
-  function removeVerifiedDonee(address account) external {
-    revokeRole(VERIFIED_DONEE_ROLE, account);
+  function setOrganizationStore(
+    address organizationStoreAddress
+  ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    organizationStore = IOrganizationStore(organizationStoreAddress);
   }
 
   function initializePublicationAction(
@@ -119,7 +126,7 @@ contract GoodDonationActionModule is
     address transactionExecutor,
     bytes calldata /* data */
   ) external override whenNotPaused onlyHub returns (bytes memory) {
-    if (!isVerifiedDonee(transactionExecutor)) {
+    if (!organizationStore.isOrganization(transactionExecutor)) {
       revert UnverifiedDonee(transactionExecutor);
     }
 
@@ -134,7 +141,7 @@ contract GoodDonationActionModule is
     address sender = params.transactionExecutor;
     address recipient = lensHub.ownerOf(params.publicationActedProfileId);
 
-    if (!isVerifiedDonee(recipient)) {
+    if (!organizationStore.isOrganization(recipient)) {
       revert UnverifiedDonee(recipient);
     }
 

@@ -1,14 +1,12 @@
-import type { PublicationMarketplaceMetadataAttribute } from '@good/lens';
+import type { MetadataAttribute } from '@lens-protocol/metadata';
 
 import { createTrackedSelector } from 'react-tracked';
 import { create } from 'zustand';
 
 interface State {
-  addAttribute: (attribute: PublicationMarketplaceMetadataAttribute) => void;
-  attributes: PublicationMarketplaceMetadataAttribute[] | undefined;
-  getAttribute: (
-    traitType: string
-  ) => PublicationMarketplaceMetadataAttribute | undefined;
+  addAttribute: (attribute: MetadataAttribute) => void;
+  attributes: MetadataAttribute[] | undefined;
+  getAttribute: (traitType: string) => MetadataAttribute | undefined;
   removeAttribute: (traitType: string) => void;
   reset: () => void;
   updateAttribute: (traitType: string, value: string) => void;
@@ -22,19 +20,17 @@ const store = create<State>((set, get) => ({
         : [attribute]
     })),
   attributes: undefined,
-  getAttribute: (traitType) =>
-    get().attributes?.find((attribute) => attribute.traitType === traitType),
-  removeAttribute: (traitType) =>
+  getAttribute: (key) =>
+    get().attributes?.find((attribute) => attribute.key === key),
+  removeAttribute: (key) =>
     set((state) => ({
-      attributes: state.attributes?.filter(
-        (attribute) => attribute.traitType !== traitType
-      )
+      attributes: state.attributes?.filter((attribute) => attribute.key !== key)
     })),
   reset: () => set({ attributes: undefined }),
-  updateAttribute: (traitType, value: any) =>
+  updateAttribute: (key, value: any) =>
     set((state) => ({
       attributes: state.attributes?.map((attribute) =>
-        attribute.traitType === traitType ? { ...attribute, value } : attribute
+        attribute.key === key ? { ...attribute, value } : attribute
       )
     }))
 }));

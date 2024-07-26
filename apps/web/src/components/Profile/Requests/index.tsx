@@ -10,8 +10,8 @@ import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
 
 // import GoodAction from './GoodAction';
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
-import { JobsActionModule } from '@good/abis';
-import { REQUEST_GOOD } from '@good/data/constants';
+import { GoodOrganizationStore } from '@good/abis';
+import { GOOD_ORGANIZATION_STORE } from '@good/data/constants';
 import {
   PublicationMetadataMainFocusType,
   PublicationType,
@@ -96,8 +96,8 @@ const Requests: FC<RequestProps> = ({
     isError,
     isLoading
   } = useReadContract({
-    abi: JobsActionModule,
-    address: REQUEST_GOOD,
+    abi: GoodOrganizationStore,
+    address: GOOD_ORGANIZATION_STORE,
     args: [address!],
     functionName: 'isOrganization',
     query: {
@@ -141,7 +141,6 @@ const Requests: FC<RequestProps> = ({
         : { actedBy: profileId })
     }
   };
-
   const {
     data,
     error: exploreError,
