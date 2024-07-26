@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import CreateVolunteerCard from '@components/Volunteer/CreateVolunteerCard';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
@@ -73,6 +74,14 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       onClick={onClick}
                       text="Volunteer"
                     />
+                  </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <CreateVolunteerCard />
                   </MenuItem>
                   <MenuItem>
                     <Menu as="div" className="relative m-2 rounded-lg">
@@ -158,9 +167,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       )}
                     </Menu>
                   </MenuItem>
+
                   <div className="divider" />
                 </>
               ) : null}
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>

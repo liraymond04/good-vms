@@ -31,7 +31,7 @@ import ModIcon from './ModIcon';
 import MoreNavItems from './MoreNavItems';
 import SignupButton from './SignupButton';
 import SiteStatus from './SiteStatus';
-import StaffBar from './StaffBar'; // Import the new component
+import StaffBar from './StaffBar';
 
 const NavbarContainer = styled.div`
   display: flex;
