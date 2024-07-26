@@ -7,10 +7,10 @@ import type {
 } from '@good/lens';
 import type { FC } from 'react';
 import type { StateSnapshot, VirtuosoHandle } from 'react-virtuoso';
-import type { Request as TRequest } from '@good/types/good';
+
 import PublicationsShimmer from '@components/Shared/Shimmer/PublicationsShimmer';
 import { JobsActionModule } from '@good/abis';
-import { GOOD_API_URL, KNOWN_ATTRIBUTES, REQUEST_GOOD } from '@good/data/constants';
+import { REQUEST_GOOD } from '@good/data/constants';
 import {
   PublicationMetadataMainFocusType,
   PublicationType,
@@ -28,18 +28,15 @@ import { useAccount, useReadContract } from 'wagmi';
 import OrganizationListing from './OrganizationListing';
 import OrganizationTable from './OrganizationTable';
 import RequestListing from './RequestListing';
-import RequestTable from './RequestTable';
 import RequestPrototype from './RequestPrototype';
-import axios from 'axios';
-import { getAuthApiHeaders } from '@helpers/getAuthApiHeaders';
-import getPublicationAttribute from '@good/helpers/getPublicationAttribute';
+import RequestTable from './RequestTable';
 
 let virtuosoState: any = { ranges: [], screenTop: 0 };
 
 interface RequestProps {
   handle: string;
   profileDetailsLoading: boolean;
-  profileId: string | null;
+  profileId: null | string;
   type:
     | ProfileFeedType.Collects
     | ProfileFeedType.Feed
@@ -72,7 +69,7 @@ const Requests: FC<RequestProps> = ({
   const [sortBy, setSortBy] = useState('Name');
   const [filterBy, setFilterBy] = useState('All');
   const [filteredPublications, setFilteredPublications] = useState<
-    (Post | Comment | Quote) []
+    (Comment | Post | Quote)[]
   >([]);
   const [showRequest, setShowRequest] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<
@@ -187,7 +184,9 @@ const Requests: FC<RequestProps> = ({
     }
   };
 
-  function sortPubsName(arr: (Comment | Post | Quote)[]): (Comment | Post | Quote)[] {
+  function sortPubsName(
+    arr: (Comment | Post | Quote)[]
+  ): (Comment | Post | Quote)[] {
     if (arr.length <= 1) {
       return arr;
     }
@@ -205,7 +204,9 @@ const Requests: FC<RequestProps> = ({
     return [...sortPubsName(left), ...middle, ...sortPubsName(right)];
   }
 
-  function sortPubsAmount(arr: (Comment | Post | Quote)[]): (Comment | Post | Quote)[] {
+  function sortPubsAmount(
+    arr: (Comment | Post | Quote)[]
+  ): (Comment | Post | Quote)[] {
     if (arr.length <= 1) {
       return arr;
     }
@@ -287,7 +288,7 @@ const Requests: FC<RequestProps> = ({
     setShowRequest(false);
   };
 
-  // Function for getting request data 
+  // Function for getting request data
   // const getRequest = async (): Promise<null | TRequest> => {
   //   if (filteredPublications.length == 0) {
   //     return null;
@@ -318,7 +319,7 @@ const Requests: FC<RequestProps> = ({
           whether the user is a volunteer or organization.
           E.g. currentProfile?.metadata?.attributes?[index of volunteer/organization] */}
 
-        {/* {filteredPublications.length != 0 ? <Button onClick={() => getRequest()}>
+      {/* {filteredPublications.length != 0 ? <Button onClick={() => getRequest()}>
           Try getting data for first request in table
         </Button> : null} */}
 
@@ -357,11 +358,9 @@ const Requests: FC<RequestProps> = ({
             <option>Good</option>
             <option>VHR</option>
           </select>
-          {filteredPublications.length == 0 ? 
-          <Button onClick={filterPubs}>
-            Load Requests
-          </Button> 
-          : null}
+          {filteredPublications.length == 0 ? (
+            <Button onClick={filterPubs}>Load Requests</Button>
+          ) : null}
         </span>
       </div>
       {!isVerifiedOrganization ? (
@@ -396,7 +395,7 @@ const Requests: FC<RequestProps> = ({
           />
         )}
         <div>Prototype for Incoming Requests:</div>
-        <RequestPrototype></RequestPrototype>
+        <RequestPrototype />
       </div>
     </Card>
   );

@@ -1,4 +1,4 @@
-import type { AnyPublication, Post, Comment, Quote } from '@good/lens';
+import type { AnyPublication, Post } from '@good/lens';
 
 import { Tooltip } from '@good/ui';
 import { useRouter } from 'next/router';
