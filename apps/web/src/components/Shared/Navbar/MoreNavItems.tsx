@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import CreateVolunteerCard from '@components/Volunteer/CreateVolunteerCard';
 import cn from '@good/ui/cn';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
@@ -32,14 +33,17 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
             )}
           >
             <EllipsisHorizontalCircleIcon className="size-8" />
-            <span className="hidden text-lg lg:block">More</span>{' '}
+            <span className="text-lg max-[1024px]:hidden">More</span>
             {/* Hide text on tablets */}
           </MenuButton>
           <MenuTransition>
             <MenuItems
               className={cn(
-                'absolute z-50 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-gray-700',
-                'md:fixed md:left-40 md:top-48'
+                'absolute top-0 z-50 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:fixed md:left-40 dark:bg-gray-900 dark:ring-gray-700',
+                {
+                  'md:top-[23rem]': !currentProfile,
+                  'md:top-56': currentProfile
+                }
               )}
               style={{
                 marginRight: '10px', // Adjusted for better alignment
@@ -74,6 +78,14 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       text="Volunteer"
                     />
                   </MenuItem>
+                  <MenuItem
+                    as="div"
+                    className={({ focus }: { focus: boolean }) =>
+                      cn({ 'dropdown-active': focus }, 'm-2 rounded-lg')
+                    }
+                  >
+                    <CreateVolunteerCard />
+                  </MenuItem>
                   <MenuItem>
                     <Menu as="div" className="relative m-2 rounded-lg">
                       {({ open }) => (
@@ -89,7 +101,7 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                             )}
                           >
                             <CurrencyDollarIcon className="ml-[-4px] size-4" />
-                            <span className="text-m block text-gray-700 md:hidden lg:block dark:text-gray-200">
+                            <span className="text-m text-gray-700 dark:text-gray-200">
                               Donate
                             </span>
                           </MenuButton>
@@ -158,9 +170,11 @@ const MoreNavItems: FC<{ onClick?: () => void }> = ({ onClick }) => {
                       )}
                     </Menu>
                   </MenuItem>
+
                   <div className="divider" />
                 </>
               ) : null}
+
               <MenuItem
                 as="div"
                 className={({ focus }: { focus: boolean }) =>

@@ -33,34 +33,36 @@ const FeedType: FC<FeedTypeProps> = ({ feedType, setFeedType }) => {
     });
   };
 
+  const iconClass = 'size-8 sm:size-4';
+
   const tabs = [
     {
-      icon: <PencilSquareIcon className="size-4" />,
+      icon: <PencilSquareIcon className={iconClass} />,
       name: 'Feed',
       type: ProfileFeedType.Feed
     },
     {
-      icon: <ChatBubbleLeftIcon className="size-4" />,
+      icon: <ChatBubbleLeftIcon className={iconClass} />,
       name: 'Replies',
       type: ProfileFeedType.Replies
     },
     {
-      icon: <FilmIcon className="size-4" />,
+      icon: <FilmIcon className={iconClass} />,
       name: 'Media',
       type: ProfileFeedType.Media
     },
     {
-      icon: <RectangleStackIcon className="size-4" />,
+      icon: <RectangleStackIcon className={iconClass} />,
       name: 'Collected',
       type: ProfileFeedType.Collects
     },
     {
-      icon: <FlagIcon className="size-4" />,
+      icon: <FlagIcon className={iconClass} />,
       name: 'Requests',
       type: ProfileFeedType.Requests
     },
     isPro && {
-      icon: <ChartBarIcon className="size-4" />,
+      icon: <ChartBarIcon className={iconClass} />,
       name: 'Stats',
       type: ProfileFeedType.Stats
     }

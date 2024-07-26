@@ -1,20 +1,30 @@
 import type { FC } from 'react';
 
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { MenuItem } from '@headlessui/react';
+import { UserIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { usePublicationStore } from 'src/store/non-persisted/publication/usePublicationStore';
 import { useGlobalModalStateStore } from 'src/store/non-persisted/useGlobalModalStateStore';
 import { useProfileStore } from 'src/store/persisted/useProfileStore';
 
-const NavPost: FC = () => {
+import MoreLink from '../../components/Shared/Navbar/NavItems/MoreLink';
+
+interface CreateVolunteerCardProps {
+  tags?: string[];
+}
+
+const CreateVolunteerCard: FC<CreateVolunteerCardProps> = ({ tags }) => {
   const { isReady, push, query } = useRouter();
   const { currentProfile } = useProfileStore();
-  const { setShowNewPostModal } = useGlobalModalStateStore();
-  const { setPublicationContent } = usePublicationStore();
+  const { setShowNewVolunteerPostModal } = useGlobalModalStateStore();
+  const { setPublicationContent, setTags } = usePublicationStore();
 
   const openModal = () => {
-    setShowNewPostModal(true);
+    if (tags) {
+      setTags(tags);
+    }
+    setShowNewVolunteerPostModal(true);
   };
 
   useEffect(() => {
@@ -36,19 +46,17 @@ const NavPost: FC = () => {
       openModal();
       setPublicationContent(content);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <button
-      className="mb-7 mt-2 flex w-full items-center justify-center rounded-full bg-[#da5597] px-2 py-2 text-white focus:outline-none max-[1024px]:w-min"
-      onClick={openModal}
-      type="button"
-    >
-      <span className="text-xl max-[1024px]:hidden">Post</span>
-      <PencilSquareIcon className="hidden size-8 max-[1024px]:block" />
-    </button>
+    <MenuItem as="button" onClick={openModal} type="button">
+      <MoreLink
+        icon={<UserIcon className="size-4" />}
+        onClick={openModal}
+        text="Volunteer Post"
+      />
+    </MenuItem>
   );
 };
 
-export default NavPost;
+export default CreateVolunteerCard;
