@@ -9,7 +9,7 @@ const allowedDomains = [
   'https://hey.xyz',
   'https://testnet.hey.xyz',
   'https://staging.hey.xyz',
-  'https://good-vms-web.vercel.app/',
+  'https://good-vms-web.vercel.app',
   'http://localhost:4783'
 ];
 
